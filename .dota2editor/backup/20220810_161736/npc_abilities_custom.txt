@@ -1,0 +1,1416 @@
+// Dota2 Editor
+// Get latest version: https://github.com/zombieJ/nw-dota2editor
+
+"DOTAAbilities"
+{
+	"Version"		"1"
+
+	"MyAbility_unit"
+	{
+		"BaseClass"	"ability_datadriven"
+		// 这里我们使用主宰的被动的那个图标
+		"AbilityTextureName"	"axe_battle_hunger"
+		// 基础的定义，如果技能是单位目标还是无目标，单位目标的类型是什么
+		// ------------------------------------------------------------------------------------------
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetFlags"	"DOTA_UNIT_TARGET_FLAG_NOT_MAGIC_IMMUNE_ALLIES"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PURE"
+		// 施法前摇，如果技能行为(AbilityBehavior)是DOTA_ABILITY_BEHAVIOR_IMMEDIATE就无效了
+		// -------------------------------------------------------------------------------------------
+		// 施法前摇
+		"AbilityCastPoint"	"0.0 0.0 0.0 0.0"
+		// 技能CD
+		// -------------------------------------------------------------------------------------------
+		// 分别四个等级的CD
+		"AbilityCooldown"	"1.0 1.0 1.0 1.0"
+		// 技能施法所需魔法值
+		// -------------------------------------------------------------------------------------------
+		// 这样写的话就是默认此技能所有等级的魔法值都是1，以上同理
+		"AbilityManaCost"	"1"
+		// 施法距离
+		"AbilityCastRange"	"1000"
+		"precache"
+		{
+			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
+		}
+		"OnSpellStart"
+		{
+			"Damage"
+			{
+				// 伤害类型，这里为纯粹
+				"Type"	"DAMAGE_TYPE_PURE"
+				// 这里是伤害值
+				"Damage"	"100"
+				// 这里是伤害的目标
+				"Target"	"TARGET"
+			}
+			"AttachEffect"
+			{
+				"EffectName"	"particles\items_fx\blink_dagger_start.vpcf"
+				"EffectAttachType"	"follow_chest"
+				"Target"	"TARGET"
+			}
+		}
+	}
+
+	"colonist_make_huoren"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"juggernaut_blade_dance"
+		// 技能行为
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		// 施法前摇
+		"AbilityCastPoint"	"0"
+		// "AbilityChannelTime" "1.5"       //持续施法事件
+		// 分别四个等级的CD
+		"AbilityCooldown"	"1.0 1.0 1.0 1.0"
+		"AbilityManaCost"	"5"
+		// 施法距离
+		"AbilityCastRange"	"0"
+		"precache"
+		{
+			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
+		}
+		// 吟诵结束后发动事件
+		// "OnChannelSucceeded"{
+		// 	"SpawnUnit"{
+		// 		"UnitName" "huoren"
+		// 		"UnitCount" "1"
+		// 		"SpawnRadius" "50"
+		// 		}
+		// }
+		"OnSpellStart"
+		{
+			"AttachEffect"
+			{
+				"EffectName"	"particles\items_fx\blink_dagger_start.vpcf"
+				"EffectAttachType"	"follow_chest"
+				"Target"	"TARGET"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"player_init.lua"
+				"Function"	"createShoot"
+				"Target"	"POINT"
+			}
+		}
+	}
+
+	// 普通射击
+	"shoot_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"mirana_arrow"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		// "SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"0.1"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"1"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		// 施法距离
+		"AbilityCastRange"	"3000"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+		}
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"shoot.lua"
+				"Function"	"shootStartCharge"
+			}
+		}
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"	"Hero_Mirana.ArrowCast"
+				"Target"	"CASTER"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"shoot.lua"
+				"Function"	"createShoot"
+				"Target"	"POINT"
+				"unitModel"	"shootUnit"
+				"particles1"	"particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles2"	"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles1plus"	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
+				"particles1weak"	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
+				"sound1"	"Hero_Gyrocopter.HomingMissile.Destroy"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_shoot_counter_datadriven"
+			{
+				"Passive"	"1"
+				"IsHidden"	"0"
+				"IsPurgable"	"0"
+				"IsDebuff"	"0"
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"maximum_charges"	"3 4 5 6"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"charge_replenish_time"	"10 9 8 3"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"max_distance"	"3000"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"starting_distance"	"50"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"speed"	"1200"
+			}
+		}
+		// Damage.
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"	"125 250 375 500"
+	}
+
+	// 普通射击 专业版本 + 技能版本
+	"shoot_boom_pro_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"mirana_arrow"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		// "SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"0.1"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"1"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		// 施法距离
+		"AbilityCastRange"	"3000"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+		}
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"shoot.lua"
+				"Function"	"shootStartCharge"
+			}
+		}
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"	"Hero_Mirana.ArrowCast"
+				"Target"	"CASTER"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"shoot_pro.lua"
+				"Function"	"createShoot"
+				"Target"	"POINT"
+				"unitModel"	"skillUnit"
+				"particles1"	"particles/zuus_base_attack_putong.vpcf"
+				"particles2"	"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles1plus"	"particles/zuus_base_attack_putong.vpcf"
+				"particles1weak"	"particles/zuus_base_attack_putong.vpcf"
+				"sound1"	"Hero_Disruptor.StaticStorm"
+				"sound2"	"Hero_Disruptor.StaticStorm.End"
+				"particlesBoom"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_shoot_counter_datadriven"
+			{
+				"Passive"	"1"
+				"IsHidden"	"0"
+				"IsPurgable"	"0"
+				"IsDebuff"	"0"
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"maximum_charges"	"3 4 5 6"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"charge_replenish_time"	"10 9 8 3"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"max_distance"	"3000"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"starting_distance"	"50"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"speed"	"600"
+			}
+			// 技能主体爆炸区
+			"06"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses"	"20"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"damage_max"	"200 250 300 350"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"5.0"
+			}
+			"10"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"interval"	"0.25"
+			}
+			// The Wiki Lies
+			"11"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_increase"	"2.5 3.0 3.5 4.0"
+			}
+			"12"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"linger_duration"	"5"
+			}
+			"13"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration_scepter"	"7.0"
+			}
+			"14"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses_scepter"	"28"
+			}
+		}
+		// Damage.
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"	"125 250 375 500"
+	}
+
+	"shoot_pro_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"mirana_arrow"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		// "SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"0.1"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"1"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		// 施法距离
+		"AbilityCastRange"	"3000"
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+			"particle"	"particles/generic_gameplay/generic_silence.vpcf"
+		}
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"shoot.lua"
+				"Function"	"shootStartCharge"
+			}
+		}
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"	"Hero_Mirana.ArrowCast"
+				"Target"	"CASTER"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"shoot_pro.lua"
+				"Function"	"createShoot"
+				"Target"	"POINT"
+				"unitModel"	"skillUnit"
+				"particles1"	"particles/zuus_base_attack_putong.vpcf"
+				"particles2"	"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles1plus"	"particles/zuus_base_attack_putong.vpcf"
+				"particles1weak"	"particles/zuus_base_attack_putong.vpcf"
+				"sound1"	"Hero_Disruptor.StaticStorm"
+				"sound2"	"Hero_Disruptor.StaticStorm.End"
+				"particlesBoom"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_shoot_counter_datadriven"
+			{
+				"Passive"	"1"
+				"IsHidden"	"0"
+				"IsPurgable"	"0"
+				"IsDebuff"	"0"
+			}
+			"modifier_fire_storm_datadriven"
+			{
+				"Aura"	"modifier_fire_storm_debuff"
+				"Aura_Radius"	"%radius"
+				"Aura_Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Aura_Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+				"Duration"	"%duration"
+			}
+			"modifier_fire_storm_debuff"
+			{
+				"IsDebuff"	"1"
+				"EffectName"	"particles/generic_gameplay/generic_silence.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"Duration"	"%linger_duration"
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"maximum_charges"	"3 4 5 6"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"charge_replenish_time"	"10 9 8 3"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"max_distance"	"3000"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"starting_distance"	"50"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"speed"	"600"
+			}
+			// 技能主体爆炸区
+			"06"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses"	"20"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"damage_max"	"200 250 300 350"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"5.0"
+			}
+			"10"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"interval"	"0.25"
+			}
+			// The Wiki Lies
+			"11"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_increase"	"2.5 3.0 3.5 4.0"
+			}
+			"12"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"linger_duration"	"5"
+			}
+			"13"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration_scepter"	"7.0"
+			}
+			"14"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses_scepter"	"28"
+			}
+		}
+		// Damage.
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"	"125 250 375 500"
+	}
+
+	// 屠夫钩重建
+	"pudge_meat_hook_lua_reb"
+	{
+		// General
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"pudge_meat_hook"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PURE"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_YES"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3 0.3 0.3 0.3"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"5 4 3 2"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"11 12 13 14"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"1000 1200 1400 1600"
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_pudge/pudge_meat_hook_lua_reb.lua"
+				"Function"	"meathookOnUpgrade"
+			}
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_pudge/pudge_meat_hook_lua_reb.lua"
+				"Function"	"meathookOnSpellStart"
+				"Target"	"POINT"
+				"unitModel"	"shootUnit"
+				"particles1"	"particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles2"	"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"sound1"	"Hero_Gyrocopter.HomingMissile.Destroy"
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hook_speed"	"1600.0"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_width"	"100"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_distance"	"1000 1200 1400 1600"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"vision_radius"	"500 500 500 500"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"vision_duration"	"4.0"
+			}
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hook_followthrough_constant"	"0.7"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_damage"	"90 180 270 360"
+			}
+		}
+	}
+
+	// 屠夫钩
+	"pudge_meat_hook_lua"
+	{
+		// General
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"pudge_meat_hook"
+		"ScriptFile"	"heroes/hero_pudge/pudge_meat_hook_lua.lua"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PURE"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_YES"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3 0.3 0.3 0.3"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"5 4 3 2"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"11 12 13 14"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"1000 1200 1400 1600"
+		// Precache
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_pudge.vsndevts"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook_chain.vpcf"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook_impact.vpcf"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook.vpcf"
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hook_speed"	"1600.0"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_width"	"100"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_distance"	"1000 1200 1400 1600"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"vision_radius"	"500 500 500 500"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"vision_duration"	"4.0"
+			}
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hook_followthrough_constant"	"0.65"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hook_damage"	"90 180 270 360"
+			}
+		}
+	}
+
+	"rattletrap_hookshot_lua"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"rattletrap_hookshot"
+		// "AbilitySound"					"Hero_Rattletrap.Hookshot.Fire"
+		"ScriptFile"	"heroes/hero_rattletrap/rattletrap_hookshot_lua.lua"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		// "AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_YES"
+		// "SpellDispellableType"		"SPELL_DISPELLABLE_YES_STRONG"
+		"FightRecapLevel"	"1"
+		// "HasScepterUpgrade"			"1"   //是否有权杖能力
+		// "AbilityDraftUltScepterAbility"		"rattletrap_overclocking"     //权杖能力
+		// "AbilityDraftUltShardAbility"		"rattletrap_jetpack"          //魔晶能力
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"	"0.3 0.3 0.3 0.3"
+		// "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_4"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"3 3 3 3"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"15 15 15 15"
+		"AbilityCastRange"	"1500 2000 2500 3000"
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_pudge.vsndevts"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook_chain.vpcf"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook_impact.vpcf"
+			"particle"	"particles/units/heroes/hero_pudge/pudge_meathook.vpcf"
+		}
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hookshot_width"	"125"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"stun_radius"	"175 175 175 175"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hookshot_duration"	"1.5 1.75 2.0 2.0"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"hookshot_speed"	"3500 4000 5000 6000"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hootshot_damage"	"75 175 275 275"
+			}
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"followthrough_constant"	"0.65"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"hookshot_distance"	"1500 2000 2500 3000"
+			}
+		}
+	}
+
+	"static_storm_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"disruptor_static_storm"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		"AbilityType"	"DOTA_ABILITY_TYPE_ULTIMATE"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"	"0.05 0.05 0.05 0.05"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"5.0 5.0 5.0 5.0"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"12 17 22 22"
+		// Cast Range
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"800 800 800 800"
+		"AoERadius"	"500"
+		// Precache
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm.vsnd"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm_end.vsnd"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"particle"	"particles/generic_gameplay/generic_silence.vpcf"
+		}
+		"OnSpellStart"
+		{
+			"CreateThinker"
+			{
+				"ModifierName"	"modifier_static_storm_datadriven"
+				"Target"	"POINT"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_static_storm_datadriven"
+			{
+				"Aura"	"modifier_static_storm_debuff"
+				"Aura_Radius"	"%radius"
+				"Aura_Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Aura_Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+				"Duration"	"%duration"
+				"OnCreated"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_disruptor/static_storm.lua"
+						"Function"	"RenderParticles"
+						"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+					}
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm"
+						"Target"	"TARGET"
+					}
+				}
+				"ThinkInterval"	"%interval"
+				"OnIntervalThink"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_disruptor/static_storm.lua"
+						"Function"	"DealDamage"
+					}
+				}
+				"OnDestroy"
+				{
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm.End"
+						"Target"	"TARGET"
+					}
+				}
+			}
+			"modifier_static_storm_debuff"
+			{
+				"IsDebuff"	"1"
+				"EffectName"	"particles/generic_gameplay/generic_silence.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"Duration"	"%linger_duration"
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses"	"20"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"damage_max"	"200 250 300 350"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"5.0"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"interval"	"0.25"
+			}
+			// The Wiki Lies
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_increase"	"2.5 3.125 3.75 4"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"linger_duration"	"0.5"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration_scepter"	"7.0"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses_scepter"	"28"
+			}
+		}
+	}
+
+	"fire_storm_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"disruptor_static_storm"
+		// "AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		// "SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"	"0.05 0.05 0.05 0.05"
+		// Time
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"	"5.0 5.0 5.0 5.0"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"12 17 22 22"
+		// Cast Range
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"800 800 800 800"
+		"AoERadius"	"500"
+		// Precache
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm.vsnd"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm_end.vsnd"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"particle"	"particles/generic_gameplay/generic_silence.vpcf"
+		}
+		"OnSpellStart"
+		{
+			"CreateThinker"
+			{
+				"ModifierName"	"modifier_fire_storm_datadriven"
+				"Target"	"POINT"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_fire_storm_datadriven"
+			{
+				"Aura"	"modifier_fire_storm_debuff"
+				"Aura_Radius"	"%radius"
+				"Aura_Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Aura_Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+				"Duration"	"%duration"
+				"OnCreated"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_disruptor/fire_storm_reb.lua"
+						"Function"	"RenderParticles"
+						"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+					}
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm"
+						"Target"	"TARGET"
+					}
+				}
+				"ThinkInterval"	"%interval"
+				"OnIntervalThink"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_disruptor/fire_storm_reb.lua"
+						"Function"	"DealDamage"
+					}
+				}
+				"OnDestroy"
+				{
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm.End"
+						"Target"	"TARGET"
+					}
+				}
+			}
+			"modifier_fire_storm_debuff"
+			{
+				"IsDebuff"	"1"
+				"EffectName"	"particles/generic_gameplay/generic_silence.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"Duration"	"%linger_duration"
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses"	"20"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"damage_max"	"200 250 300 350"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"5.0"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"interval"	"0.25"
+			}
+			// The Wiki Lies
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_increase"	"2.5 3.125 3.75 4"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"linger_duration"	"0.5"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration_scepter"	"7.0"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses_scepter"	"28"
+			}
+		}
+	}
+
+	"sniper_shrapnel_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"sniper_shrapnel"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		"AbilityCastPoint"	"0.3 0.3 0.3 0.3"
+		// Cost
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"	"120 120 120 120"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"1800"
+		"AOERadius"	"%radius"
+		// Data driven
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"	"particles/units/heroes/hero_sniper/sniper_shrapnel_launch.vpcf"
+			"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_sniper.vsndevts"
+			"particle"	"particles/units/heroes/hero_sniper/sniper_shrapnel.vpcf"
+			"particle"	"particles/econ/items/sniper/sniper_charlie/sniper_shrapnel_charlie.vpcf"
+		}
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_sniper/shrapnel.lua"
+				"Function"	"shrapnel_start_charge"
+			}
+		}
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"heroes/hero_sniper/shrapnel.lua"
+				"Function"	"shrapnel_fire"
+				"Target"	"POINT"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_shrapnel_stack_counter_datadriven"
+			{
+				"Passive"	"1"
+				"IsHidden"	"0"
+				"IsPurgable"	"0"
+				"IsDebuff"	"0"
+			}
+			"modifier_shrapnel_dummy_datadriven"
+			{
+				"OnCreated"
+				{
+					"FireSound"
+					{
+						"Target"	"TARGET"
+						"EffectName"	"Hero_Sniper.ShrapnelShatter"
+					}
+					"RunScript"
+					{
+						"ScriptFile"	"heroes/hero_disruptor/static_storm.lua"
+						"Function"	"RenderParticles"
+						"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+					}
+					"AttachEffect"
+					{
+						"Target"	"TARGET"
+						"EffectName"	"particles/units/heroes/hero_sniper/sniper_shrapnel.vpcf"
+						"EffectAttachType"	"follow_origin"
+						"EffectRadius"	"%radius"
+					}
+					"AttachEffect"
+					{
+						"Target"	"TARGET"
+						"EffectName"	"particles/econ/items/sniper/sniper_charlie/sniper_shrapnel_charlie.vpcf"
+						"EffectAttachType"	"follow_origin"
+						"EffectRadius"	"%radius"
+					}
+					"ActOnTargets"
+					{
+						"Target"
+						{
+							"Center"	"TARGET"
+							"Radius"	"%radius"
+							"Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+							"Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_MECHANICAL"
+							"Flags"	"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+						}
+						"Action"
+						{
+							"Damage"
+							{
+								"Target"	"TARGET"
+								"Damage"	"%AbilityDamage"
+								"Type"	"DAMAGE_TYPE_MAGICAL"
+							}
+							"ApplyModifier"
+							{
+								"Target"	"TARGET"
+								"ModifierName"	"modifier_shrapnel_slow_datadriven"
+							}
+						}
+					}
+				}
+				"ThinkInterval"	"%tick_interval"
+				"OnIntervalThink"
+				{
+					"ActOnTargets"
+					{
+						"Target"
+						{
+							"Center"	"TARGET"
+							"Radius"	"%radius"
+							"Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+							"Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_MECHANICAL"
+							"Flags"	"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+						}
+						"Action"
+						{
+							"Damage"
+							{
+								"Target"	"TARGET"
+								"Damage"	"%AbilityDamage"
+								"Type"	"DAMAGE_TYPE_MAGICAL"
+							}
+							"ApplyModifier"
+							{
+								"Target"	"TARGET"
+								"ModifierName"	"modifier_shrapnel_slow_datadriven"
+							}
+						}
+					}
+				}
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_BONUS_DAY_VISION"	"%radius"
+					"MODIFIER_PROPERTY_BONUS_NIGHT_VISION"	"%radius"
+				}
+				"States"
+				{
+					"MODIFIER_STATE_INVULNERABLE"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_HEALTH_BAR"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_UNIT_COLLISION"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NOT_ON_MINIMAP"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_UNSELECTABLE"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_FLYING"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+			"modifier_shrapnel_slow_datadriven"
+			{
+				"IsHidden"	"0"
+				"Duration"	"%slow_duration"
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"	"%slow_movement_speed"
+				}
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"slow_movement_speed"	"-15 -20 -25 -30"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"building_damage"	"4 8 12 16"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"10.0"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_delay"	"0.8 0.8 0.8 0.8"
+			}
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"slow_duration"	"2.0 2.0 2.0 2.0"
+			}
+			// Extra variables
+			"07"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"tick_interval"	"1.0"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"maximum_charges"	"3"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"charge_replenish_time"	"5.0"
+			}
+		}
+		// Damage.
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"	"12 24 36 48"
+		// Stats
+		// -------------------------------------------------------------------------------------------------------------
+		// primarily about damage
+		"AbilityModifierSupportValue"	"0.25"
+	}
+
+	"fire_storm_boom_datadriven"
+	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"alchemist_acid_spray"
+		// "AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_MAGICAL"
+		// "SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"	"1"
+		// Casting
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"	"0.05 0.05 0.05 0.05"
+		// Cast Range
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"	"800 800 800 800"
+		"AoERadius"	"500"
+		// Precache
+		// -------------------------------------------------------------------------------------------------------------
+		"precache"
+		{
+			"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm.vsnd"
+			"soundfile"	"sounds/weapons/hero/disruptor/static_storm_end.vsnd"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"soundfile"	"soundevents/game_sounds_heroes/game_sounds_disruptor.vsndevts"
+			"particle"	"particles/generic_gameplay/generic_silence.vpcf"
+		}
+		"OnOwnerDied"
+		{
+			"CreateThinker"
+			{
+				"ModifierName"	"modifier_fire_storm_datadriven"
+				"Target"	"CASTER"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_fire_storm_datadriven"
+			{
+				"Aura"	"modifier_fire_storm_debuff"
+				"Aura_Radius"	"%radius"
+				"Aura_Teams"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Aura_Types"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+				"Duration"	"%duration"
+				"OnCreated"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"shoot_pro.lua"
+						"Function"	"RenderParticles"
+						"particle"	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+					}
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm"
+						"Target"	"TARGET"
+					}
+				}
+				"ThinkInterval"	"%interval"
+				"OnIntervalThink"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"shoot_pro.lua"
+						"Function"	"DealDamage"
+					}
+				}
+				"OnDestroy"
+				{
+					"FireSound"
+					{
+						"EffectName"	"Hero_Disruptor.StaticStorm.End"
+						"Target"	"TARGET"
+					}
+				}
+			}
+			"modifier_fire_storm_debuff"
+			{
+				"IsDebuff"	"1"
+				"EffectName"	"particles/generic_gameplay/generic_silence.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"Duration"	"%linger_duration"
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+		}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"radius"	"450"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses"	"20"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"damage_max"	"200 250 300 350"
+			}
+			"04"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration"	"5.0 6.0 7.0 8.0"
+			}
+			"05"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"interval"	"0.25"
+			}
+			// The Wiki Lies
+			"06"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"damage_increase"	"2.5 3.125 3.75 10"
+			}
+			"07"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"linger_duration"	"0.5"
+			}
+			"08"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"duration_scepter"	"7.0"
+			}
+			"09"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"pulses_scepter"	"28"
+			}
+		}
+	}
+}

@@ -1,0 +1,104 @@
+
+"DOTAHeroes"
+{
+	"Version"		"1"
+
+	"npc_dota_hero_rubick" 
+	{
+		"override_hero"	"npc_dota_hero_rubick"
+		"AbilityLayout"         "7"
+		"Ability1"	"shoot_datadriven"
+		"Ability2"	"pudge_meat_hook_lua_reb"
+		"Ability3"	"pudge_meat_hook_lua"
+		"Ability4"  "rattletrap_hookshot_lua"
+		"Ability5"  "fire_storm_datadriven"
+		"Ability6"  "shoot_pro_datadriven"
+		"Ability7"  "shoot_boom_pro_datadriven"
+	
+		"MovementTurnRate"	"1.0"
+		 "MovementSpeed"             "1000"
+		// 夜晚视野
+		"VisionNighttimeRange"	"1800"
+	}
+
+	"little_srtong"
+	{
+		// Hero to override
+		"override_hero"	"npc_dota_hero_nyx_assassin"
+		"Model"	"models/heroes/nerubian_assassin/nerubian_assassin.vmdl"
+		"Level"	"1"
+		"ModelScale"	"1"
+		// Status
+		// ----------------------------------------------------------------
+		// Base health.
+		"StatusHealth"	"1"
+		// Health regeneration rate.
+		"StatusHealthRegen"	"0"
+		// Base mana.
+		"StatusMana"	"0"
+		// Mana regeneration rate.
+		"StatusManaRegen"	"0.0"
+		// 转身速度
+		"MovementTurnRate"	"1"
+		// Range of vision at night time.
+		"VisionNighttimeRange"	"1800"
+		"Ability1"	""
+		"Ability2"	""
+		"Ability3"	""
+		"Ability4"	""
+		"Ability5"	""
+		"Ability6"	""
+		"Ability7"	""
+		"Ability8"	""
+		"Ability9"	""
+		"Ability10"	""
+		"Ability11"	""
+		"Ability12"	""
+		"Ability13"	""
+		"Ability14"	""
+		"Ability15"	""
+		"Ability16"	""
+	}
+
+	"npc_dota_hero_juggernaut"
+	{
+		"override_hero"	"npc_dota_hero_juggernaut"
+		// 攻击速度
+		"AttackRate"	"0.5"
+		// 技能1
+		"Ability1"	"shoot_datadriven"
+		"Ability2"	"pudge_meat_hook_lua"
+		"Ability3"	"pudge_meat_hook"
+		"Ability4"	""
+		"Ability5"	""
+		"Ability6"	""
+		"Ability7"	""
+		"Ability8"	""
+		"Ability9"	""
+		"Ability10"	""
+		"Ability11"	""
+		"Ability12"	""
+		"Ability13"	""
+		"Ability14"	""
+		"Ability15"	""
+		"Ability16"	""
+
+		// 夜晚视野
+		"VisionNighttimeRange"	"1800"
+	}
+
+	"npc_dota_hero_pudge" 
+	{
+		"override_hero"	"npc_dota_hero_pudge"
+
+		"Ability1"	""
+		"Ability2"	"pudge_meat_hook_lua"
+		"Ability3"	"pudge_meat_hook"
+
+		// 夜晚视野
+		"VisionNighttimeRange"	"1800"
+	}
+
+	
+
+}
