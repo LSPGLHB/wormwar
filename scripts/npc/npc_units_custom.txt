@@ -15,7 +15,7 @@
 		"MinimapIconSize"	"50"
 		"UnitLabel"	""
 		// 技能 1.
-		"Ability1"	"shoot_datadriven"
+		"Ability1"	""
 		// 技能 2.
 		"Ability2"	""
 		// 技能 3.
@@ -134,7 +134,7 @@
 	"niu"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Model"	"models/heroes/earth_spirit/stonesummon.vmdl"
+		"Model"	"models/heroes/snapfire/snapfire_magma_projectile.vmdl"
 		"ModelScale"	"1"
 		"ConsideredHero"            "1"  
 		// 小地图图标尺寸
@@ -483,7 +483,7 @@
 	    "BaseClass"                 "npc_dota_creature"
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" 
         "UnitLabel"					"mu"
-		"ModelScale"                "5"
+		"ModelScale"                "0.1"
 		"ShouldDoFlyHeightVisual"  "100"
         "MinimapIcon" ""
    		"MinimapIconSize" "50"
@@ -530,8 +530,8 @@
 	{
 	    "BaseClass"                "npc_dota_earth_spirit_stone"
         "Model"                		"models/heroes/snapfire/snapfire_magma_projectile.vmdl" 
-        "ModelScale"                "1"
-		"UnitLabel"					"shui"
+        "ModelScale"                "0.1"
+		"UnitLabel"					"hookUnit"
 		//"ShouldDoFlyHeightVisual"  "100"
         "MinimapIcon" ""
    		"MinimapIconSize" "50"
@@ -563,7 +563,7 @@
   		"MovementCapabilities" "DOTA_UNIT_CAP_MOVE_FLY"                
         "MovementSpeed" "0"                                             
         "MovementTurnRate" "1"                                           
-    	"StatusHealth"				"100"                             
+    	"StatusHealth"				"1"                             
     	"StatusHealthRegen" "0"                                     
     	"StatusMana" "0"
     	"StatusManaRegen" "0"

@@ -127,7 +127,9 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
 	local caster = keys.caster
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
-		if traveled_distance < max_distance then
+		local shootHp = shoot:GetHealth()--判断子弹是否被消灭
+
+		if traveled_distance < max_distance and shootHp> 0 then
 			--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
 			--shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100)) --发射高度
 			local newPos = shoot:GetOrigin() + direction * speed
@@ -179,6 +181,7 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
      end,0)
 end
 
+--技能爆炸
 function skillBoom(keys,shoot)
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration")

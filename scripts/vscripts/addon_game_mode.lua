@@ -160,10 +160,17 @@ function wormWar:OnEntityKilled (keys)
 		end
 	end
 	
-	if lable then
-		local position=unit:GetAbsOrigin()
-		local shoot = CreateUnitByName("yang", position, true, nil, nil, DOTA_TEAM_NEUTRALS)
-	end
+	--if lable == "mu" then
+		--unit:ForceKill(true)
+		--unit:AddNoDraw()
+		--local position=unit:GetAbsOrigin()
+		--local shoot = CreateUnitByName("niu", position, true, nil, nil, DOTA_TEAM_NEUTRALS)
+	--end
+	--if lable == "hookUnit" then
+		--local position=unit:GetAbsOrigin()
+		--local hookUnit = CreateUnitByName("hookUnit", position, true, nil, nil, DOTA_TEAM_NEUTRALS)
+
+	--end
 	
 end
 

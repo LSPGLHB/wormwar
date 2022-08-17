@@ -12,7 +12,7 @@
 		"Ability3"	"shoot_boom_pro_datadriven"
 		"Ability4"  "fire_storm_datadriven"
 		"Ability5"  "shoot_pro_datadriven"
-		"Ability6"  ""
+		"Ability6"  "running_fire_datadriven"
 		"Ability7"  ""
 	
 		"MovementTurnRate"	"1.0"

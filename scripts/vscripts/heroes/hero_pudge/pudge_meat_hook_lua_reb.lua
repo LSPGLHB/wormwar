@@ -84,10 +84,12 @@ function moveMeathook(shoot, traveled_distance, max_distance, direction, speed, 
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		--大循环判断发射后是否到尽头
-		if traveled_distance < max_distance then
+		local shootHp = shoot:GetHealth()--判断子弹是否被消灭
+		if traveled_distance < max_distance and shootHp > 0 then
 			shoot:SetAbsOrigin(shoot:GetAbsOrigin() + direction * speedTimer)
 			traveled_distance = traveled_distance + speedTimer
 			local hitTarget = shootHit(shoot)
+
 			-- 命中目标		
 			if hitTarget ~= nil then
 				--中弹声音
@@ -146,12 +148,13 @@ function moveMeathook(shoot, traveled_distance, max_distance, direction, speed, 
 				return nil
 			end
 		else
-			--超出射程没有命中并返回
+			--超出射程没有命中或被打爆，钩子返回
 			if shoot then 		
 				StopSoundOn( "Hero_Pudge.AttackHookExtend", caster)
-				EmitSoundOn( "Hero_Pudge.AttackHookExtend", caster)
-				
+				EmitSoundOn( "Hero_Pudge.AttackHookExtend", caster)				
+			
 				ParticleManager:SetParticleControlEnt( caster.nChainParticleFXIndex, 1, caster, PATTACH_POINT_FOLLOW, "attach_weapon_chain_rt", caster:GetOrigin() + caster.vHookOffset, true)
+
 				shoot:ForceKill(true)
 				shoot:AddNoDraw()	
 
