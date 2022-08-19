@@ -1770,7 +1770,18 @@
 				"var_type"			"FIELD_INTEGER"
 				"damage"			"100 200 300 400"
 			}
+			"05"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"spirit_count"		"4"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"skill_duration"		"10"
+			}
 		}
+
 		"precache"
 		{
 			"soundfile"					"soundevents/game_sounds_heroes/game_sounds_phoenix.vsndevts"
@@ -1799,9 +1810,11 @@
 			{
 				"ScriptFile"		"multi_stage_skills.lua"
 				"Function"			"stageOne"
+				
+				"spirit_count"		"%spirit_count"
 
-				"modifier_stage_name"	"modifier_stage_a_datadriven"
-				"sub_ability_name"		"multi_stage_skills_b_datadriven"
+				"modifier_stage_a_name"	"modifier_stage_a_datadriven"
+				"ability_b_name"		"multi_stage_skills_b_datadriven"
 			}
 		}
 
@@ -1811,16 +1824,16 @@
 			{
 				"ScriptFile"	"multi_stage_skills.lua"
 				"Function"		"LevelUpAbility"
-				"ability_name"	"multi_stage_skills_b_datadriven"
+				"ability_b_name"	"multi_stage_skills_b_datadriven"
 			}
 		}
 
 		"Modifiers"
 		{
-			"modifier_fire_spirit_stack_datadriven"
+			"modifier_stage_a_datadriven"
 			{
 				"IsBuff"	"1"
-				
+				"Duration"	"%skill_duration"
 				
 				"OnDestroy"
 				{
@@ -1829,7 +1842,7 @@
 						"ScriptFile"		"multi_stage_skills.lua"
 						"Function"			"initStage"
 						
-						"sub_ability_name"	"multi_stage_skills_b_datadriven"
+						"ability_b_name"	"multi_stage_skills_b_datadriven"
 					}
 				}
 			}
@@ -1883,6 +1896,16 @@
 				"var_type"			"FIELD_INTEGER"
 				"damage"			"100 200 300 400"
 			}
+			"05"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"spirit_count"		"4"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"skill_duration"		"10"
+			}
 		}
 		
 		//-------------------------------------------------------------------------------------------------------------
@@ -1899,19 +1922,22 @@
 				"ScriptFile"		"multi_stage_skills.lua"
 				"Function"			"LaunchFire"
 				
-				"modifier_stack_name"	"modifier_fire_spirit_stack_datadriven"
-				"main_ability_name"		"phoenix_fire_spirits_datadriven"
+				"modifier_stage_a_name"	"modifier_stage_a_datadriven"
+				"ability_a_name"		"multi_stage_skills_a_datadriven"
 			}
 			
 			"LinearProjectile"
 			{
 				"Target"			"POINT"
 				"EffectName"		"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_launch.vpcf"
-				"MoveSpeed"			"%spirit_speed"
+				"MoveSpeed"			"900"
 				"StartPosition"		"attach_attack1"
+				"damage"			"%damage"
 			}
 		}
 	}
+
+		
 
 
 }

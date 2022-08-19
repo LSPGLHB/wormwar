@@ -33,7 +33,7 @@ function WrathOfNature( event )
 		if not enemies then
 			print("No enemies on the map")
 			return
-		end
+	
 	else
 		enemies = FindUnitsInRadius(caster:GetTeamNumber(), target:GetAbsOrigin(), nil, FIND_UNITS_EVERYWHERE, DOTA_UNIT_TARGET_TEAM_ENEMY, 
 									   abilityTargetType, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES, FIND_CLOSEST, false)
