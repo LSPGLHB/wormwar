@@ -102,6 +102,7 @@ function createShoot(keys)
 		else
 			ability:EndCooldown()
 		end
+		
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
 		local skill_lv = caster:FindAbilityByName("shoot_pro_datadriven"):GetLevel() + 1

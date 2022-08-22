@@ -1,3 +1,5 @@
+require('shoot_init')
+
 function stageOne (keys)
     local caster	= keys.caster
 	local ability	= keys.ability
@@ -7,7 +9,7 @@ function stageOne (keys)
     local particleName = "particles/units/heroes/hero_phoenix/phoenix_fire_spirits.vpcf"
 	pfx = ParticleManager:CreateParticle( particleName, PATTACH_ABSORIGIN_FOLLOW, caster )
 	ParticleManager:SetParticleControl( pfx, 1, Vector( numSpirits, 0, 0 ) )
-
+	ParticleManager:SetParticleControl( pfx, 6, Vector( numSpirits, 0, 0 ) )
 	for i=1, numSpirits do
 		ParticleManager:SetParticleControl( pfx, 8+i, Vector( 1, 0, 0 ) )
 	end
@@ -36,6 +38,17 @@ function LaunchFire(keys)
 	currentStack = currentStack - 1
 	
 	caster:SetModifierStackCount( modifierName, ability_a_name, currentStack )
+
+	local position = caster:GetAbsOrigin()
+	local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
+	shoot:SetOwner(caster)
+	local skill_lv = caster:FindAbilityByName("shoot_pro_datadriven"):GetLevel() + 1
+	local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
+	shoot_sk:SetLevel(skill_lv)
+	shoot.power_lv = 0
+	shoot.power_flag = 0
+
+	--moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
 
 	-- Update the particle FX
 	local pfx = caster.fire_spirits_pfx

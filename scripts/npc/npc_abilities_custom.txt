@@ -1922,17 +1922,18 @@
 				"ScriptFile"		"multi_stage_skills.lua"
 				"Function"			"LaunchFire"
 				
-				"modifier_stage_a_name"	"modifier_stage_a_datadriven"
-				"ability_a_name"		"multi_stage_skills_a_datadriven"
+				"unitModel"					"shootUnit"
+				"modifier_stage_a_name"		"modifier_stage_a_datadriven"
+				"ability_a_name"			"multi_stage_skills_a_datadriven"
 			}
 			
 			"LinearProjectile"
 			{
 				"Target"			"POINT"
 				"EffectName"		"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_launch.vpcf"
-				"MoveSpeed"			"900"
+				"MoveSpeed"			"%stage_speed"
 				"StartPosition"		"attach_attack1"
-				"damage"			"%damage"
+				
 			}
 		}
 	}
