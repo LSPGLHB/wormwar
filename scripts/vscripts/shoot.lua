@@ -1,3 +1,4 @@
+require('shoot_init')
 function shootStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
@@ -111,13 +112,13 @@ function createShoot(keys)
 		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 		
 
-		moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
+		moveShoot(shoot, max_distance, direction, speed, ability, keys, particleID)
 		
 	else
 		keys.ability:RefundManaCost()
 	end	
 end
-
+--[[
 --子弹移动
 function moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
@@ -198,7 +199,7 @@ function shootHit(shoot, ability)
 	return 0
 
 end
-
+]]
 
 function shoot_start_cooldown( caster, charge_replenish_time )
 	caster.shoot_cooldown = charge_replenish_time

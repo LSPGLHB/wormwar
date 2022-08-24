@@ -31,7 +31,13 @@ function LaunchFire(keys)
     local caster	= keys.caster
 	local ability	= keys.ability
 	local modifierName	= keys.modifier_stage_a_name
-
+	local skillPoint = ability:GetCursorPosition()
+	local casterPoint = caster:GetAbsOrigin()
+	--local casterDirection = caster:GetForwardVector()
+	local shoot_speed = ability:GetLevelSpecialValueFor("stage_speed", ability:GetLevel() - 1)
+	local speed = shoot_speed * 0.02 * 1.7
+	local distance = (skillPoint - casterPoint ):Length2D()
+	local sDirection = (skillPoint - casterPoint ):Normalized() 
 	local ability_a_name = caster:FindAbilityByName( keys.ability_a_name )
 
 	local currentStack	= caster:GetModifierStackCount( modifierName, ability_a_name )
@@ -42,13 +48,15 @@ function LaunchFire(keys)
 	local position = caster:GetAbsOrigin()
 	local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 	shoot:SetOwner(caster)
-	local skill_lv = caster:FindAbilityByName("shoot_pro_datadriven"):GetLevel() + 1
-	local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
-	shoot_sk:SetLevel(skill_lv)
+	--local skill_lv = caster:FindAbilityByName("multi_stage_skills_a_datadriven"):GetLevel() + 1
+	--local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
+	--shoot_sk:SetLevel(skill_lv)
 	shoot.power_lv = 0
 	shoot.power_flag = 0
 
-	--moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
+
+
+	moveShoot(shoot, distance, sDirection, speed, ability, keys, nil)
 
 	-- Update the particle FX
 	local pfx = caster.fire_spirits_pfx

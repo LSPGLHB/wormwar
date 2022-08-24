@@ -139,7 +139,7 @@
 
 		// Damage.
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityDamage"					"125 250 375 500"
+		//"AbilityDamage"					"125 250 375 500"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -171,6 +171,11 @@
 				"var_type"					"FIELD_FLOAT"
 				"speed"						"1200"
 			}
+			"06"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"damage"						"125 250 375 500"
+			}
 		
 	
 		}
@@ -199,10 +204,11 @@
 				"Target"		"POINT"
 				"unitModel"		"shootUnit"
 				"particles1"    "particles/invoker_kid_debut_wex_orb_test.vpcf"
-				"particles2"    "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles_hit"    "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles1plus" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles1weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
-				"sound1"		"Hero_Gyrocopter.HomingMissile.Destroy"
+				"sound_hit"		"Hero_Gyrocopter.HomingMissile.Destroy"
+			
 			}
 		}
 
@@ -255,7 +261,7 @@
 
 		// Damage.
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityDamage"					"125 250 375 500"
+		//"AbilityDamage"					"125 250 375 500"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
@@ -1925,6 +1931,8 @@
 				"unitModel"					"shootUnit"
 				"modifier_stage_a_name"		"modifier_stage_a_datadriven"
 				"ability_a_name"			"multi_stage_skills_a_datadriven"
+				"particles_hit"    			"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"sound_hit"					"Hero_Gyrocopter.HomingMissile.Destroy"
 			}
 			
 			"LinearProjectile"
