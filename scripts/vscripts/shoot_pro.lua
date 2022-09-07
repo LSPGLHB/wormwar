@@ -1,3 +1,4 @@
+require('shoot_init')
 function shootStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
@@ -6,25 +7,25 @@ function shootStartCharge(keys)
 	local maximum_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 1 ) )
 	local charge_replenish_time = ability:GetLevelSpecialValueFor( "charge_replenish_time", ( ability:GetLevel() - 1 ) )
 	
-	caster.shoot_max_charges = maximum_charges
-	caster.shoot_charge_replenish_time = charge_replenish_time
+	caster.shoot_pro_max_charges = maximum_charges
+	caster.shoot_pro_charge_replenish_time = charge_replenish_time
 
 	--子弹数刷新
-	if caster.shoot_charges == nil then
-		caster.shoot_cooldown = 0.0
-		caster.shoot_charges = maximum_charges
+	if caster.shoot_pro_charges == nil then
+		caster.shoot_pro_cooldown = 0.0
+		caster.shoot_pro_charges = maximum_charges
 	else
 		local lastmax_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 2 ) )
-		caster.shoot_charges = caster.shoot_charges + maximum_charges - lastmax_charges
+		caster.shoot_pro_charges = caster.shoot_pro_charges + maximum_charges - lastmax_charges
 	end
 
 	ability:EndCooldown()
-	caster:SetModifierStackCount( counterModifierName, caster, caster.shoot_charges )
+	caster:SetModifierStackCount( counterModifierName, caster, caster.shoot_pro_charges )
 
 	--上弹初始化
 	if keys.ability:GetLevel() == 1 then	
 		ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-		caster.shoot_start_charge = false
+		caster.shoot_pro_start_charge = false
 		createCharges(keys)	
 	end
 end
@@ -38,26 +39,26 @@ function createCharges(keys)
 
 	Timers:CreateTimer(function()
 		-- Restore charge
-		if caster.shoot_start_charge and caster.shoot_charges < caster.shoot_max_charges then
-			local next_charge = caster.shoot_charges + 1
+		if caster.shoot_pro_start_charge and caster.shoot_pro_charges < caster.shoot_pro_max_charges then
+			local next_charge = caster.shoot_pro_charges + 1
 			caster:RemoveModifierByName( counterModifierName )
-			if next_charge ~= caster.shoot_max_charges then
-				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.shoot_charge_replenish_time } )
-				shoot_start_cooldown( caster, caster.shoot_charge_replenish_time )
+			if next_charge ~= caster.shoot_pro_max_charges then
+				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.shoot_pro_charge_replenish_time } )
+				shoot_start_cooldown( caster, caster.shoot_pro_charge_replenish_time )
 			else
 				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-				caster.shoot_start_charge = false
+				caster.shoot_pro_start_charge = false
 			end
 			-- Update stack
 			caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-			caster.shoot_charges = next_charge
+			caster.shoot_pro_charges = next_charge
 		end
 		-- Check if max is reached then check every seconds if the charge is used
-		if caster.shoot_charges < caster.shoot_max_charges then
-			caster.shoot_start_charge = true
-			return caster.shoot_charge_replenish_time
+		if caster.shoot_pro_charges < caster.shoot_pro_max_charges then
+			caster.shoot_pro_start_charge = true
+			return caster.shoot_pro_charge_replenish_time
 		else
-			caster.shoot_start_charge = false
+			caster.shoot_pro_start_charge = false
 			return nil
 		end
 	end)
@@ -67,7 +68,7 @@ end
 
 
 function createShoot(keys)
-	if keys.caster.shoot_charges > 0 then
+	if keys.caster.shoot_pro_charges > 0 then
 		local caster = keys.caster
 		local ability = keys.ability
 	
@@ -83,31 +84,32 @@ function createShoot(keys)
 		local position = caster:GetAbsOrigin() --+ starting_distance * direction
 
 		local counterModifierName = "modifier_shoot_counter_datadriven"
-		local maximum_charges = caster.shoot_max_charges
-		local charge_replenish_time = caster.shoot_charge_replenish_time
-		local next_charge = caster.shoot_charges - 1
+		local maximum_charges = caster.shoot_pro_max_charges
+		local charge_replenish_time = caster.shoot_pro_charge_replenish_time
+		local next_charge = caster.shoot_pro_charges - 1
 
 		--满弹情况下开枪启动充能
-		if caster.shoot_charges == maximum_charges then
+		if caster.shoot_pro_charges == maximum_charges then
 			caster:RemoveModifierByName( counterModifierName )
 			ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = charge_replenish_time } )
 			createCharges(keys)
 			shoot_start_cooldown( caster, charge_replenish_time )
 		end
 		caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-		caster.shoot_charges = next_charge
+		caster.shoot_pro_charges = next_charge
 		--无弹后启动技能冷却
-		if caster.shoot_charges == 0 then
-			ability:StartCooldown( caster.shoot_cooldown )
+		if caster.shoot_pro_charges == 0 then
+			ability:StartCooldown( caster.shoot_pro_cooldown )
 		else
 			ability:EndCooldown()
 		end
 		
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
-		local skill_lv = caster:FindAbilityByName("shoot_pro_datadriven"):GetLevel() + 1
-		local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
-		shoot_sk:SetLevel(skill_lv)
+		--此处可以设子弹的被动技能等级
+		--local skill_lv = caster:FindAbilityByName("shoot_pro_datadriven"):GetLevel() + 1
+		--local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
+		--shoot_sk:SetLevel(skill_lv)
 		shoot.power_lv = 0
 		shoot.power_flag = 0
 
@@ -124,13 +126,27 @@ function createShoot(keys)
 		ParticleManager:SetParticleControl( particleID, 2, Vector( shoot_speed, max_distance, 0 ) )
 
 	
-		moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
+		moveShoot(shoot, max_distance, direction, speed, ability, keys, particleID)
 		
 	else
 		keys.ability:RefundManaCost()
 	end	
 end
 
+function shoot_start_cooldown( caster, charge_replenish_time )
+	caster.shoot_pro_cooldown = charge_replenish_time
+	Timers:CreateTimer( function()
+			local current_cooldown = caster.shoot_pro_cooldown - 0.1
+			if current_cooldown > 0.1 then
+				caster.shoot_pro_cooldown = current_cooldown
+				return 0.1
+			else
+				return nil
+			end
+		end
+	)
+end
+--[[
 --子弹移动
 function moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
@@ -148,13 +164,13 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
 			--shoot:SetAbsOrigin(newPos)
 			--判断是否有加强
 			if shoot.power_lv > 0 and shoot.power_flag == 1 then
-				--ParticleManager:DestroyParticle(particleID, true)
-				--particleID = ParticleManager:CreateParticle(keys.particles1plus, PATTACH_ABSORIGIN_FOLLOW , shoot)
+				ParticleManager:DestroyParticle(particleID, true)
+				particleID = ParticleManager:CreateParticle(keys.particles_power, PATTACH_ABSORIGIN_FOLLOW , shoot)
 				shoot.power_flag = 0
 			end
 			if shoot.power_lv < 0 and shoot.power_flag == 1  then
-				--ParticleManager:DestroyParticle(particleID, true)
-				--particleID = ParticleManager:CreateParticle(keys.particles1weak, PATTACH_ABSORIGIN_FOLLOW , shoot)
+				ParticleManager:DestroyParticle(particleID, true)
+				particleID = ParticleManager:CreateParticle(keys.particles_weak, PATTACH_ABSORIGIN_FOLLOW , shoot)
 				shoot.power_flag = 0
 			end
 
@@ -163,33 +179,22 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
 			
 			-- 命中目标
 			if isHit == 1 then 
-				ParticleManager:CreateParticle(keys.particles2, PATTACH_ABSORIGIN_FOLLOW, shoot) --中弹动画
-
-				--EmitSoundOn(keys.sound1, shoot)--中弹声音
-				--shoot:AddNewModifier( caster, ability, "modifier_fire_storm_datadriven", { duration = duration } )
-				--shoot:ApplyDataDrivenThinker( caster, ability, "modifier_fire_storm_datadriven", { duration = duration } ) 
-
+				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) --中弹动画
 				ParticleManager:DestroyParticle(particleID, true)
-
-				--RenderParticles(keys,shoot)
-				--shoot:AddNewModifier( caster, ability, "modifier_fire_storm_datadriven", nil)
-				EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)
+				EmitSoundOn(keys.sound_hit, shoot)
 
 				shoot:ForceKill(true) 
 				shoot:AddNoDraw() 
-				
+			
 				return nil
 			end
 		else
 			--超出射程没有命中
 			if shoot then
-				--shoot:ApplyDataDrivenThinker( caster, ability, "modifier_fire_storm_datadriven", { duration = duration } ) 
-				--shoot:AddNewModifier( caster, ability, "modifier_fire_storm_datadriven", { duration = duration } )
+
 				ParticleManager:DestroyParticle(particleID, true)
 
-				--RenderParticles(keys,shoot)
-				--shoot:AddNewModifier( caster, ability, "modifier_fire_storm_datadriven", nil)
-				EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)
+
 				
 				shoot:ForceKill(true) 
 				shoot:AddNoDraw() 
@@ -221,33 +226,22 @@ function shootHit(shoot, ability)
 		--local isHero= v:IsHero()
 		--此处可判断类型
 		--实现伤害
-		--[[
+	
 		local damage = ability:GetAbilityDamage() + powerLv * 1000
 		if damage < 0 then
 			damage = 1  --伤害保底
 		end
-		]]
+		
 		return 1
 	end	
 	return 0
 
 end
 
+]]
 
-function shoot_start_cooldown( caster, charge_replenish_time )
-	caster.shoot_cooldown = charge_replenish_time
-	Timers:CreateTimer( function()
-			local current_cooldown = caster.shoot_cooldown - 0.1
-			if current_cooldown > 0.1 then
-				caster.shoot_cooldown = current_cooldown
-				return 0.1
-			else
-				return nil
-			end
-		end
-	)
-end
 
+--[[此处用于子弹被动技能触发，暂时废弃
 
 function DealDamage(keys)
 	local caster = keys.caster
@@ -310,7 +304,6 @@ function DealDamage(keys)
 	end
 end
 
-
 function RenderParticles(keys)
 	local caster = keys.caster
 	local ability = keys.ability
@@ -321,7 +314,6 @@ function RenderParticles(keys)
 	ParticleManager:SetParticleControl(ability.particle, 1, Vector(radius, radius, 0))
 	ParticleManager:SetParticleControl(ability.particle, 2, Vector(radius, radius, 0))
 end
-
-
+]]
 
 

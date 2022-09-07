@@ -3,7 +3,7 @@ function shootStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
 	local ability = keys.ability
-	local counterModifierName = "modifier_shoot_counter_datadriven"
+	local counterModifierName = keys.modifierCountName
 	local maximum_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 1 ) )
 	local charge_replenish_time = ability:GetLevelSpecialValueFor( "charge_replenish_time", ( ability:GetLevel() - 1 ) )
 	
@@ -23,10 +23,10 @@ function shootStartCharge(keys)
 	caster:SetModifierStackCount( counterModifierName, caster, caster.shoot_charges )
 
 	--上弹初始化
-	if keys.ability:GetLevel() == 1 then	
+	if keys.ability:GetLevel() == 1 then
 		ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
 		caster.shoot_start_charge = false
-		createCharges(keys)	
+		createCharges(keys)
 	end
 end
 
@@ -35,7 +35,7 @@ function createCharges(keys)
 
 	local caster = keys.caster
 	local ability = keys.ability
-	local counterModifierName = "modifier_shoot_counter_datadriven"
+	local counterModifierName = keys.modifierCountName
 
 	Timers:CreateTimer(function()
 		-- Restore charge
@@ -83,7 +83,7 @@ function createShoot(keys)
 		local direction = caster:GetForwardVector()
 		local position = caster:GetAbsOrigin() --+ starting_distance * direction
 
-		local counterModifierName = "modifier_shoot_counter_datadriven"
+		local counterModifierName = keys.modifierCountName
 		local maximum_charges = caster.shoot_max_charges
 		local charge_replenish_time = caster.shoot_charge_replenish_time
 		local next_charge = caster.shoot_charges - 1
@@ -108,7 +108,7 @@ function createShoot(keys)
 		shoot.power_lv = 0
 		shoot.power_flag = 0
 
-		local particleID = ParticleManager:CreateParticle(keys.particles1, PATTACH_ABSORIGIN_FOLLOW , shoot) 
+		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 		
 
@@ -117,6 +117,21 @@ function createShoot(keys)
 	else
 		keys.ability:RefundManaCost()
 	end	
+end
+
+
+function shoot_start_cooldown( caster, charge_replenish_time )
+	caster.shoot_cooldown = charge_replenish_time
+	Timers:CreateTimer( function()
+			local current_cooldown = caster.shoot_cooldown - 0.1
+			if current_cooldown > 0.1 then
+				caster.shoot_cooldown = current_cooldown
+				return 0.1
+			else
+				return nil
+			end
+		end
+	)
 end
 --[[
 --子弹移动
@@ -201,18 +216,6 @@ function shootHit(shoot, ability)
 end
 ]]
 
-function shoot_start_cooldown( caster, charge_replenish_time )
-	caster.shoot_cooldown = charge_replenish_time
-	Timers:CreateTimer( function()
-			local current_cooldown = caster.shoot_cooldown - 0.1
-			if current_cooldown > 0.1 then
-				caster.shoot_cooldown = current_cooldown
-				return 0.1
-			else
-				return nil
-			end
-		end
-	)
-end
+
 
 

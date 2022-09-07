@@ -6,26 +6,26 @@ function shootStartCharge(keys)
 	local maximum_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 1 ) )
 	local charge_replenish_time = ability:GetLevelSpecialValueFor( "charge_replenish_time", ( ability:GetLevel() - 1 ) )
 	
-	caster.shoot_pro_boom_max_charges = maximum_charges
-	caster.shoot_pro_boom_charge_replenish_time = charge_replenish_time
-	
+	caster.cannon_max_charges = maximum_charges
+	caster.cannon_charge_replenish_time = charge_replenish_time
+
 	--子弹数刷新
-	if caster.shoot_pro_boom_charges == nil then
-		caster.shoot_pro_boom_cooldown = 0.0
-		caster.shoot_pro_boom_charges = maximum_charges
+	if caster.cannon_charges == nil then
+		caster.cannon_cooldown = 0.0
+		caster.cannon_charges = maximum_charges
 	else
 		local lastmax_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 2 ) )
-		caster.shoot_pro_boom_charges = caster.shoot_pro_boom_charges + maximum_charges - lastmax_charges
+		caster.cannon_charges = caster.cannon_charges + maximum_charges - lastmax_charges
 	end
 
 	ability:EndCooldown()
-	caster:SetModifierStackCount( counterModifierName, caster, caster.shoot_pro_boom_charges )
+	caster:SetModifierStackCount( counterModifierName, caster, caster.cannon_charges )
 
 	--上弹初始化
-	if keys.ability:GetLevel() == 1 then	
+	if keys.ability:GetLevel() == 1 then
 		ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-		caster.shoot_pro_boom_start_charge = false
-		createCharges(keys)	
+		caster.cannon_start_charge = false
+		createCharges(keys)
 	end
 end
 
@@ -38,26 +38,26 @@ function createCharges(keys)
 
 	Timers:CreateTimer(function()
 		-- Restore charge
-		if caster.shoot_pro_boom_start_charge and caster.shoot_pro_boom_charges < caster.shoot_pro_boom_max_charges then
-			local next_charge = caster.shoot_pro_boom_charges + 1
+		if caster.cannon_start_charge and caster.cannon_charges < caster.cannon_max_charges then
+			local next_charge = caster.cannon_charges + 1
 			caster:RemoveModifierByName( counterModifierName )
-			if next_charge ~= caster.shoot_pro_boom_max_charges then
-				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.shoot_pro_boom_charge_replenish_time } )
-				shoot_start_cooldown( caster, caster.shoot_pro_boom_charge_replenish_time )
+			if next_charge ~= caster.cannon_max_charges then
+				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.cannon_charge_replenish_time } )
+				shoot_start_cooldown( caster, caster.cannon_charge_replenish_time )
 			else
 				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-				caster.shoot_pro_boom_start_charge = false
+				caster.cannon_start_charge = false
 			end
 			-- Update stack
 			caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-			caster.shoot_pro_boom_charges = next_charge
+			caster.cannon_charges = next_charge
 		end
 		-- Check if max is reached then check every seconds if the charge is used
-		if caster.shoot_pro_boom_charges < caster.shoot_pro_boom_max_charges then
-			caster.shoot_pro_boom_start_charge = true
-			return caster.shoot_pro_boom_charge_replenish_time
+		if caster.cannon_charges < caster.cannon_max_charges then
+			caster.cannon_start_charge = true
+			return caster.cannon_charge_replenish_time
 		else
-			caster.shoot_pro_boom_start_charge = false
+			caster.cannon_start_charge = false
 			return nil
 		end
 	end)
@@ -67,74 +67,111 @@ end
 
 
 function createShoot(keys)
-	if keys.caster.shoot_pro_boom_charges > 0 then
+	if keys.caster.cannon_charges > 0 then
 		local caster = keys.caster
 		local ability = keys.ability
 	
 		local shoot_speed = ability:GetLevelSpecialValueFor("speed", ability:GetLevel() - 1)
-		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
+		--local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
 
 		local speed = shoot_speed * 0.02
-		local traveled_distance = 0
-		--local point = ability:GetCursorPosition()
+		--local traveled_distance = 0
+		local CursorPoint = ability:GetCursorPosition()
 
 		--local starting_distance = ability:GetLevelSpecialValueFor( "starting_distance", ability:GetLevel() - 1 )
-		local direction = caster:GetForwardVector()
+		--local direction = caster:GetForwardVector()
 		local position = caster:GetAbsOrigin() --+ starting_distance * direction
 
+		local distance = CursorPoint - position
+
+		local ldistance = (distance):Length2D()
+		local sDirection = (distance):Normalized() 
+
 		local counterModifierName = keys.modifierCountName
-		local maximum_charges = caster.shoot_pro_boom_max_charges
-		local charge_replenish_time = caster.shoot_pro_boom_charge_replenish_time
-		local next_charge = caster.shoot_pro_boom_charges - 1
+		local maximum_charges = caster.cannon_max_charges
+		local charge_replenish_time = caster.cannon_charge_replenish_time
+		local next_charge = caster.cannon_charges - 1
 
 		--满弹情况下开枪启动充能
-		if caster.shoot_pro_boom_charges == maximum_charges then
+		if caster.cannon_charges == maximum_charges then
 			caster:RemoveModifierByName( counterModifierName )
 			ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = charge_replenish_time } )
 			createCharges(keys)
 			shoot_start_cooldown( caster, charge_replenish_time )
 		end
 		caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-		caster.shoot_pro_boom_charges = next_charge
+		caster.cannon_charges = next_charge
 		--无弹后启动技能冷却
-		if caster.shoot_pro_boom_charges == 0 then
-			ability:StartCooldown( caster.shoot_pro_boom_cooldown )
+		if caster.cannon_charges == 0 then
+			ability:StartCooldown( caster.cannon_cooldown )
 		else
 			ability:EndCooldown()
 		end
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-		ability.shoot = shoot
 		shoot:SetOwner(caster)
 		shoot.power_lv = 0
 		shoot.power_flag = 0
 
-	
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
+		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		
 
-
-	
-		moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
+		moveCannon(shoot, ldistance, sDirection, speed, ability, keys, particleID)
 		
 	else
 		keys.ability:RefundManaCost()
 	end	
 end
 
+
+function shoot_start_cooldown( caster, charge_replenish_time )
+	caster.cannon_cooldown = charge_replenish_time
+	Timers:CreateTimer( function()
+			local current_cooldown = caster.cannon_cooldown - 0.1
+			if current_cooldown > 0.1 then
+				caster.cannon_cooldown = current_cooldown
+				return 0.1
+			else
+				return nil
+			end
+		end
+	)
+end
+
 --子弹移动
-function moveShoot(shoot, traveled_distance, max_distance, direction, speed, ability, keys, particleID)
+function moveCannon(shoot, max_distance, direction, speed, ability, keys, particleID)
+	local traveled_distance = 0
+	local p = 2
+	local changshu = (max_distance / 30 / 2) ^ 2 / p + 100
+	local zIndex = changshu
+	local zStep = 0
+	local count = 0
+	local zControl = 0
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,100)) --发射高度
-	local caster = keys.caster
+	--shoot:SetAbsOrigin(GetGroundPosition(shoot:GetAbsOrigin(), shoot) + Vector(0,0,zIndex))
+	--shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,zIndex)) --发射高度
+	--local duration = ability:GetSpecialValueFor("duration")
+	--local caster = keys.caster
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
-		local shootHp = shoot:GetHealth()--判断子弹是否被消灭
-
-		if traveled_distance < max_distance and shootHp> 0 then
+		if traveled_distance < max_distance then
 			--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-			--shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100)) --发射高度
+			zStep = traveled_distance / 30
+			if traveled_distance < max_distance / 2 then
+				count = count + 1
+				
+			else
+				zControl = zControl + 100 / count
+			--	zIndex = -1 * zStep ^ 2 - zStep + 100  
+			end
+			zIndex = - (zStep - (max_distance / 30 / 2)) ^ 2 / p + changshu - zControl
+			
+			
+	
 			local newPos = shoot:GetOrigin() + direction * speed
 			FindClearSpaceForUnit( shoot, newPos, false )
-			shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100))
+			shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,zIndex)) --发射高度
+			--shoot:SetAbsOrigin(GetGroundPosition(shoot:GetAbsOrigin(), shoot) + Vector(0,0,zIndex))
 			--shoot:SetAbsOrigin(newPos)
 			--判断是否有加强
 			if shoot.power_lv > 0 and shoot.power_flag == 1 then
@@ -149,31 +186,19 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
 			end
 
 			traveled_distance = traveled_distance + speed
-			local isHit = shootHit(shoot, ability)
-			
-			-- 命中目标
-			if isHit == 1 then 
-				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) --中弹动画
-
-	
-				EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)--中弹声音
-
-
-				ParticleManager:DestroyParticle(particleID, true)
-			
-			
-				skillBoom(keys,shoot)
-				
-				return nil
-			end
-		else
-			--超出射程没有命中
-			if shoot then
-
-				ParticleManager:DestroyParticle(particleID, true)
-
-				skillBoom(keys,shoot)
 		
+		else
+			--到达射程
+			if shoot then
+				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
+				EmitSoundOn(keys.sound_hit, shoot)
+				if particleID then
+					ParticleManager:DestroyParticle(particleID, true)
+				end
+                
+                skillBoom(keys,shoot)
+
+				
 				return nil
 			end
 		end
@@ -181,7 +206,40 @@ function moveShoot(shoot, traveled_distance, max_distance, direction, speed, abi
      end,0)
 end
 
---技能爆炸
+--命中目标
+function shootHit(shoot, ability)
+	local position=shoot:GetAbsOrigin()
+	local powerLv = shoot.power_lv
+	--寻找目标
+	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NEUTRALS, 
+										position,
+										nil,
+										100,
+										DOTA_UNIT_TARGET_TEAM_FRIENDLY,
+										DOTA_UNIT_TARGET_ALL,
+										DOTA_UNIT_TARGET_FLAG_NONE,
+										FIND_ANY_ORDER,
+										false)
+	for k,v in pairs(aroundUnit) do
+		local lable=v:GetContext("name")
+		
+		--local isHero= v:IsHero()
+		--此处可判断类型
+		--实现伤害
+        --[[
+		local damage = ability:GetAbilityDamage() + powerLv * 1000
+		if damage < 0 then
+			damage = 1  --伤害保底
+		end
+
+		ApplyDamage({victim = v, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+		]]
+		return 1
+	end	
+	return 0
+
+end
+
 function skillBoom(keys,shoot)
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration")
@@ -208,46 +266,17 @@ function skillBoom(keys,shoot)
 	shoot:AddNoDraw() 
 end
 
---命中目标
-function shootHit(shoot, ability)
-	local position=shoot:GetAbsOrigin()
-	local powerLv = shoot.power_lv
-	--寻找目标
-	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NEUTRALS, 
-										position,
-										nil,
-										100,
-										DOTA_UNIT_TARGET_TEAM_FRIENDLY,
-										DOTA_UNIT_TARGET_ALL,
-										DOTA_UNIT_TARGET_FLAG_NONE,
-										FIND_ANY_ORDER,
-										false)
-	for k,v in pairs(aroundUnit) do
-		local lable=v:GetContext("name")
-		--local isHero= v:IsHero()
-		--此处可判断类型
-		--实现伤害
-		return 1
-	end	
-	return 0
-
+function RenderParticles(keys,shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
+	ability.level = ability:GetLevel()
+	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
+	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
+	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, radius, 0))
+	ParticleManager:SetParticleControl(particleBoom, 2, Vector(radius, radius, 0))
+	return particleBoom
 end
-
-
-function shoot_start_cooldown( caster, charge_replenish_time )
-	caster.shoot_pro_boom_cooldown = charge_replenish_time
-	Timers:CreateTimer( function()
-			local current_cooldown = caster.shoot_pro_boom_cooldown - 0.1
-			if current_cooldown > 0.1 then
-				caster.shoot_pro_boom_cooldown = current_cooldown
-				return 0.1
-			else
-				return nil
-			end
-		end
-	)
-end
-
 
 function DealDamage(keys,shoot)
 	local caster = keys.caster
@@ -305,20 +334,6 @@ function DealDamage(keys,shoot)
 		ability.pulse = nil
 	end
 end
-
-
-function RenderParticles(keys,shoot)
-	local caster = keys.caster
-	local ability = keys.ability
-	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
-	ability.level = ability:GetLevel()
-	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
-	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
-	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, radius, 0))
-	ParticleManager:SetParticleControl(particleBoom, 2, Vector(radius, radius, 0))
-	return particleBoom
-end
-
 
 
 

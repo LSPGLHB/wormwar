@@ -7,6 +7,7 @@ function stageOne (keys)
 	local numSpirits	= keys.spirit_count
 
     local particleName = "particles/units/heroes/hero_phoenix/phoenix_fire_spirits.vpcf"
+
 	pfx = ParticleManager:CreateParticle( particleName, PATTACH_ABSORIGIN_FOLLOW, caster )
 	ParticleManager:SetParticleControl( pfx, 1, Vector( numSpirits, 0, 0 ) )
 	ParticleManager:SetParticleControl( pfx, 6, Vector( numSpirits, 0, 0 ) )
@@ -48,9 +49,7 @@ function LaunchFire(keys)
 	local position = caster:GetAbsOrigin()
 	local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 	shoot:SetOwner(caster)
-	--local skill_lv = caster:FindAbilityByName("multi_stage_skills_a_datadriven"):GetLevel() + 1
-	--local shoot_sk = shoot:FindAbilityByName("fire_storm_boom_datadriven")
-	--shoot_sk:SetLevel(skill_lv)
+
 	shoot.power_lv = 0
 	shoot.power_flag = 0
 
@@ -79,7 +78,7 @@ end
 
 function LevelUpAbility(keys)
     local caster = keys.caster
-	local this_ability = keys.ability		
+	local this_ability = keys.ability
 	local this_abilityName = this_ability:GetAbilityName()
 	local this_abilityLevel = this_ability:GetLevel()
 
