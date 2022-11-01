@@ -94,6 +94,10 @@ function wormWar:InitGameMode()
 	self.CurrentScenario = nil
 	self.flNextTimerConsoleNotify = -1
 
+	
+
+	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
+
 	--GameRules:SetCustomGameSetupTimeout(0) --设置设置(赛前)阶段的超时。 0 = 立即开始, -1 = 永远 (直到FinishCustomGameSetup 被调用) 
 	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0)--设置自动开始前的等待时间。 
 	--GameRules:SetPreGameTime(0) --选择英雄与开始时间
@@ -122,6 +126,9 @@ function wormWar:InitGameMode()
 	ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(wormWar,"OnGameRulesStateChange"), self)
 	
 
+	--监听物品被捡起
+	ListenToGameEvent("dota_item_picked_up", Dynamic_Wrap(wormWar, "OnItemPickup"), self)
+
 
 
 	--初始化玩家数据
@@ -129,7 +136,64 @@ function wormWar:InitGameMode()
 		initPlayerStats()
 		temp_flag = 1
 	end
+
+
 end
+
+--死亡物品掉落
+function RollDrops(unit)
+	-- 读取上面读取的掉落KV文件，然后读取到对应的单位的定义文件
+    local DropInfo = GameRules.DropTable[unit:GetUnitName()]
+    if DropInfo then
+-- 循环所有需要掉落的物品
+        for item_name,chance in pairs(DropInfo) do
+            if RollPercentage(chance) then
+                -- 创建对应的物品
+				--print("Creating "..item_name)
+                local item = CreateItem(item_name, nil, nil)	--handle CreateItem(string item_name, handle owner, handle owner)
+                local pos = unit:GetAbsOrigin()
+				-- 用LaunchLoot函数可以有一个掉落动画，当然，也可以用CreateItemOnPositionSync来直接掉落。
+              	-- item:LaunchLoot(false, 50, 50, pos)
+				CreateItemOnPositionSync(pos,item)
+				GameRules.BaoshiPos = pos
+            end
+        end
+    end
+end
+
+
+--捡起物品监听
+function wormWar:OnItemPickup (keys)
+	--local unit = EntIndexToHScript(keys.dota_item_picked_up)
+	local itemname = keys.itemname
+	local PlayerID = keys.PlayerID
+	local ItemEntity = EntIndexToHScript(keys.ItemEntityIndex)
+	local HeroEntity = EntIndexToHScript(keys.HeroEntityIndex)
+	--print("itemname",itemname)
+	--print("PlayerID",PlayerID)
+	
+	local team = HeroEntity:GetTeam()
+	local pos = GameRules.BaoshiPos  --全局变量保存好掉落的宝石位置
+
+	if team == 2 and itemname == 'item_lvxie' then
+		--print('pos:',pos) --宝石位置
+		--print('drop:',itemname)
+		
+		HeroEntity:DropItemAtPositionImmediate(ItemEntity, pos)
+		
+
+	end
+
+	--print("ItemEntity",ItemEntity)
+	--print("pos",pos)
+	
+	
+	--RemoveItem()
+	--if itemname == 'item_sha_b'then
+		
+	--end
+end
+
 
 -- Evaluate the state of the game
 function wormWar:OnThink()
@@ -145,15 +209,19 @@ end
 function wormWar:OnEntityKilled (keys)
 	
 	--DeepPrintTable(keys)
-	local unit = EntIndexToHScript(keys.entindex_killed)			 
+	local unit = EntIndexToHScript(keys.entindex_killed)
     local name = unit:GetContext("name")
 	local lable = unit:GetUnitLabel()
 
+	RollDrops(unit)
 	--判断小怪被消灭，并刷新小怪
 	if name then
 		if name == "yang" then
 
 			createUnit("yang")
+
+
+
 		end
 		if name == "niu" then
 			createUnit("niu")
@@ -174,11 +242,14 @@ function wormWar:OnEntityKilled (keys)
 	
 end
 
+--导入页面文件
 function wormWar:OnGameRulesStateChange( keys )
 	local state = GameRules:State_Get()
 
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then
 			  --调用UI
-			  CustomUI:DynamicHud_Create(-1,"UIButton","file://{resources}/layout/custom_game/UI_button.xml",nil)
+			CustomUI:DynamicHud_Create(-1,"UIButton","file://{resources}/layout/custom_game/UI_button.xml",nil)
+			CustomUI:DynamicHud_Create(-1,"UITopMsg","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
 	end
 end
+

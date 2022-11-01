@@ -528,7 +528,7 @@
 
 	"cannonUnit"
 	{
-	    "BaseClass"              "npc_dota_earth_spirit_stone"// "npc_dota_creature"
+	    "BaseClass"               "npc_dota_creature" //"npc_dota_earth_spirit_stone"//
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" 
         "UnitLabel"					"cannon"
 		"ModelScale"                "0.1"

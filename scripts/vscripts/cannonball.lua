@@ -1,4 +1,4 @@
-function shootStartCharge(keys)
+function cannonStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
 	local ability = keys.ability
@@ -8,7 +8,7 @@ function shootStartCharge(keys)
 	
 	caster.cannon_max_charges = maximum_charges
 	caster.cannon_charge_replenish_time = charge_replenish_time
-
+	
 	--子弹数刷新
 	if caster.cannon_charges == nil then
 		caster.cannon_cooldown = 0.0
@@ -17,7 +17,7 @@ function shootStartCharge(keys)
 		local lastmax_charges = ability:GetLevelSpecialValueFor( "maximum_charges", ( ability:GetLevel() - 2 ) )
 		caster.cannon_charges = caster.cannon_charges + maximum_charges - lastmax_charges
 	end
-
+	
 	ability:EndCooldown()
 	caster:SetModifierStackCount( counterModifierName, caster, caster.cannon_charges )
 
@@ -27,6 +27,8 @@ function shootStartCharge(keys)
 		caster.cannon_start_charge = false
 		createCharges(keys)
 	end
+
+	
 end
 
 --启动上弹直到满弹
@@ -111,7 +113,7 @@ function createShoot(keys)
 		shoot:SetOwner(caster)
 		shoot.power_lv = 0
 		shoot.power_flag = 0
-
+		ability:ApplyDataDrivenModifier(shoot, shoot, "modifier_cannonball_datadriven", {})
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 		
@@ -141,28 +143,24 @@ end
 --子弹移动
 function moveCannon(shoot, max_distance, direction, speed, ability, keys, particleID)
 	local traveled_distance = 0
-	local p = 2
+	local p = 1.6 --抛物线弧度参数，越大越平
 	local changshu = (max_distance / 30 / 2) ^ 2 / p + 100
 	local zIndex = changshu
 	local zStep = 0
-	local count = 0
+	local count =  max_distance / 2 / speed
 	local zControl = 0
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-	--shoot:SetAbsOrigin(GetGroundPosition(shoot:GetAbsOrigin(), shoot) + Vector(0,0,zIndex))
-	--shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,zIndex)) --发射高度
-	--local duration = ability:GetSpecialValueFor("duration")
-	--local caster = keys.caster
+
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
-			--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
+			
 			zStep = traveled_distance / 30
-			if traveled_distance < max_distance / 2 then
-				count = count + 1
-				
-			else
+			
+			if traveled_distance > max_distance / 2 then
+			
 				zControl = zControl + 100 / count
-			--	zIndex = -1 * zStep ^ 2 - zStep + 100  
+			
 			end
 			zIndex = - (zStep - (max_distance / 30 / 2)) ^ 2 / p + changshu - zControl
 			
@@ -196,9 +194,8 @@ function moveCannon(shoot, max_distance, direction, speed, ability, keys, partic
 					ParticleManager:DestroyParticle(particleID, true)
 				end
                 
-                skillBoom(keys,shoot)
+                skillBoom(keys,shoot,"modifier_boom_storm_datadriven")
 
-				
 				return nil
 			end
 		end
@@ -206,41 +203,8 @@ function moveCannon(shoot, max_distance, direction, speed, ability, keys, partic
      end,0)
 end
 
---命中目标
-function shootHit(shoot, ability)
-	local position=shoot:GetAbsOrigin()
-	local powerLv = shoot.power_lv
-	--寻找目标
-	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NEUTRALS, 
-										position,
-										nil,
-										100,
-										DOTA_UNIT_TARGET_TEAM_FRIENDLY,
-										DOTA_UNIT_TARGET_ALL,
-										DOTA_UNIT_TARGET_FLAG_NONE,
-										FIND_ANY_ORDER,
-										false)
-	for k,v in pairs(aroundUnit) do
-		local lable=v:GetContext("name")
-		
-		--local isHero= v:IsHero()
-		--此处可判断类型
-		--实现伤害
-        --[[
-		local damage = ability:GetAbilityDamage() + powerLv * 1000
-		if damage < 0 then
-			damage = 1  --伤害保底
-		end
 
-		ApplyDamage({victim = v, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-		]]
-		return 1
-	end	
-	return 0
-
-end
-
-function skillBoom(keys,shoot)
+function skillBoom(keys,shoot,modifierName)
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration")
 	local interval = ability:GetSpecialValueFor("interval")
@@ -248,7 +212,7 @@ function skillBoom(keys,shoot)
 	local caster = keys.caster
 	local particleBoom = RenderParticles(keys,shoot) --粒子效果生成
 
-	ability:ApplyDataDrivenModifier(caster, shoot, "modifier_boom_storm_datadriven", {})--光环添加
+	ability:ApplyDataDrivenModifier(caster, shoot, modifierName, {})--光环添加
 
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
 		function ()

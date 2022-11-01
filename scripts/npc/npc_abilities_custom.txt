@@ -116,6 +116,7 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"mirana_arrow"
+		"HotKeyOverride"    "F"
 		
 		
 		"precache"
@@ -186,6 +187,7 @@
 			{
 				"ScriptFile"			"shoot.lua"
 				"Function"				"shootStartCharge"
+				"modifierCountName"	"modifier_shoot_counter_datadriven"
 			}
 		}
 		
@@ -240,7 +242,7 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"mirana_arrow"
-		
+		"HotKeyOverride"    "G"
 		
 		"precache"
 		{
@@ -350,6 +352,7 @@
 			{
 				"ScriptFile"			"shoot_pro.lua"
 				"Function"				"shootStartCharge"
+				"modifierCountName"		"modifier_shoot_pro_counter_datadriven"
 			}
 		}
 		
@@ -405,7 +408,7 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"mirana_starfall"
-		
+		"HotKeyOverride"    "H"
 		
 		"precache"
 		{
@@ -515,6 +518,8 @@
 			{
 				"ScriptFile"			"shoot_pro_boom.lua"
 				"Function"				"shootStartCharge"
+
+				"modifierCountName"		"modifier_shoot_pro_boom_counter_datadriven"
 			}
 		}
 		
@@ -592,7 +597,7 @@
 		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"puck_illusory_orb"
-		
+		"HotKeyOverride"    "C"
 		
 		"precache"
 		{
@@ -701,7 +706,9 @@
 			"RunScript"
 			{
 				"ScriptFile"			"cannonball.lua"
-				"Function"				"shootStartCharge"
+				"Function"				"cannonStartCharge"
+
+				"modifierCountName"		"modifier_cannonball_counter_datadriven"
 			}
 		}
 		
@@ -728,14 +735,27 @@
 				"particlesBoom" 	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
 				"particles_hit_dur" "0.7"
 
-				"modifierCountName"		"modifier_shoot_pro_boom_counter_datadriven"
+				"modifierCountName"		"modifier_cannonball_counter_datadriven"
 
 			}
 		}
 
 		"Modifiers"
 		{
-			"modifier_shoot_pro_boom_counter_datadriven"
+			"modifier_cannonball_datadriven"
+			{	
+				"Passive"				"1"
+				"IsHidden"				"1"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+
+				"States"
+				{
+					"MODIFIER_STATE_NO_HEALTH_BAR" "MODIFIER_STATE_VALUE_ENABLED"  //无血条
+					"MODIFIER_STATE_INVULNERABLE"	"MODIFIER_STATE_VALUE_ENABLED" //无敌
+				}
+			}
+			"modifier_cannonball_counter_datadriven"
 			{
 				"Passive"				"1"
 				"IsHidden"				"0"
@@ -780,7 +800,7 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"phoenix_sun_ray"
-		
+		"HotKeyOverride"    "V"
 		
 		"precache"
 		{
