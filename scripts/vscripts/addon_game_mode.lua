@@ -130,13 +130,17 @@ function wormWar:InitGameMode()
 	ListenToGameEvent("dota_item_picked_up", Dynamic_Wrap(wormWar, "OnItemPickup"), self)
 
 
+	--监听UI事件,这是新的事件管理器
+	CustomGameEventManager:RegisterListener( "myui_open", OnMyUIOpen )
+	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )
+	CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
+
 
 	--初始化玩家数据
 	if temp_flag == 0 then
 		initPlayerStats()
 		temp_flag = 1
 	end
-
 
 end
 
@@ -178,20 +182,9 @@ function wormWar:OnItemPickup (keys)
 	if team == 2 and itemname == 'item_lvxie' then
 		--print('pos:',pos) --宝石位置
 		--print('drop:',itemname)
-		
-		HeroEntity:DropItemAtPositionImmediate(ItemEntity, pos)
-		
 
+		HeroEntity:DropItemAtPositionImmediate(ItemEntity, pos)		
 	end
-
-	--print("ItemEntity",ItemEntity)
-	--print("pos",pos)
-	
-	
-	--RemoveItem()
-	--if itemname == 'item_sha_b'then
-		
-	--end
 end
 
 
@@ -249,7 +242,24 @@ function wormWar:OnGameRulesStateChange( keys )
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then
 			  --调用UI
 			CustomUI:DynamicHud_Create(-1,"UIButton","file://{resources}/layout/custom_game/UI_button.xml",nil)
-			CustomUI:DynamicHud_Create(-1,"UITopMsg","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
+			--CustomUI:DynamicHud_Create(-1,"UITopMsg","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
 	end
 end
 
+
+--传参案例
+function OnMyUIOpen( index,keys )
+	--index 是事件的index值
+	--keys 是一个table，固定包含一个触发的PlayerID，其余的是传递过来的数据
+	CustomUI:DynamicHud_Create(keys.PlayerID,"UITopMsg","file://{resources}/layout/custom_game/UI_button.xml",nil)
+end
+
+function OnJsToLua( index,keys )
+         print("pleyid:"..keys.pleyid.." magicname:"..tostring(keys.magicname))
+        -- CustomUI:DynamicHud_Destroy(keys.PlayerID,"UIButton")
+end
+
+function OnLuaToJs( index,keys )
+         CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(keys.PlayerID), "on_lua_to_js", {str="Lua"} )
+       --  CustomUI:DynamicHud_Destroy(keys.PlayerID,"UIButton")
+end
