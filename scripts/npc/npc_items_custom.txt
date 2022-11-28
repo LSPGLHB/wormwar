@@ -16,6 +16,33 @@
 		"ItemShareability"                "ITEM_FULLY_SHAREABLE"
 	}
 
+	"item_lvping"
+	{
+		"ID"                                        "2001"
+		"BaseClass"                                "item_datadriven"
+		"AbilityBehavior"                    "DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"AbilityTextureName"        	"item_lvping"
+		"ItemDroppable"                        "1"
+		"ItemSellable"                        "1"
+		"AbilityCooldown"				"2.0"
+
+		"ItemStackable"					"1"		//可堆叠
+		"ItemPermanent"                 "0"		//永久的
+		"ItemInitialCharges"            "1"     //一次一个
+
+		"OnSpellStart"
+		{
+			//用于使用后消失
+			"SpendCharge"
+    		{}
+			"RunScript"
+			{
+				"ScriptFile"	"get_magic.lua"
+				"Function"		"getRandomMagic"
+			}
+		}
+	}
+
 	"item_first"
 	{
 		"ID"                                        "1000"

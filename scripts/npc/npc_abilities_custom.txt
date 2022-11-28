@@ -3,7 +3,28 @@
 
 "DOTAAbilities"
 {
-	"Version"		"1"
+	//"Version"		"1"
+	"nothing_c"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName" "riki_smoke_screen"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"
+	}
+	"nothing_b"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName" "riki_smoke_screen"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"
+	}
+	"nothing_a"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName" "riki_smoke_screen"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"
+	}
 
 	"MyAbility_unit"
 	{
@@ -17,6 +38,7 @@
 		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"AbilityUnitTargetFlags"	"DOTA_UNIT_TARGET_FLAG_NOT_MAGIC_IMMUNE_ALLIES"
 		"AbilityUnitDamageType"	"DAMAGE_TYPE_PURE"
+		
 		// 施法前摇，如果技能行为(AbilityBehavior)是DOTA_ABILITY_BEHAVIOR_IMMEDIATE就无效了
 		// -------------------------------------------------------------------------------------------
 		// 施法前摇
@@ -69,6 +91,7 @@
 		"AbilityManaCost"	"5"
 		// 施法距离
 		"AbilityCastRange"	"0"
+		
 		"precache"
 		{
 			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
@@ -117,7 +140,7 @@
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"mirana_arrow"
 		"HotKeyOverride"    "F"
-		
+	
 		
 		"precache"
 		{
@@ -597,8 +620,11 @@
 		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"puck_illusory_orb"
-		"HotKeyOverride"    "C"
 		
+		"AbilityLevel" "C"
+		"iconSrc" 	"file://{images}/custom_game/ability_button/invoker_exort.png"
+		"AbilityShowName" "#UIButton1"
+
 		"precache"
 		{
 			"soundfile"			"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
@@ -800,8 +826,11 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"phoenix_sun_ray"
-		"HotKeyOverride"    "V"
 		
+		"AbilityLevel" "C"
+		"iconSrc"      "file://{images}/custom_game/ability_button/invoker_quas.png"
+		"AbilityShowName" "#UIButton2"
+
 		"precache"
 		{
 			"soundfile"			"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
@@ -1191,7 +1220,11 @@
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"disruptor_static_storm"
-		
+
+		"AbilityLevel" "C"
+		"iconSrc" "file://{images}/custom_game/ability_button/invoker_wex.png"
+		"AbilityShowName" "#UIButton3"
+
 		// Precache
 		//-------------------------------------------------------------------------------------------------------------
 		"precache"
@@ -1352,7 +1385,9 @@
 		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"disruptor_static_storm"
-		
+		"AbilityLevel" "C"
+		"iconSrc" "file://{images}/custom_game/ability_button/invoker_cold_snap.png"
+		"AbilityShowName" "#UIButton4"
 		// Precache
 		//-------------------------------------------------------------------------------------------------------------
 		"precache"
@@ -1761,7 +1796,9 @@
 		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"alchemist_acid_spray"
-		
+		"AbilityLevel" "C"
+		"iconSrc" "file://{images}/custom_game/ability_button/invoker_deafening_blast.png"
+		"AbilityShowName" "#UIButton5"
 		// Precache
 		//-------------------------------------------------------------------------------------------------------------
 		"precache"
@@ -2119,7 +2156,113 @@
 		}
 	}
 
+	speed_up_stack_datadriven
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
+		"AbilityTextureName"			"bloodseeker_thirst"
+
+
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" "FIELD_INTEGER"
+				"speed_up_per_stack" "5 5 5 5"
+			}
+		}
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"upGrade"
 		
+			}
+		}
+
+
+		"OnSpellStart"
+		{
+		
+			
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"speedUp"
+			}
+
+		}
+
+
+		"Modifiers"
+		{
+
+			"modifier_speed_up_buff"
+			{
+				"Passive"				"1"
+				"IsHidden"				"0"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+				
+				"Properties"
+				{
+			
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT" "%speed_up_per_stack"
+				}
+			}
+		}
+
+	}
+
+	speed_down_stack_datadriven
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
+		"AbilityTextureName"			"riki_smoke_screen"
+
+
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" "FIELD_INTEGER"
+				"speed_up_per_stack" "5 5 5 5"
+			}
+		}
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"upGradeDown"
+		
+			}
+		}
+
+
+		"OnSpellStart"
+		{
+		
+			
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"speedDown"
+			}
+
+		}
+
+
+		
+
+	}
 
 
 }

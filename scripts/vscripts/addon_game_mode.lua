@@ -1,6 +1,7 @@
 -- Generated from template
 
 require('player_init')
+require('get_magic')
 require('util')
 require('timers')
 require('physics')
@@ -94,10 +95,9 @@ function wormWar:InitGameMode()
 	self.CurrentScenario = nil
 	self.flNextTimerConsoleNotify = -1
 
-	
-
 	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
-
+	
+	GameRules.customAbilities = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")--导入技能表
 	--GameRules:SetCustomGameSetupTimeout(0) --设置设置(赛前)阶段的超时。 0 = 立即开始, -1 = 永远 (直到FinishCustomGameSetup 被调用) 
 	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0)--设置自动开始前的等待时间。 
 	--GameRules:SetPreGameTime(0) --选择英雄与开始时间
@@ -130,7 +130,8 @@ function wormWar:InitGameMode()
 	ListenToGameEvent("dota_item_picked_up", Dynamic_Wrap(wormWar, "OnItemPickup"), self)
 
 
-	--监听UI事件,这是新的事件管理器
+
+	--监听UI事件,这是按钮事件管理器
 	CustomGameEventManager:RegisterListener( "myui_open", OnMyUIOpen )
 	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )
 	CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -143,6 +144,8 @@ function wormWar:InitGameMode()
 	end
 
 end
+
+
 
 --死亡物品掉落
 function RollDrops(unit)
@@ -179,12 +182,15 @@ function wormWar:OnItemPickup (keys)
 	local team = HeroEntity:GetTeam()
 	local pos = GameRules.BaoshiPos  --全局变量保存好掉落的宝石位置
 
+	--不能拾取会掉落
 	if team == 2 and itemname == 'item_lvxie' then
 		--print('pos:',pos) --宝石位置
 		--print('drop:',itemname)
 
 		HeroEntity:DropItemAtPositionImmediate(ItemEntity, pos)		
 	end
+
+	
 end
 
 
@@ -206,6 +212,7 @@ function wormWar:OnEntityKilled (keys)
     local name = unit:GetContext("name")
 	local lable = unit:GetUnitLabel()
 
+	
 	RollDrops(unit)
 	--判断小怪被消灭，并刷新小怪
 	if name then
@@ -240,26 +247,13 @@ function wormWar:OnGameRulesStateChange( keys )
 	local state = GameRules:State_Get()
 
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then
+
+		GetAbilityList()
 			  --调用UI
-			CustomUI:DynamicHud_Create(-1,"UIButton","file://{resources}/layout/custom_game/UI_button.xml",nil)
+			--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
+			--CustomUI:DynamicHud_Create(-1,"UIPanelBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
 			--CustomUI:DynamicHud_Create(-1,"UITopMsg","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
 	end
 end
 
 
---传参案例
-function OnMyUIOpen( index,keys )
-	--index 是事件的index值
-	--keys 是一个table，固定包含一个触发的PlayerID，其余的是传递过来的数据
-	CustomUI:DynamicHud_Create(keys.PlayerID,"UITopMsg","file://{resources}/layout/custom_game/UI_button.xml",nil)
-end
-
-function OnJsToLua( index,keys )
-         print("pleyid:"..keys.pleyid.." magicname:"..tostring(keys.magicname))
-        -- CustomUI:DynamicHud_Destroy(keys.PlayerID,"UIButton")
-end
-
-function OnLuaToJs( index,keys )
-         CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(keys.PlayerID), "on_lua_to_js", {str="Lua"} )
-       --  CustomUI:DynamicHud_Destroy(keys.PlayerID,"UIButton")
-end

@@ -10,14 +10,14 @@
 		"Ability1"	"shoot_datadriven"
 		"Ability2"	"pudge_meat_hook_lua_reb"
 		"Ability3"	"shoot_boom_pro_datadriven"
-		"Ability4"  "fire_storm_datadriven"
-		"Ability5"  "cannon_datadriven"
-		"Ability6"  "multi_stage_skills_a_datadriven"
-		"Ability7"  "running_fire_datadriven"
+		"Ability4"  "nothing_c"//"fire_storm_datadriven"
+		"Ability5"  "speed_up_stack_datadriven"//"cannon_datadriven"
+		"Ability6"  "speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
+		"Ability7"  ""//"running_fire_datadriven"
 		"Ability8"  "multi_stage_skills_b_datadriven"
 	
 		"MovementTurnRate"	"1.0"
-		 "MovementSpeed"             "1000"
+		 "MovementSpeed"             "250"
 		// 夜晚视野
 		"VisionNighttimeRange"	"1800"
 	}
