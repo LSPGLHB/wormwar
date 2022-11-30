@@ -112,7 +112,7 @@ function createShoot(keys)
 		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 		
 
-		moveShoot(shoot, max_distance, direction, speed, ability, keys, particleID)
+		moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)
 		
 	else
 		keys.ability:RefundManaCost()

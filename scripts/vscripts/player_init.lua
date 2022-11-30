@@ -70,7 +70,7 @@ function createShoot(keys)
     local chaoxiang=unit:GetForwardVector()
     local position=unit:GetAbsOrigin()
     --local tempposition=position+chaoxiang*50
-    local new_unit = CreateUnitByName("littlebug", position, true, nil, nil, unit:GetTeam())
+    local new_unit = CreateUnitByName("huoren", position, true, nil, nil, unit:GetTeam())
     new_unit:SetForwardVector(chaoxiang)
     GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()

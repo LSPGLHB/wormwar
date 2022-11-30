@@ -261,22 +261,22 @@
 	{
 		"BaseClass"	"npc_dota_creature"
 		"Model"	"models/heroes/invoker/forge_spirit.vmdl"
-		"ModelScale"	"1.2"
+		"ModelScale"	"1.0"
 		// 小地图图标尺寸
 		"MinimapIconSize"	"50"
 		"UnitLabel"	"huoren"
 		// 技能 1.
-		"Ability1"	""
+		"Ability1"	"shoot_datadriven"
 		// 技能 2.
-		"Ability2"	""
+		"Ability2"	"speed_up_stack_datadriven"
 		// 技能 3.
-		"Ability3"	""
+		"Ability3"	"speed_down_stack_datadriven"
 		// 技能 4.
-		"Ability4"	""
+		"Ability4"	"bloodseeker_thirst"
 		// 技能 5.
-		"Ability5"	""
+		"Ability5"	"shoot_speed_up_stack_datadriven"
 		// 技能 6.
-		"Ability6"	""
+		"Ability6"	"shoot_speed_down_stack_datadriven"
 		// 技能 7 -最高就显示6个技能，后面添加的技能将不显示
 		"Ability7"	""
 		// 技能 8 -最高就显示6个技能，后面添加的技能将不显示
@@ -339,7 +339,7 @@
 		// 血条高度，缺省值为 "-1"，意味着使用默认的模型高度
 		"HealthBarOffset"	"-1"
 		// 移动类型
-		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_FLY"
+		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_GROUND"
 		// DOTA_UNIT_CAP_MOVE_NONE       不能移动
 		// DOTA_UNIT_CAP_MOVE_GROUND     地面
 		// DOTA_UNIT_CAP_MOVE_FLY        飞行
@@ -354,11 +354,11 @@
 		// 基础生命值
 		"StatusHealth"	"20000"
 		// 生命恢复速度，负值无效
-		"StatusHealthRegen"	"0"
+		"StatusHealthRegen"	"10"
 		// 基础魔法值，设置为0会导致没有魔法条
-		"StatusMana"	"0"
+		"StatusMana"	"100"
 		// 魔法恢复速度，负值无效
-		"StatusManaRegen"	"0"
+		"StatusManaRegen"	"2"
 		// 单位诞生时的魔法值，-1意味着默认满魔法值
 		"StatusStartingMana"	"-1"
 		"TeamName"	"DOTA_TEAM_NEUTRALS"

@@ -114,3 +114,88 @@ function shoot_start_cooldown( caster, charge_replenish_time )
 		end
 	)
 end
+
+
+function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)
+	local traveled_distance = 0
+	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
+	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,100)) --发射高度
+
+	--影响弹道的buff
+	local caster = keys.caster
+	local unit = keys.unit
+	local speed_up_per_stack = caster.speed_up_per_stack
+	if speed_up_per_stack == nil then
+		speed_up_per_stack = 0
+	end
+	local buff_modifier = "modifier_shoot_speed_up_buff"
+	local speed_up_stacks = 0
+	if caster:HasModifier(buff_modifier) then
+		speed_up_stacks = caster:GetModifierStackCount(buff_modifier, ability)
+		
+	end
+	speed = speed + speed_up_stacks * speed_up_per_stack * 0.02
+	
+
+	
+
+	--local duration = ability:GetSpecialValueFor("duration")
+	--local caster = keys.caster
+	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
+     function ()
+		if traveled_distance < max_distance then
+			--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
+			--shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100)) --发射高度
+			local newPos = shoot:GetOrigin() + direction * speed
+			FindClearSpaceForUnit( shoot, newPos, false )
+			shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100))
+			--shoot:SetAbsOrigin(newPos)
+			--判断是否有加强
+			if shoot.power_lv > 0 and shoot.power_flag == 1 then
+				ParticleManager:DestroyParticle(particleID, true)
+				particleID = ParticleManager:CreateParticle(keys.particles_power, PATTACH_ABSORIGIN_FOLLOW , shoot)
+				shoot.power_flag = 0
+			end
+			if shoot.power_lv < 0 and shoot.power_flag == 1  then
+				ParticleManager:DestroyParticle(particleID, true)
+				particleID = ParticleManager:CreateParticle(keys.particles_weak, PATTACH_ABSORIGIN_FOLLOW , shoot)
+				shoot.power_flag = 0
+			end
+
+			traveled_distance = traveled_distance + speed
+			local isHit = shootHit(shoot, ability)
+			
+			-- 命中目标
+			if isHit == 1 then
+				--中弹粒子效果
+				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
+				--中弹声音
+				EmitSoundOn(keys.sound_hit, shoot)
+
+				--消除粒子效果
+				if particleID then
+					ParticleManager:DestroyParticle(particleID, true)
+				end
+
+				--消除子弹以及中弹粒子效果
+				shoot:ForceKill(true)
+				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, keys.particles_hit_dur) --命中后动画持续时间
+
+				return nil
+			end
+		else
+			--超出射程没有命中
+			if shoot then
+				
+				if particleID then
+					ParticleManager:DestroyParticle(particleID, true)
+				end			
+				shoot:ForceKill(true)
+				shoot:AddNoDraw()
+				
+				return nil
+			end
+		end
+      return 0.02
+     end,0)
+end
