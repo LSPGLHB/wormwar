@@ -67,10 +67,10 @@ function shootHit(shoot, ability)
 	local position=shoot:GetAbsOrigin()
 	local powerLv = shoot.power_lv
 	--寻找目标
-	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NEUTRALS, 
+	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NOTEAM, 
 										position,
 										nil,
-										100,
+										200,
 										DOTA_UNIT_TARGET_TEAM_FRIENDLY,
 										DOTA_UNIT_TARGET_ALL,
 										DOTA_UNIT_TARGET_FLAG_NONE,
