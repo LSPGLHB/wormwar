@@ -1,0 +1,40 @@
+"DOTAAbilities"
+{
+	make_friend_datadriven
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"juggernaut_blade_dance"
+		// 技能行为
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		// 施法前摇
+		"AbilityCastPoint"	"0"
+		// "AbilityChannelTime" "1.5"       //持续施法事件
+		// 分别四个等级的CD
+		"AbilityCooldown"	"1.0 1.0 1.0 1.0"
+		"AbilityManaCost"	"5"
+		// 施法距离
+		"AbilityCastRange"	"0"
+		
+		"precache"
+		{
+			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
+		}
+
+		"OnSpellStart"
+		{
+			"AttachEffect"
+			{
+				"EffectName"	"particles\items_fx\blink_dagger_start.vpcf"
+				"EffectAttachType"	"follow_chest"
+				"Target"	"TARGET"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"make_friend.lua"
+				"Function"	"createFriend"
+				"Target"	"POINT"
+			}
+		}
+	}
+
+}

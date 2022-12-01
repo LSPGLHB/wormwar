@@ -1,0 +1,209 @@
+"DOTAAbilities"
+{
+    //抛物线炮弹
+	"cannon_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		
+		"BaseClass"				        "ability_datadriven"
+		//"AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
+		"AoERadius"						"500"
+		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"				"1"
+		"AbilityTextureName"			"puck_illusory_orb"
+		
+		"AbilityLevel" "C"
+		"iconSrc" 	"file://{images}/custom_game/ability_button/invoker_exort.png"
+		"AbilityShowName" "#UIButton1"
+
+		"precache"
+		{
+			"soundfile"			"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+		}
+	
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"3000"   //施法距离
+		"AbilityCastPoint"				"0.3"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.1"
+		
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"1"
+
+		// Damage.
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityDamage"					"125 250 375 500"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"maximum_charges"		"3 4 5 6"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"charge_replenish_time"	"10 9 8 3"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"max_distance"				"3000"
+			}
+		
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"starting_distance"			"0"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"speed"						"1200"
+			}
+			//技能主体爆炸区
+			"06"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"radius"					"500"
+			}
+			"07"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"pulses"					"20"
+			}
+			"08"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"damage_max"				"200 250 300 350"
+			}
+			"09"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"duration"					"5.0"
+			}
+			"10"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"interval"					"0.25"
+			}
+
+			"11"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"damage_increase"			"2.5 3.0 3.5 4.0"
+			}
+			"12"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"linger_duration"			"5"
+			}
+			"13"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"duration_scepter"			"7.0"
+			}
+			"14"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"pulses_scepter"			"28"
+			}
+		}
+		
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"			"cannonball.lua"
+				"Function"				"cannonStartCharge"
+
+				"modifierCountName"		"modifier_cannonball_counter_datadriven"
+			}
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"			"Hero_Mirana.ArrowCast"
+				"Target"				"CASTER"
+			}
+		
+			"RunScript"
+			{
+				"ScriptFile"	"cannonball.lua"
+				"Function"		"createShoot"
+				"Target"		"POINT"
+				"unitModel"		"cannonUnit"
+				
+				"particles_nm"    "particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles_hit"    "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
+				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
+				"particlesBoom" 	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+				"particles_hit_dur" "0.7"
+
+				"modifierCountName"		"modifier_cannonball_counter_datadriven"
+
+			}
+		}
+
+		"Modifiers"
+		{
+			"modifier_cannonball_datadriven"
+			{	
+				"Passive"				"1"
+				"IsHidden"				"1"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+
+				"States"
+				{
+					"MODIFIER_STATE_NO_HEALTH_BAR" "MODIFIER_STATE_VALUE_ENABLED"  //无血条
+					"MODIFIER_STATE_INVULNERABLE"	"MODIFIER_STATE_VALUE_ENABLED" //无敌
+				}
+			}
+			"modifier_cannonball_counter_datadriven"
+			{
+				"Passive"				"1"
+				"IsHidden"				"0"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+			}
+			
+			"modifier_boom_storm_datadriven"
+			{	
+				"Aura"					"modifier_boom_storm_debuff"
+				"Aura_Radius"			"%radius"
+				"Aura_Teams"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+				"Aura_Types"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_CREEP | DOTA_UNIT_TARGET_MECHANICAL"
+				"Duration"				"%duration"
+			}
+			
+			"modifier_boom_storm_debuff"
+			{
+				"IsDebuff"		"1"
+				"EffectName"	"particles/generic_gameplay/generic_silence.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"Duration"			"%linger_duration"
+				
+				"States"
+				{
+					"MODIFIER_STATE_SILENCED"		"MODIFIER_STATE_VALUE_ENABLED"
+				}
+			}
+		}
+	}
+}

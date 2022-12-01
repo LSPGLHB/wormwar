@@ -1,0 +1,128 @@
+//普通射击
+"DOTAAbilities"
+{
+	"shoot_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"				"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
+		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"				"1"
+		"AbilityTextureName"			"mirana_arrow"
+		"HotKeyOverride"    "F"
+	
+		
+		"precache"
+		{
+			"soundfile"			"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
+		}
+	
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"3000"   //施法距离
+		"AbilityCastPoint"				"0.3"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.1"
+		
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"1"
+
+		// Damage.
+		//-------------------------------------------------------------------------------------------------------------
+		//"AbilityDamage"					"125 250 375 500"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"maximum_charges"		"3 4 5 6"
+			}
+			"02"
+			{
+				"var_type"				"FIELD_FLOAT"
+				"charge_replenish_time"	"10 9 8 3"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"max_distance"				"3000"
+			}
+		
+			"04"
+			{
+				"var_type"					"FIELD_INTEGER"
+				"starting_distance"			"50"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"speed"						"1200"
+			}
+			"06"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"damage"						"125 250 375 500"
+			}
+		
+		}
+		
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"			"shoot.lua"
+				"Function"				"shootStartCharge"
+				"modifierCountName"	"modifier_shoot_counter_datadriven"
+			}
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"			"Hero_Mirana.ArrowCast"
+				"Target"				"CASTER"
+			}
+		
+			"RunScript"
+			{
+				"ScriptFile"		"shoot.lua"
+				"Function"			"createShoot"
+				"Target"			"POINT"
+				"unitModel"			"shootUnit"
+				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles_hit_dur" "0.7"
+				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
+				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"
+				"modifierCountName"	"modifier_shoot_counter_datadriven"
+			
+			}
+		}
+
+		
+		"Modifiers"
+		{
+			"modifier_shoot_counter_datadriven"
+			{
+				"Passive"				"1"
+				"IsHidden"				"0"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+			}
+	
+		}
+	}
+}

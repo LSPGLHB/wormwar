@@ -1,0 +1,93 @@
+"DOTAAbilities"
+{
+
+    shoot_speed_up_stack_datadriven
+    {
+        "BaseClass" 			"ability_datadriven"
+        "AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+        "SpellImmunityType" 	"SPELL_IMMUNITY_ENEMIES_YES"
+        "AbilityTextureName"	"morphling_morph_agi"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type" "FIELD_INTEGER"
+                "speed_up_per_stack" "10 10 10 10"
+            }
+        }
+
+        "OnUpgrade"
+        {
+            "RunScript"
+            {
+                "ScriptFile"	"shoot_speed_up.lua"
+                "Function"		"upGrade"
+        
+            }
+        }
+
+
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"	"shoot_speed_up.lua"
+                "Function"		"shootSpeedUp"
+            }
+
+        }
+
+        "Modifiers"
+        {
+
+            "modifier_shoot_speed_up_buff"
+            {
+                "Passive"				"1"
+                "IsHidden"				"0"
+                "IsPurgable"			"0"
+                "IsDebuff"				"0"
+                
+                
+            }
+        }
+    }
+
+    shoot_speed_down_stack_datadriven
+    {
+        "BaseClass" 			"ability_datadriven"
+        "AbilityBehavior"		"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+        "SpellImmunityType" 	"SPELL_IMMUNITY_ENEMIES_YES"
+        "AbilityTextureName"	"morphling_morph_str"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type" "FIELD_INTEGER"
+                "speed_up_per_stack" "10 10 10 10"
+            }
+        }
+
+        "OnUpgrade"
+        {
+            "RunScript"
+            {
+                "ScriptFile"	"shoot_speed_up.lua"
+                "Function"		"upGrade"
+        
+            }
+        }
+
+
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"	"shoot_speed_up.lua"
+                "Function"		"shootSpeedDown"
+            }
+
+        }
+    }
+}

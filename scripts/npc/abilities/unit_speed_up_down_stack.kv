@@ -1,0 +1,106 @@
+"DOTAAbilities"
+{
+    speed_up_stack_datadriven
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
+		"AbilityTextureName"			"bloodseeker_bloodrage"
+
+
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" "FIELD_INTEGER"
+				"speed_up_per_stack" "5 5 5 5"
+			}
+		}
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"upGrade"
+		
+			}
+		}
+
+
+		"OnSpellStart"
+		{
+		
+			
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"speedUp"
+			}
+
+		}
+
+
+		"Modifiers"
+		{
+
+			"modifier_speed_up_buff"
+			{
+				"Passive"				"1"
+				"IsHidden"				"0"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
+				
+				"Properties"
+				{
+			
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT" "%speed_up_per_stack"
+					
+				}
+			}
+		}
+
+	}
+
+	speed_down_stack_datadriven
+	{
+		"BaseClass" "ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING"
+		"SpellImmunityType" "SPELL_IMMUNITY_ENEMIES_YES"
+		"AbilityTextureName"			"riki_smoke_screen"
+
+
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type" "FIELD_INTEGER"
+				"speed_up_per_stack" "5 5 5 5"
+			}
+		}
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"upGradeDown"
+		
+			}
+		}
+
+
+		"OnSpellStart"
+		{
+
+			"RunScript"
+			{
+				"ScriptFile"	"speed_up.lua"
+				"Function"		"speedDown"
+			}
+
+		}
+	}
+}

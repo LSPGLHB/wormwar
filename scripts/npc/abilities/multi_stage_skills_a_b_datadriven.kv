@@ -1,0 +1,219 @@
+"DOTAAbilities"
+{    
+    multi_stage_skills_a_datadriven
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"				"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"FightRecapLevel"				"1"
+		"AbilityTextureName"			"phoenix_fire_spirits"
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"1400"
+		"AbilityCastPoint"				"0.01 0.01 0.01 0.01"
+		
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"4 4 3 3"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"8 9 10 11"
+
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"stage_duration"	"20 20 20 20"
+			}
+			"02"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"stage_speed"		"900 900 900 900"
+			}
+			"03"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"radius"			"175 175 175 175"
+			}
+			"04"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"damage"			"100 200 300 400"
+			}
+			"05"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"spirit_count"		"4"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"skill_duration"		"10"
+			}
+		}
+
+		"precache"
+		{
+			"soundfile"					"soundevents/game_sounds_heroes/game_sounds_phoenix.vsndevts"
+			"particle"					"particles/units/heroes/hero_phoenix/phoenix_fire_spirits.vpcf"
+			"particle"					"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_launch.vpcf"
+			"particle"					"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_ground.vpcf"
+			"particle"					"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_burn.vpcf"
+			"particle"					"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_burn_creep.vpcf"
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"		"Hero_Phoenix.FireSpirits.Cast"
+				"Target"			"CASTER"
+			}
+			
+			"ApplyModifier"
+			{
+				"Target"			"CASTER"
+				"ModifierName"		"modifier_stage_a_datadriven"
+			}
+			
+			"RunScript"
+			{
+				"ScriptFile"		"multi_stage_skills.lua"
+				"Function"			"stageOne"
+				
+				"spirit_count"		"%spirit_count"
+
+				"modifier_stage_a_name"	"modifier_stage_a_datadriven"
+				"ability_b_name"		"multi_stage_skills_b_datadriven"
+			}
+		}
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"multi_stage_skills.lua"
+				"Function"		"LevelUpAbility"
+				"ability_b_name"	"multi_stage_skills_b_datadriven"
+			}
+		}
+
+		"Modifiers"
+		{
+			"modifier_stage_a_datadriven"
+			{
+				"IsBuff"	"1"
+				"Duration"	"%skill_duration"
+				
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"		"multi_stage_skills.lua"
+						"Function"			"initStage"
+						
+						"ability_b_name"	"multi_stage_skills_b_datadriven"
+					}
+				}
+			}
+		}
+	}
+
+	multi_stage_skills_b_datadriven
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"				"ability_datadriven"
+
+		"AbilityType"					"DOTA_ABILITY_TYPE_BASIC"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		"AbilityTextureName"			"phoenix_launch_fire_spirit"
+
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"1400"
+		"AbilityCastPoint"				"0.01 0.01 0.01 0.01"
+		
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0 0 0 0"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0 0 0 0"
+
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"stage_duration"	"20 20 20 20"
+			}
+			"02"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"stage_speed"		"900 900 900 900"
+			}
+			"03"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"radius"			"175 175 175 175"
+			}
+			"04"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"damage"			"100 200 300 400"
+			}
+			"05"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"spirit_count"		"4"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"skill_duration"		"10"
+			}
+		}
+		
+		//-------------------------------------------------------------------------------------------------------------
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"		"Hero_Phoenix.FireSpirits.Launch"
+				"Target"			"CASTER"
+			}
+			
+			"RunScript"
+			{
+				"ScriptFile"		"multi_stage_skills.lua"
+				"Function"			"LaunchFire"
+				
+				"unitModel"					"shootUnit"
+				"modifier_stage_a_name"		"modifier_stage_a_datadriven"
+				"ability_a_name"			"multi_stage_skills_a_datadriven"
+				"particles_hit"    			"particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"sound_hit"					"Hero_Gyrocopter.HomingMissile.Destroy"
+			}
+			
+			"LinearProjectile"
+			{
+				"Target"			"POINT"
+				"EffectName"		"particles/units/heroes/hero_phoenix/phoenix_fire_spirit_launch.vpcf"
+				"MoveSpeed"			"%stage_speed"
+				"StartPosition"		"attach_attack1"
+				
+			}
+		}
+	}
+}

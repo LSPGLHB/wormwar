@@ -1,0 +1,98 @@
+"DOTAAbilities"
+{
+
+    "MyAbility_unit"
+	{
+		"BaseClass"	"ability_datadriven"
+		// 这里我们使用主宰的被动的那个图标
+		"AbilityTextureName"	"axe_battle_hunger"
+		// 基础的定义，如果技能是单位目标还是无目标，单位目标的类型是什么
+		// ------------------------------------------------------------------------------------------
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetFlags"	"DOTA_UNIT_TARGET_FLAG_NOT_MAGIC_IMMUNE_ALLIES"
+		"AbilityUnitDamageType"	"DAMAGE_TYPE_PURE"
+		
+		// 施法前摇，如果技能行为(AbilityBehavior)是DOTA_ABILITY_BEHAVIOR_IMMEDIATE就无效了
+		// -------------------------------------------------------------------------------------------
+		// 施法前摇
+		"AbilityCastPoint"	"0.0 0.0 0.0 0.0"
+		// 技能CD
+		// -------------------------------------------------------------------------------------------
+		// 分别四个等级的CD
+		"AbilityCooldown"	"1.0 1.0 1.0 1.0"
+		// 技能施法所需魔法值
+		// -------------------------------------------------------------------------------------------
+		// 这样写的话就是默认此技能所有等级的魔法值都是1，以上同理
+		"AbilityManaCost"	"1"
+		// 施法距离
+		"AbilityCastRange"	"1000"
+		"precache"
+		{
+			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
+		}
+		"OnSpellStart"
+		{
+			"Damage"
+			{
+				// 伤害类型，这里为纯粹
+				"Type"	"DAMAGE_TYPE_PURE"
+				// 这里是伤害值
+				"Damage"	"100"
+				// 这里是伤害的目标
+				"Target"	"TARGET"
+			}
+			"AttachEffect"
+			{
+				"EffectName"	"particles\items_fx\blink_dagger_start.vpcf"
+				"EffectAttachType"	"follow_chest"
+				"Target"	"TARGET"
+			}
+		}
+	}
+
+	"colonist_make_huoren"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityTextureName"	"juggernaut_blade_dance"
+		// 技能行为
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		// 施法前摇
+		"AbilityCastPoint"	"0"
+		// "AbilityChannelTime" "1.5"       //持续施法事件
+		// 分别四个等级的CD
+		"AbilityCooldown"	"1.0 1.0 1.0 1.0"
+		"AbilityManaCost"	"5"
+		// 施法距离
+		"AbilityCastRange"	"0"
+		
+		"precache"
+		{
+			"particle"	"particles\items_fx\blink_dagger_start.vpcf"
+		}
+		// 吟诵结束后发动事件
+		// "OnChannelSucceeded"{
+		// 	"SpawnUnit"{
+		// 		"UnitName" "huoren"
+		// 		"UnitCount" "1"
+		// 		"SpawnRadius" "50"
+		// 		}
+		// }
+		"OnSpellStart"
+		{
+			"AttachEffect"
+			{
+				"EffectName"	"particles\items_fx\blink_dagger_start.vpcf"
+				"EffectAttachType"	"follow_chest"
+				"Target"	"TARGET"
+			}
+			"RunScript"
+			{
+				"ScriptFile"	"player_init.lua"
+				"Function"	"createShoot"
+				"Target"	"POINT"
+			}
+		}
+	}
+}
