@@ -1,6 +1,7 @@
 -- Generated from template
 
 require('player_init')
+require('game_progress')
 require('get_magic')
 require('util')
 require('timers')
@@ -53,22 +54,24 @@ end
 function Precache( context )
 
 	print("BEGIN TO PRECACHE RESOURCE")
-
+--[[
 
 	local time = GameRules:GetGameTime()
+	
+
+	time = time - GameRules:GetGameTime()
+	print("DONE PRECACHEING IN:"..tostring(time).."Seconds")
+]]
 	PrecacheEveryThingFromKV( context )
 	PrecacheResource("particle_folder", "particles/buildinghelper", context)
 	PrecacheUnitByNameSync("npc_dota_hero_tinker", context)
-	time = time - GameRules:GetGameTime()
-	print("DONE PRECACHEING IN:"..tostring(time).."Seconds")
-
 	PrecacheResource("particle", "particles/econ/generic/generic_aoe_explosion_sphere_1/generic_aoe_explosion_sphere_1.vpcf", context)
 	PrecacheResource("particle_folder", "particles/test_particle", context)
 	-- Models can also be precached by folder or individually
 	-- PrecacheModel should generally used over PrecacheResource for individual models
 	PrecacheResource("model_folder", "particles/heroes/antimage", context)
-	PrecacheResource("model", "particles/heroes/viper/viper.vmdl", context)
-	PrecacheModel("models/heroes/viper/viper.vmdl", context)
+	--PrecacheResource("model", "particles/heroes/viper/viper.vmdl", context)
+	--PrecacheModel("models/heroes/viper/viper.vmdl", context)
 	-- Sounds can precached here like anything else
 	PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_gyrocopter.vsndevts", context)
 	-- Entire items can be precached by name
@@ -80,6 +83,29 @@ function Precache( context )
 	PrecacheUnitByNameSync("npc_dota_hero_ancient_apparition", context)
 	PrecacheUnitByNameSync("npc_dota_hero_enigma", context)
 
+--[[
+	print("Precache...")
+    local precache_list = require("precache")
+	for _, precache_item in pairs(precache_list) do
+		--预载precache.lua里的资源
+		if string.find(precache_item, ".vpcf") then
+			-- print('[precache]'..precache_item)
+			PrecacheResource( "particle",  precache_item, context)
+		end
+		if string.find(precache_item, ".vmdl") then 	
+			-- print('[precache]'..precache_item)
+			PrecacheResource( "model",  precache_item, context)
+		end
+		if string.find(precache_item, ".vsndevts") then
+			-- print('[precache]'..precache_item)
+			PrecacheResource( "soundfile",  precache_item, context)
+		end
+		if string.find(precache_item, ".v") == false then
+			-- print('[precache]'..precache_item)
+			PrecacheResource( "particle_folder",  precache_item, context)
+		end
+    end
+]]
 
 end
 
@@ -90,31 +116,57 @@ function Activate()
 end
 
 function wormWar:InitGameMode()
-	print( "Template addon is loaded." )
+	print( "============Init Game Mode============" )
+
+	--GameRules:SetHeroSelectionTime(20)--选英雄时间(可用)
+	GameRules:SetStrategyTime(0) --选英雄了后选装备时间（可用）
+	
+	--GameRules:SetShowcaseTime(20)
+	--GameRules:SetTreeRegrowTime(60) -- 设置树木重生时间
+	--GameRules:GetGameModeEntity():SetCustomBackpackSwapCooldown(0) --物品交换冷却
+	GameRules:GetGameModeEntity():SetCustomHeroMaxLevel(16) --英雄最高等级
+	GameRules:SetCustomGameEndDelay(1)--设置游戏结束等待时间
+
+	--GameRules:SetCustomGameSetupTimeout(1) --0后无法选英雄？？？设置设置(赛前)阶段的超时。 0 = 立即开始, -1 = 永远 (直到FinishCustomGameSetup 被调用) 
+	--GameRules:SetCustomGameSetupAutoLaunchDelay(0)--设置自动开始前的等待时间。 
+	GameRules.PreTime = 10
+	GameRules:SetPreGameTime(GameRules.PreTime) --选择英雄与开始时间，吹号角时间
+
+	--GameRules:SetHeroSelectPenaltyTime( 0.0 )
+
+
+
+--[[用了启动会跳出
+	GameRules:GetGameModeEntity():SetCustomBackpackSwapCooldown(0)
+	GameRules:GetGameModeEntity():SetPauseEnabled(false)
+    GameRules:GetGameModeEntity():SetFogOfWarDisabled(false)
+    GameRules:GetGameModeEntity():SetUnseenFogOfWarEnabled(false)
+    GameRules:GetGameModeEntity():SetBuybackEnabled(false)
+	GameRules:GetGameModeEntity():SetUseCustomHeroLevels(true)
+	GameRules:GetGameModeEntity():DisableHudFlip(true)
+	GameRules:GetGameModeEntity():SetSendToStashEnabled(false)
+]]
+
 	self._GameMode = GameRules:GetGameModeEntity()
 	self.CurrentScenario = nil
 	self.flNextTimerConsoleNotify = -1
 
 	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
-	
 	GameRules.customAbilities = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")--导入技能表
-	--GameRules:SetCustomGameSetupTimeout(0) --设置设置(赛前)阶段的超时。 0 = 立即开始, -1 = 永远 (直到FinishCustomGameSetup 被调用) 
-	--GameRules:SetCustomGameSetupAutoLaunchDelay( 0)--设置自动开始前的等待时间。 
-	--GameRules:SetPreGameTime(0) --选择英雄与开始时间
-	--GameRules:SetHeroSelectPenaltyTime( 0.0 )
+
 
 	--设置4*4队伍组合
-	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_GOODGUYS, 4 )
-	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_BADGUYS, 4 )
-	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_1, 4 )
-	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_2, 4 )
+	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_GOODGUYS, 5 )
+	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_BADGUYS, 5 )
+	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_1, 5 )
+	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_2, 5 )
 
 
 	--GameRules:SetPostGameTime( 0.0 )
 	--GameRules:SetGoldPerTick( 0 )
 	--GameRules:SetCustomGameAccountRecordSaveFunction( Dynamic_Wrap( wormWar, "OnSaveAccountRecord" ), self )
 
-	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
+	--GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
 
 	--监听单位被击杀
 	ListenToGameEvent("entity_killed", Dynamic_Wrap(wormWar, "OnEntityKilled"), self)
@@ -131,15 +183,19 @@ function wormWar:InitGameMode()
 
 
 
-	--监听UI事件,这是按钮事件管理器
-	CustomGameEventManager:RegisterListener( "myui_open", OnMyUIOpen )
-	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )
-	CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
+	--监听UI事件,这是按钮事件管理器 --(监听名，回调函数)
+	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )  
+	
+	--没用的家伙
+	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
+	--CustomGameEventManager:RegisterListener( "myui_open", OnMyUIOpen )
+	--CustomGameEventManager:RegisterListener( "uimsg_open", OnUIMsg )
 
 
 	--初始化玩家数据
 	if temp_flag == 0 then
 		initPlayerStats()
+		GetAbilityList()
 		temp_flag = 1
 	end
 
@@ -188,13 +244,13 @@ function wormWar:OnItemPickup (keys)
 		--print('drop:',itemname)
 
 		HeroEntity:DropItemAtPositionImmediate(ItemEntity, pos)		
-	end
-
-	
+	end	
 end
 
 
 -- Evaluate the state of the game
+--GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )配合使用
+--[[
 function wormWar:OnThink()
 	
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
@@ -203,7 +259,7 @@ function wormWar:OnThink()
 		return nil
 	end
 	return 1
-end
+end]]
 
 function wormWar:OnEntityKilled (keys)
 	
@@ -217,14 +273,10 @@ function wormWar:OnEntityKilled (keys)
 	--判断小怪被消灭，并刷新小怪
 	if name then
 		if name == "yang" then
-
-			createUnit("yang")
-
-
-
+			createUnit("niu",DOTA_TEAM_BADGUYS)
 		end
 		if name == "niu" then
-			createUnit("niu")
+			createUnit("niu",DOTA_TEAM_BADGUYS)
 		end
 	end
 	
@@ -237,7 +289,6 @@ function wormWar:OnEntityKilled (keys)
 	--if lable == "hookUnit" then
 		--local position=unit:GetAbsOrigin()
 		--local hookUnit = CreateUnitByName("hookUnit", position, true, nil, nil, DOTA_TEAM_NEUTRALS)
-
 	--end
 	
 end
@@ -245,15 +296,64 @@ end
 --导入页面文件
 function wormWar:OnGameRulesStateChange( keys )
 	local state = GameRules:State_Get()
-
-	if state == DOTA_GAMERULES_STATE_PRE_GAME then
-
-		GetAbilityList()
-			  --调用UI
-			--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
-			--CustomUI:DynamicHud_Create(-1,"UIPanelBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
-			--CustomUI:DynamicHud_Create(-1,"UITopMsg","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
+	--时间结束没有选的话，随机英雄
+	if state == DOTA_GAMERULES_STATE_STRATEGY_TIME then
+        for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
+                --if PlayerResource:GetPlayer(playerID) ~= nil and PlayerResource:IsValidPlayer(playerID) then
+                if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
+                        --print(PlayerResource:GetSelectedHeroID(playerID))
+                        if PlayerResource:GetSelectedHeroID(playerID) == -1 then
+                                PlayerResource:GetPlayer(playerID):MakeRandomHeroSelection()
+                        end
+                end
+        end
 	end
+
+	if state == DOTA_GAMERULES_STATE_PRE_GAME then		
+		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
+		--所有玩家金钱置零
+		for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
+			if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
+					PlayerResource:SetGold(playerID,0,true)			
+			end
+		end
+--[[
+		--开启游戏进程
+		local countPreTime = GameRules.PreTime
+		local sec = 1
+		--local gameTime = getNowTime()
+		Timers:CreateTimer(sec,function ()
+			for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
+				if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
+					OnGetTimeCount(-1,nil,countPreTime,nil,playerID)
+
+				end
+			end	
+			countPreTime = countPreTime - 1
+			if countPreTime == 0 then
+				gameProgress()
+				return nil
+			end		
+			return sec
+		end)
+]]
+	end
+
+	if state == DOTA_GAMERULES_STATE_HERO_SELECTION then
+		--print("DOTA_GAMERULES_STATE_HERO_SELECTION"..getNowTime())
+	end
+	if state == DOTA_GAMERULES_STATE_INIT then
+		--print("DOTA_GAMERULES_STATE_INIT"..getNowTime())
+	end
+	if state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
+
+		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
+		
+		gameProgress()
+		
+	end
+
+
 end
 
 

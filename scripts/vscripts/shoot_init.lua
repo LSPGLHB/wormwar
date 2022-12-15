@@ -26,7 +26,7 @@ function moveShoot(shoot, max_distance, direction, speed, ability, keys, particl
 			end
 
 			traveled_distance = traveled_distance + speed
-			local isHit = shootHit(shoot, ability)
+			local isHit = shootHit(shoot, keys)
 			
 			-- 命中目标
 			if isHit == 1 then
@@ -63,23 +63,66 @@ function moveShoot(shoot, max_distance, direction, speed, ability, keys, particl
      end,0)
 end
 
-function shootHit(shoot, ability)
+
+
+function shootHit(shoot, keys)
+	local caster = keys.caster
+	local ability = keys.ability
 	local position=shoot:GetAbsOrigin()
 	local powerLv = shoot.power_lv
+	local casterTeam = caster:GetTeam()
+	--local PlayerID = caster:GetPlayerID()
+	--PlayerResource:GetTeam(PlayerID)
+	
+	--[[
+	print("team========:"..team)
+	print("goodguy2:"..DOTA_TEAM_GOODGUYS)
+	print("badguy3:"..DOTA_TEAM_BADGUYS)
+	print("noteam5:"..DOTA_TEAM_NOTEAM)
+	print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1)
+	print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
+	]]
+	
 	--寻找目标
-	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NOTEAM, 
+	local searchRadius = 100
+	local aroundUnits = FindUnitsInRadius(casterTeam, 
 										position,
 										nil,
-										200,
+										searchRadius,
+										DOTA_UNIT_TARGET_TEAM_BOTH,
+										DOTA_UNIT_TARGET_ALL,
+										0,
+										0,
+										false)
+--[[另类搜索，无用代码
+    local aroundEnemyTeamUnit=FindUnitsInRadius(enemyTeam, 
+										position,
+										nil,
+										searchRadius,
 										DOTA_UNIT_TARGET_TEAM_FRIENDLY,
 										DOTA_UNIT_TARGET_ALL,
 										DOTA_UNIT_TARGET_FLAG_NONE,
 										FIND_ANY_ORDER,
-										false)
-	for k,v in pairs(aroundUnit) do
-		local lable=v:GetContext("name")
-		
-		--local isHero= v:IsHero()
+										false)	
+	
+	if #aroundNoTeamUnit > 0 then
+		print("aroundNoTeamUnit")						
+	end
+	if #aroundEnemyTeamUnit > 0 then
+		print("aroundEnemyTeamUnit")						
+	end
+									
+	if #aroundEnemyTeamUnit > 0 then
+		for k,v in pairs(aroundEnemyTeamUnit) do 
+			aroundNoTeamUnit[k] = v 
+		end 
+	end
+	]]	
+	
+	for k,unit in pairs(aroundUnits) do
+		local lable=unit:GetContext("name")
+		local unitTeam =unit:GetTeam()
+		--local isHero= unit:IsHero()
 		--此处可判断类型
 		--实现伤害
 		--此处有问题
@@ -93,9 +136,12 @@ function shootHit(shoot, ability)
 			damage = 1  --伤害保底
 		end
 	
-		ApplyDamage({victim = v, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-		
-		return 1
+		--遇到敌人实现伤害并返回撞击反馈
+		if(casterTeam ~= unitTeam) then
+			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+			return 1
+		end  
+
 	end	
 	return 0
 
@@ -132,7 +178,6 @@ function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, p
 	local speed_up_stacks = 0
 	if caster:HasModifier(buff_modifier) then
 		speed_up_stacks = caster:GetModifierStackCount(buff_modifier, ability)
-		
 	end
 	speed = speed + speed_up_stacks * speed_up_per_stack * 0.02
 	
@@ -163,7 +208,7 @@ function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, p
 			end
 
 			traveled_distance = traveled_distance + speed
-			local isHit = shootHit(shoot, ability)
+			local isHit = shootHit(shoot, keys)
 			
 			-- 命中目标
 			if isHit == 1 then

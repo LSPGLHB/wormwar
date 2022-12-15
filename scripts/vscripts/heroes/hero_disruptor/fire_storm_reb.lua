@@ -19,7 +19,7 @@ function DealDamage(keys)
 	local PosTemp = ability:GetCursorPosition()
 	local casterTeam = caster:GetTeam()
 	-- Finds all units in the radius and applies the pulse damage
-
+	print("casterTeam:::==="..casterTeam)
 	local units = FindUnitsInRadius(caster:GetTeam(),    --teamNumber
 									target:GetAbsOrigin(),   --postion
 									nil, 					--cacheUnit

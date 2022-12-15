@@ -1,6 +1,3 @@
-
-
-
 --取出n个随机技能
 function getRandomArrayList(arrayList, randomNumList)
 
@@ -23,7 +20,7 @@ function getRandomNumList(from, to, count)
     local randomNum = 0
     local randomBox = {}
     local tempBox = {}
-	local count2 = count
+	--local count2 = count
 
     for  i = from , to do
        table.insert(tempBox,i)
@@ -65,7 +62,7 @@ function getRandomMagic(keys)
 	local playerID = caster:GetPlayerID()
 	
 	OnMyUIOpen( playerID )
-    print("getRandomMagic========================playerID="..playerID)
+    --print("getRandomMagic========================playerID="..playerID)
     
 	local listLength = #randomAbilityList
 
@@ -84,8 +81,8 @@ function OnJsToLua( index,keys )
 		 --GetAbilityList()
 		 local playerID = keys.PlayerID
 		 CustomUI:DynamicHud_Destroy(playerID,"UIPanelBox")
-		 print("JSTOLUA")
-         print("playid:"..playerID.." magicname:"..tostring(keys.magicname))
+		 --print("JSTOLUA")
+         --print("playid:"..playerID.." magicname:"..tostring(keys.magicname))
 		--获取英雄实体
 		 local hHero = PlayerResource:GetSelectedHeroEntity(playerID)
 		 --local caster = keys.caster
@@ -123,12 +120,12 @@ function OnJsToLua( index,keys )
 		end
 		
 end
-
+--[[
 function OnLuaToJs( index,keys )
          CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(keys.PlayerID), "on_lua_to_js", {str="Lua"} )
        --  CustomUI:DynamicHud_Destroy(keys.PlayerID,"UIButton")
 end
-
+]]
 --把技能放到缓存区
 function GetAbilityList()
 	local abilityList = GameRules.customAbilities
