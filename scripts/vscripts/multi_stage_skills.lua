@@ -36,7 +36,7 @@ function LaunchFire(keys)
 	local casterPoint = caster:GetAbsOrigin()
 	--local casterDirection = caster:GetForwardVector()
 	local shoot_speed = ability:GetLevelSpecialValueFor("stage_speed", ability:GetLevel() - 1)
-	local speed = shoot_speed * 0.02 * 1.7
+	local speed = shoot_speed
 	local distance = (skillPoint - casterPoint ):Length2D()
 	local sDirection = (skillPoint - casterPoint ):Normalized() 
 	local ability_a_name = caster:FindAbilityByName( keys.ability_a_name )

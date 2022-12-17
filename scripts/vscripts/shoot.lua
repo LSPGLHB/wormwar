@@ -75,8 +75,8 @@ function createShoot(keys)
 		local shoot_speed = ability:GetLevelSpecialValueFor("speed", ability:GetLevel() - 1)
 		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
 
-		local speed = shoot_speed * 0.02
-		local traveled_distance = 0
+		local speed = shoot_speed
+		--local traveled_distance = 0
 		--local point = ability:GetCursorPosition()
 
 		--local starting_distance = ability:GetLevelSpecialValueFor( "starting_distance", ability:GetLevel() - 1 )

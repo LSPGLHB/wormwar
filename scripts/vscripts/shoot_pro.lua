@@ -75,7 +75,7 @@ function createShoot(keys)
 		local shoot_speed = ability:GetLevelSpecialValueFor("speed", ability:GetLevel() - 1)
 		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
 
-		local speed = shoot_speed * 0.02 * 1.7
+		local speed = shoot_speed 
 		local traveled_distance = 0
 		--local point = ability:GetCursorPosition()
 
@@ -123,7 +123,7 @@ function createShoot(keys)
 		ParticleManager:SetParticleAlwaysSimulate( particleID)
 		ParticleManager:SetParticleControlEnt(particleID, 0, caster, PATTACH_POINT_FOLLOW, "attach_hitloc", caster:GetAbsOrigin() + shootOffset, true)
 		ParticleManager:SetParticleControl( particleID, 1, shootTargetPos + shootOffset )
-		ParticleManager:SetParticleControl( particleID, 2, Vector( shoot_speed, max_distance, 0 ) )
+		ParticleManager:SetParticleControl( particleID, 2, Vector( speed, max_distance, 0 ) )
 
 	
 		moveShoot(shoot, max_distance, direction, speed, ability, keys, particleID)

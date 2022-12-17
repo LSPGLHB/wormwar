@@ -74,7 +74,7 @@ function createShoot(keys)
 		local shoot_speed = ability:GetLevelSpecialValueFor("speed", ability:GetLevel() - 1)
 		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
 
-		local speed = shoot_speed * 0.02
+		local speed = shoot_speed 
 		local traveled_distance = 0
 		--local point = ability:GetCursorPosition()
 
@@ -135,7 +135,7 @@ function moveShoot(shoot, traveled_distance, max_distance, speed, ability, keys,
 	local caster = keys.caster
 	local direction = caster:GetForwardVector()
 
-
+	speed = speed * 0.02
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
 	shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,100)) --发射高度
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),

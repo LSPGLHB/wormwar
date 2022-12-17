@@ -38,7 +38,7 @@
 		//转身速度
 		"MovementTurnRate"	"1.0"
 		//移动速度
-		 "MovementSpeed"             "150"
+		 "MovementSpeed"             "550"
 
 	
 		// 基础护甲

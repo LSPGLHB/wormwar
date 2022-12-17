@@ -239,7 +239,7 @@ function wormWar:OnItemPickup (keys)
 	local pos = GameRules.BaoshiPos  --全局变量保存好掉落的宝石位置
 
 	--不能拾取会掉落
-	if team == 2 and itemname == 'item_lvxie' then
+	if team == 2 and itemname == 'item_lvxie2' then
 		--print('pos:',pos) --宝石位置
 		--print('drop:',itemname)
 

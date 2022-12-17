@@ -22,11 +22,11 @@ end
 
 function gameRoundInit()
     print("gameRoundInit")
-    local initPoint1 = Entities:FindByName(nil,"player1") --找到实体
-    local initPoint2 = Entities:FindByName(nil,"player2") --找到实体
-    local initPoint3 = Entities:FindByName(nil,"player3") --找到实体
-    local initPoint4 = Entities:FindByName(nil,"player4") --找到实体
-    local initPoint5 = Entities:FindByName(nil,"player5") --找到实体
+    local initPoint1 = Entities:FindByName(nil,"youxia") --找到实体
+    local initPoint2 = Entities:FindByName(nil,"player2")--找到实体
+    local initPoint3 = Entities:FindByName(nil,"player3") 
+    local initPoint4 = Entities:FindByName(nil,"player4") 
+    local initPoint5 = Entities:FindByName(nil,"player5") 
     local initPoints = {}
     table.insert(initPoints,initPoint1)
     table.insert(initPoints,initPoint2)
@@ -37,8 +37,6 @@ function gameRoundInit()
     for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
         if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
 
-           
-           
             local initPoint = initPoints[1] --从1开始
             local initPos = initPoint:GetAbsOrigin()
             local player = PlayerResource:GetPlayer(playerID)
@@ -50,25 +48,23 @@ function gameRoundInit()
             print("goodguys:" .. DOTA_GC_TEAM_GOOD_GUYS)-- =0
             print("badguys:" .. DOTA_GC_TEAM_BAD_GUYS)-- =1
 
-            FindClearSpaceForUnit( hero, initPos, false )
+            --FindClearSpaceForUnit( hero, initPos, false )
 
             --镜头跟随英雄
+            --[[
             PlayerResource:SetCameraTarget(playerID,hero)           
             Timers:CreateTimer(0.1,function ()
                 PlayerResource:SetCameraTarget(playerID,nil)
                 return nil
             end)
+            ]]
+
+
 
            --[[
             local heros = HeroList:GetAllHeroes() 获取所有英雄
             for index, hero in ipairs(heros) do
 
-               
-
-                
-                
-               
-                
             end
             ]]
 
@@ -111,12 +107,12 @@ function prepareStep(gameRound,preTime)
     print("onStepLoop1========start")
 
     local step1 = 1
-    local interval = 1
+    local interval = 1.0
 
     gameRoundInit()
     
     --信息发送到前端
-    Timers:CreateTimer(0.1,function ()
+    Timers:CreateTimer(interval,function ()
         local gameTime = getNowTime()
         for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
             if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
@@ -142,7 +138,7 @@ function battleStep(gameRound,battleTime,gameRoundMax)
     --扫描进程
     local interval = 1.0
 
-    Timers:CreateTimer(0.1,function ()
+    Timers:CreateTimer(interval,function ()
         print("onStepLoop2========check")
         local gameTime = getNowTime()
         for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
