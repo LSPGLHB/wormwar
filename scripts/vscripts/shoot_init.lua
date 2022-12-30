@@ -165,7 +165,7 @@ function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, p
 
 				--消除子弹以及中弹粒子效果
 				shoot:ForceKill(true)
-				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, keys.particles_hit_dur) --命中后动画持续时间
+				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
 
 				return nil
 			end
@@ -238,7 +238,7 @@ function moveShoot(shoot, max_distance, direction, speed, ability, keys, particl
 
 				--消除子弹以及中弹粒子效果
 				shoot:ForceKill(true)
-				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, keys.particles_hit_dur) --命中后动画持续时间
+				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
 
 				return nil
 			end

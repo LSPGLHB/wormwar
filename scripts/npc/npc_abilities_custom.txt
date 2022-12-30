@@ -12,6 +12,7 @@
 #base abilities/shoot_boom_pro.kv
 #base abilities/cannon.kv
 #base abilities/running_fire.kv
+#base abilities/windrunner_powershot.kv
 
 
 
