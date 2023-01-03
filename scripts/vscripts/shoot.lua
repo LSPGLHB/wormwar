@@ -75,6 +75,7 @@ function createShoot(keys)
 		local shoot_speed = ability:GetLevelSpecialValueFor("speed", ability:GetLevel() - 1)
 		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
 
+
 		local speed = shoot_speed
 		--local traveled_distance = 0
 		--local point = ability:GetCursorPosition()
@@ -103,8 +104,10 @@ function createShoot(keys)
 		else
 			ability:EndCooldown()
 		end
+		--unitModel = shootUnit
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
+		shoot:SetContext("unitType",keys.shootType,0)
 		shoot.power_lv = 0
 		shoot.power_flag = 0
 

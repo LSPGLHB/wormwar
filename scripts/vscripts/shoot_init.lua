@@ -1,5 +1,5 @@
 require('items_power')
-function shootHit(shoot, keys)
+function shootHit(shoot, keys, particleID)
 	local caster = keys.caster
 	local ability = keys.ability
 	local position=shoot:GetAbsOrigin()
@@ -50,8 +50,18 @@ function shootHit(shoot, keys)
 	]]	
 	
 	for k,unit in pairs(aroundUnits) do
-		local lable=unit:GetContext("name")
-		local unitTeam =unit:GetTeam()
+		local name = unit:GetContext("name")
+		local lable =unit:GetUnitLabel()
+		local shootLable = "shootLabel"
+		local unitTeam = unit:GetTeam()
+		local unitType = unit:GetContext("unitType")
+
+		local unitHealth = unit:GetContext("isHealth")
+		local shootHealth = shoot:GetContext("isHealth")
+		
+
+		--print("unitType:",unitType)
+		
 		--local isHero= unit:IsHero()
 		--此处可判断类型
 		--实现伤害
@@ -70,11 +80,81 @@ function shootHit(shoot, keys)
 		if damage < 0 then
 			damage = 1  --伤害保底
 		end
-	
+		print("shootHealth:",shootHealth)
+		print("unitHealth:",unitHealth)
 		--遇到敌人实现伤害并返回撞击反馈
-		if(casterTeam ~= unitTeam) then
-			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-			return 1
+		if(casterTeam ~= unitTeam and shootHealth ~= "0") then
+			
+			if(shootLable == lable and unitHealth ~= "0") then --碰到的是子弹
+				local tempHealth = shoot:GetHealth() - unit:GetHealth()
+				print("tempHealth:",tempHealth)
+				if(tempHealth > 0) then
+
+
+
+					shoot:SetHealth(tempHealth)
+					unit:SetHealth(0)
+					unit:SetContext("isHealth","0",0)
+
+					ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, unit) 
+					EmitSoundOn(keys.sound_hit, unit)
+					unit:ForceKill(true)
+					GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () unit:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
+
+					return 0
+				else
+					if tempHealth == 0 then
+						print("tempHealth:======00")
+
+						unit:SetContext("isHealth","0",0) 
+						ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, unit) 
+						EmitSoundOn(keys.sound_hit, unit)
+						unit:ForceKill(true)
+						GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () unit:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
+					end
+
+					shoot:SetHealth(0)
+					shoot:SetContext("isHealth","0",0)
+					tempHealth = tempHealth * -1
+					unit:SetHealth(tempHealth)
+					
+					ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
+					EmitSoundOn(keys.sound_hit, shoot)
+					if particleID then
+						ParticleManager:DestroyParticle(particleID, true)
+					end
+					shoot:ForceKill(true)
+					GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
+					return 1
+				end
+
+			else
+				--中弹粒子效果
+				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
+				--中弹声音
+				EmitSoundOn(keys.sound_hit, shoot)
+
+				--消除粒子效果
+				if particleID then
+					ParticleManager:DestroyParticle(particleID, true)
+				end
+
+				--消除子弹以及中弹粒子效果
+				shoot:ForceKill(true)
+				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
+
+				ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+
+				return 1
+			end
+			
+			
+			
+			
+		else--相同队伍的触碰
+			if shootType ~= nil and shoot ~= unit and shootLable == lable then
+				print("shootType:",shootType)
+			end
 		end  
 
 	end	
@@ -149,25 +229,27 @@ function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, p
 			end
 
 			traveled_distance = traveled_distance + speed
-			local isHit = shootHit(shoot, keys)
+			
+			local isHit = shootHit(shoot, keys, particleID)
 			
 			-- 命中目标
+			local isHealth = shoot:GetContext("isHealth")
+			
 			if isHit == 1 then
-				--中弹粒子效果
-				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
-				--中弹声音
-				EmitSoundOn(keys.sound_hit, shoot)
-
-				--消除粒子效果
-				if particleID then
-					ParticleManager:DestroyParticle(particleID, true)
-				end
-
-				--消除子弹以及中弹粒子效果
-				shoot:ForceKill(true)
-				GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, 0.7)--keys.particles_hit_dur) --命中后动画持续时间
-
 				return nil
+			end
+
+			if isHealth ==0 then
+				if shoot then
+				
+					if particleID then
+						ParticleManager:DestroyParticle(particleID, true)
+					end			
+					shoot:ForceKill(true)
+					shoot:AddNoDraw()
+					
+					return nil
+				end
 			end
 		else
 			--超出射程没有命中
