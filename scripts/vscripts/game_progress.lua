@@ -44,9 +44,9 @@ function gameRoundInit()
 
             local heroTeam = PlayerResource:GetTeam(playerID)--hero:GetTeam()
        
-            print("heroTeam:".. heroTeam ) -- GOOD=2, BAD=3
-            print("goodguys:" .. DOTA_GC_TEAM_GOOD_GUYS)-- =0
-            print("badguys:" .. DOTA_GC_TEAM_BAD_GUYS)-- =1
+            --print("heroTeam:".. heroTeam ) -- GOOD=2, BAD=3
+           -- print("goodguys:" .. DOTA_GC_TEAM_GOOD_GUYS)-- =0
+           -- print("badguys:" .. DOTA_GC_TEAM_BAD_GUYS)-- =1
 
             --FindClearSpaceForUnit( hero, initPos, false )
 
@@ -132,14 +132,14 @@ end
 
 --战斗阶段
 function battleStep(gameRound,battleTime,gameRoundMax)
-    print("onStepLoop2========start")
+    --print("onStepLoop2========start")
     local step2 = 2
 
     --扫描进程
     local interval = 1.0
 
     Timers:CreateTimer(interval,function ()
-        print("onStepLoop2========check")
+        --print("onStepLoop2========check")
         local gameTime = getNowTime()
         for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
             if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
@@ -150,12 +150,12 @@ function battleStep(gameRound,battleTime,gameRoundMax)
         battleTime = battleTime - 1
  
         if battleTime == 0 then
-            print("onStepLoop2========over")
+            --print("onStepLoop2========over")
             gameRound = gameRound + 1
             if gameRound < gameRoundMax then
                 onStepLoop(gameRound)
             else
-                print("GAME========OVER")
+                --print("GAME========OVER")
                -- GameRules:SetGameWinner(GameRules.winTeam)
             end
 

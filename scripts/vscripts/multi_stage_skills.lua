@@ -55,7 +55,7 @@ function LaunchFire(keys)
 
 
 
-	moveShoot(shoot, distance, sDirection, speed, ability, keys, nil)
+	moveShootByBuff(shoot, distance, sDirection, speed, ability, keys, nil)
 
 	-- Update the particle FX
 	local pfx = caster.fire_spirits_pfx
@@ -106,3 +106,15 @@ function initStage(keys)
 	local ability_b_name	= keys.ability_b_name
 	caster:SwapAbilities( ability_a_name, ability_b_name, true, false )
 end
+
+--[[
+function power_charge( keys )
+	local ability = keys.ability
+	
+	-- Fail check
+	if not ability.power_charge_percent then
+		ability.power_charge_percent = 0.0
+	end
+	ability.power_charge_percent = ability.power_charge_percent + 0.1
+
+end]]

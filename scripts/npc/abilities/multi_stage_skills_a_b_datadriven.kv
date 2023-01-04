@@ -5,7 +5,7 @@
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
@@ -18,6 +18,7 @@
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilityCooldown"				"4 4 3 3"
+		"AbilityChannelTime"			"3.0 3.0 3.0 3.0"
 
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
@@ -73,6 +74,32 @@
 		{
 			"FireSound"
 			{
+				"Target"				"CASTER"
+				"EffectName"			"Ability.PowershotPull"
+			}
+
+			
+			"ApplyModifier"
+			{
+				"Target"				"CASTER"
+				"ModifierName"			"modifier_power_charge_datadriven"
+			}		
+
+		
+		}
+
+
+
+		"OnChannelSucceeded"
+		{
+			//"RemoveModifier"
+			//{
+			//	"Target"				"CASTER"
+			//	"ModifierName"			"modifier_power_charge_datadriven"
+			//}
+			
+			"FireSound"
+			{
 				"EffectName"		"Hero_Phoenix.FireSpirits.Cast"
 				"Target"			"CASTER"
 			}
@@ -83,17 +110,17 @@
 				"ModifierName"		"modifier_stage_a_datadriven"
 			}
 			
+
 			"RunScript"
 			{
 				"ScriptFile"		"multi_stage_skills.lua"
 				"Function"			"stageOne"
-				
 				"spirit_count"		"%spirit_count"
-
 				"modifier_stage_a_name"	"modifier_stage_a_datadriven"
 				"ability_b_name"		"multi_stage_skills_b_datadriven"
 			}
 		}
+
 
 		"OnUpgrade"
 		{
@@ -107,6 +134,25 @@
 
 		"Modifiers"
 		{
+
+			"modifier_power_charge_datadriven"
+			{
+				"Duration"				"3"
+			
+				"States"
+				{
+				//	"MODIFIER_STATE_DISARMED"			"MODIFIER_STATE_VALUE_ENABLED"	//无法攻击
+				//	"MODIFIER_STATE_ROOTED"				"MODIFIER_STATE_VALUE_ENABLED"	//禁止移动	
+					
+				//"MODIFIER_STATE_STUNNED"			"MODIFIER_STATE_VALUE_ENABLED"	
+				}
+				"Properties"
+				{
+				//	"MODIFIER_PROPERTY_DISABLE_TURNING "  "1"
+				}
+			}
+
+
 			"modifier_stage_a_datadriven"
 			{
 				"IsBuff"	"1"
