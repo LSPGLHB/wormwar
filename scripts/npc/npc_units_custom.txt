@@ -110,7 +110,7 @@
 		"StatusManaRegen"	"0"
 		// 单位诞生时的魔法值，-1意味着默认满魔法值
 		"StatusStartingMana"	"-1"
-		"TeamName"	"DOTA_TEAM_NEUTRALS"
+		//"TeamName"	"DOTA_TEAM_NEUTRALS"
 		// 攻击的伤害类型，攻击类型表如下：
 		"CombatClassAttack"	"DOTA_COMBAT_CLASS_ATTACK_HERO"
 		"CombatClassDefend"	"DOTA_COMBAT_CLASS_DEFEND_HERO"
@@ -141,7 +141,7 @@
 		"MinimapIconSize"	"50"
 		"UnitLabel"	""
 		// 技能 1.
-		"Ability1"	"fire_storm_boom_datadriven"
+		"Ability1"	""
 		// 技能 2.
 		"Ability2"	""
 		// 技能 3.
@@ -267,11 +267,11 @@
 		"UnitLabel"	"huoren"
 		"UnitFlag"                  "MKF"
 		// 技能 1.
-		"Ability1"	"shoot_datadriven"
+		"Ability1"	"stone_datadriven"
 		// 技能 2.
 		"Ability2"	"speed_up_stack_datadriven"
 		// 技能 3.
-		"Ability3"	"fire_storm_datadriven"
+		"Ability3"	"speed_down_stack_datadriven"
 		// 技能 4.
 		"Ability4"	"bloodseeker_thirst"
 		// 技能 5.
@@ -422,6 +422,55 @@
         "MovementSpeed" "0"                                             
         "MovementTurnRate" "1"                                           
     	"StatusHealth"		"10"                             
+    	"StatusHealthRegen" "0"                                     
+    	"StatusMana" "0"
+    	"StatusManaRegen" "0"
+   	                              
+    	"CombatClassAttack" "DOTA_COMBAT_CLASS_ATTACK_PIRECE"            
+    	"CombatClassDefend" "DOTA_COMBAT_CLASS_DEFEND_SOFT"        
+    	"UnitRelationshipClass" "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+    	"VisionDaytimeRange" "1500"
+	}
+
+	"shootUnit2"
+	{
+	    "BaseClass"                 "npc_dota_earth_spirit_stone"
+        "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" // "models/heroes/mirana/mirana_javelin.vmdl"
+        "UnitLabel"					"shootLabel"
+
+		"ModelScale"                "0.1"
+		"ShouldDoFlyHeightVisual"  "100"
+        "MinimapIcon" ""
+   		"MinimapIconSize" "50"
+    	"HealthBarOffset" "-1"
+    	"Ability1" ""  
+  	  	"Ability2" ""
+  	  	"Ability3" ""
+    	"Ability4" ""
+  	  	"Ability5" ""
+    	"Ability6" ""
+  	  	"Ability7" ""
+    	"Ability8" ""
+   	 	"ArmorPhysical" "3"                                             
+    	"MagicalResistance" "0"
+    	"AttackCapabilities" "DOTA_UNIT_CAP_NO_ATTACK"                 
+ 		"AttackDamageMin" "0"                                                  
+  		"AttackDamageMax" "0"                                                 
+ 		"AttackRate""0.45"                                         
+  		"AttackAnimationPoint" "1"                                  
+ 		"AttackAcquisitionRange" "500"                                 
+   		"AttackRange" "400"
+    	"ProjectileModel" ""
+    	"ProjectileSpeed" ""
+	    "BountyXP" "0"
+    	"BountyGoldMin" "0"                                          
+    	"BountyGoldMax" "0"
+    	"BoundsHullName" "DOTA_HULL_SIZE_SMALL"
+    	"RingRadius" "50"                                               
+  		"MovementCapabilities" "DOTA_UNIT_CAP_MOVE_FLY"                
+        "MovementSpeed" "0"                                             
+        "MovementTurnRate" "1"                                           
+    	"StatusHealth"		"2"                             
     	"StatusHealthRegen" "0"                                     
     	"StatusMana" "0"
     	"StatusManaRegen" "0"

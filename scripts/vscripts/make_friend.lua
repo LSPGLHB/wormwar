@@ -10,6 +10,5 @@ function createFriend(keys)
     new_unit:SetControllableByPlayer(player, true)
     new_unit:SetForwardVector(chaoxiang)
 
-    new_unit:SetContext("unitType","makehuoren",0)
 
 end

@@ -349,7 +349,7 @@ function wormWar:OnGameRulesStateChange( keys )
 
 		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
 		
-		gameProgress()
+		--gameProgress()
 		
 	end
 

@@ -10,7 +10,7 @@
 		"Ability1"	"shoot_datadriven"
 		"Ability2"	"multi_stage_skills_a_datadriven"//"powershot_datadriven"//"mirana_arrow"//"pudge_meat_hook_lua_reb"
 		"Ability3"	"make_friend_datadriven"
-		"Ability4"  "nothing_c"//"fire_storm_datadriven"
+		"Ability4"  "stone_datadriven"//"nothing_c"//"fire_storm_datadriven"
 		"Ability5"  "speed_up_stack_datadriven"//"cannon_datadriven"
 		"Ability6"  "speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
 		"Ability7"  "bloodseeker_thirst"//"running_fire_datadriven"
@@ -20,7 +20,7 @@
 
 
 
-		  "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"   // 碰撞边界类型，以下为单位尺寸参数:
+		"BoundsHullName"            "DOTA_HULL_SIZE_SMALL"   // 碰撞边界类型，以下为单位尺寸参数:
                                                             // 值                             Hammer中的单位半径
                                                             // DOTA_HULL_SIZE_SMALL            8
                                                             // DOTA_HULL_SIZE_REGULAR          16

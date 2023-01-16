@@ -107,19 +107,21 @@ function createShoot(keys)
 		--unitModel = shootUnit
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
-		shoot:SetContext("unitType",keys.shootType,0)
+		shoot.unit_type = keys.unitType
 		shoot.power_lv = 0
 		shoot.power_flag = 0
 
+		local cp = keys.cp
+		if cp == nil then
+			cp = 0
+		end
+		
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		--ParticleManager:SetParticleControlEnt(particleID, 0 , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		
-
-		moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)
-		
+		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)	
 	else
 		keys.ability:RefundManaCost()
-	end	
+	end
 end
 
 

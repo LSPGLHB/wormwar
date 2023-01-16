@@ -31,19 +31,26 @@ function DealDamage(keys)
 									false)                             --canGrowCacge
 
     for _, unit in ipairs(units) do
-		local lable =unit:GetUnitLabel()
+		local unitType =unit.unit_type --:GetContext("unitType")--GetUnitLabel()
+		--local shootType = shoot:GetContext("unitType")
+		local aoeType = keys.unitType
 		local unitTeam =unit:GetTeam()
 		
-		if unit.fireStormFlag == nil  then
-			if(lable == 'lei') then
+
+		--fireStormFlag:标记该aoe是否已经起作用
+		--power_lv：标记增强等级
+		--power_flag: 标记是否实现增强效果
+		if unit.fireStormPowerFlag == nil  then
+			print("aoe-unit-type:",aoeType,"-",unitType)
+			if(unitType == 'lei') then
 				unit.power_lv =  unit.power_lv + 1
 				unit.power_flag = 1
 			end
-			if (lable == 'mu') then
+			if (unitType == 'huo') then
 				unit.power_lv =  unit.power_lv - 1
 				unit.power_flag = 1
 			end
-			unit.fireStormFlag = 1;
+			unit.fireStormPowerFlag = 1;
 		end
 		
 		if(casterTeam ~= unitTeam) then

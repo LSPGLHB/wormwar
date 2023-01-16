@@ -8,11 +8,14 @@
 #base abilities/multi_stage_skills_a_b_datadriven.kv
 #base abilities/make_friend.kv
 #base abilities/shoot.kv
+#base abilities/shoot2.kv
 #base abilities/shoot_pro.kv
 #base abilities/shoot_boom_pro.kv
 #base abilities/cannon.kv
 #base abilities/running_fire.kv
 #base abilities/windrunner_powershot.kv
+
+#base abilities/stone.kv
 
 
 
@@ -580,6 +583,7 @@
 					{
 						"ScriptFile"	"heroes/hero_disruptor/fire_storm_reb.lua"
 						"Function"		"DealDamage"
+						"unitType"      "feng"
 					}
 				}
 				

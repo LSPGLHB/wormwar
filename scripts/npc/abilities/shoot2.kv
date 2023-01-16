@@ -1,7 +1,7 @@
 //普通射击
 "DOTAAbilities"
 {
-	"shoot_datadriven"
+	"shoot2_datadriven"
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
@@ -13,7 +13,7 @@
 		//"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"mirana_arrow"
-
+		"HotKeyOverride"    "F"
 	
 		
 		"precache"
@@ -46,12 +46,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"maximum_charges"		"3 4 5 6"
+				"maximum_charges"		"13 14 15 16"
 			}
 			"02"
 			{
-				"var_type"					"FIELD_FLOAT"
-				"charge_replenish_time"		"10 9 8 3"
+				"var_type"				"FIELD_FLOAT"
+				"charge_replenish_time"	"3 3 3 3"
 			}
 			"03"
 			{
@@ -67,7 +67,7 @@
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed"						"1200"
+				"speed"						"500"
 			}
 			"06"
 			{
@@ -100,8 +100,8 @@
 				"ScriptFile"		"shoot.lua"
 				"Function"			"createShoot"
 				"Target"			"POINT"
-				"unitModel"			"shootUnit"
-				"unitType"          "lei"
+				"unitModel"			"shootUnit2"
+				"unitType"         	"huo"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
@@ -109,7 +109,7 @@
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
 				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"
 				"modifierCountName"	"modifier_shoot_counter_datadriven"
-				"cp"				"0"
+			
 			}
 		}
 
