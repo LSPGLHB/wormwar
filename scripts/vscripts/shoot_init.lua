@@ -81,7 +81,7 @@ function shootHit(shoot, keys, hitOver)
 			end
 		else--相同队伍的触碰    	 
 			 --不搜索自己，标签为子弹
-			if shoot ~= unit and shootLable == lable and isHitUnit then			
+			if shoot ~= unit and shootLable == lable and isHitUnit then
 				--fireStormFlag:标记该aoe是否已经起作用
 				if unit.shootPowerFlag == nil  then
 					reinforceEach(unit,shoot,nil) --加强或削弱运算
@@ -188,104 +188,6 @@ function moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, p
 end
 
 
-function beatBackUnit(keys,shoot,hitTarget,flag)
-	local caster = keys.caster
-	local ability = keys.ability
-	local beat_back_one = ability:GetSpecialValueFor("beat_back_one")
-	local beat_back_speed = ability:GetSpecialValueFor("beat_back_speed")
-	local beat_back_two = ability:GetSpecialValueFor("beat_back_two")
-	
-	--local control_time = beat_back_aoe / beat_back_speed * 1.5
-	local hitTargetDebuff = keys.hitTargetDebuff
-	--print("hitTargetDebuff:",hitTargetDebuff)
-	--hitTarget:AddNewModifier(caster, ability, hitTargetDebuff, {Duration = control_time} )--需要调用lua的modefier
-	ability:ApplyDataDrivenModifier(caster, hitTarget, hitTargetDebuff, {Duration = -1})
-
-	
-	if flag == "one" then
-		shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight*-1))--把子弹的高度降到0
-	end
-	local shootPos = shoot:GetAbsOrigin()
-	local targetPos = hitTarget:GetAbsOrigin()
-	
-	local beatBackDirection =  (targetPos - shootPos):Normalized() --这里不同单位碰撞的结果不一样
-	--print("beatBackDirection:===",beatBackDirection)
-	local interval = 0.02
-	local speedmod = beat_back_speed * interval
-	local bufferTempDis = hitTarget:GetPaddedCollisionRadius()
-	local traveled_distance = 0
-	--记录击退时间
-	local beatTime = GameRules:GetGameTime()
-	hitTarget.lastBeatBackTime = beatTime
-	local beat_back_distance
-
-	if flag == "one" then
-		beat_back_distance = beat_back_one
-		
-	end
-	if flag == "two" then
-		beat_back_distance = beat_back_two
-	end
-	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
-	function ()
-		if traveled_distance < beat_back_distance and beatTime == hitTarget.lastBeatBackTime then --如果击退时间没被更改继续执行
-			local newPosition = hitTarget:GetAbsOrigin() + Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
-			local tempLastDis = beat_back_distance - traveled_distance
-			--中途可穿模，最后不能穿
-			if tempLastDis > bufferTempDis then
-				hitTarget:SetAbsOrigin(newPosition)
-			else
-				FindClearSpaceForUnit( hitTarget, newPosition, false )
-			end
-			traveled_distance = traveled_distance + speedmod
-
-			--print("ininin=====",flag,"==",newPosition,"====",GameRules:GetGameTime())
-
-			if flag == "one" then
-				checkSecondHit(keys,hitTarget)
-			end
-		else
-			hitTarget:InterruptMotionControllers( true )
-			hitTarget:RemoveModifierByName(hitTargetDebuff)		
-			hitTarget.stoneBeatBack = 0
-			--EmitSoundOn( "Hero_Pudge.AttackHookRetractStop", caster)
-			return nil
-		end
-		return interval
-	end,0)
-end
-
-
-function checkSecondHit(keys,shoot)
-	local caster = keys.caster
-	--local ability = keys.ability
-	local position = shoot:GetAbsOrigin()
-	local casterTeam = caster:GetTeam()
-	local searchRadius = 100
-	local aroundUnits = FindUnitsInRadius(casterTeam, 
-										position,
-										nil,
-										searchRadius,
-										DOTA_UNIT_TARGET_TEAM_BOTH,
-										DOTA_UNIT_TARGET_ALL,
-										0,
-										0,
-										false)
-
-	for k,unit in pairs(aroundUnits) do
-		--local name = unit:GetContext("name")
-		local lable =unit:GetUnitLabel()
-		local shootLable = "shootLabel"
-		--local unitTeam = unit:GetTeam()
-		if(shootLable ~= lable and shoot ~= unit and unit.stoneBeatBack ~= 1) then --碰到的不是子弹,不是自己,没被该技能碰撞过		
-			print("hithithit")
-			unit.stoneBeatBack = 1
-			beatBackUnit(keys,shoot,unit,"two")
-		end
-
-	end
-
-end
 
 
 --充能用的冷却
