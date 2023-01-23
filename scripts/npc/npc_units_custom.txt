@@ -387,7 +387,7 @@
 	{
 	    "BaseClass"                 "npc_dota_earth_spirit_stone"
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" // "models/heroes/mirana/mirana_javelin.vmdl"
-        "UnitLabel"					"shootLabel"
+        "UnitLabel"					"skillLabel"
 
 		"ModelScale"                "0.1"
 		"ShouldDoFlyHeightVisual"  "100"
@@ -436,7 +436,7 @@
 	{
 	    "BaseClass"                 "npc_dota_earth_spirit_stone"
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" // "models/heroes/mirana/mirana_javelin.vmdl"
-        "UnitLabel"					"shootLabel"
+        "UnitLabel"					"skillLabel"
 
 		"ModelScale"                "0.1"
 		"ShouldDoFlyHeightVisual"  "100"
@@ -533,9 +533,7 @@
 	{
 	    "BaseClass"               "npc_dota_creature"
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" 
-        "UnitLabel"					"mu"
 		"ModelScale"                "0.1"
-		"ShouldDoFlyHeightVisual"  "100"
         "MinimapIcon" ""
    		"MinimapIconSize" "50"
     	"HealthBarOffset" "-1"

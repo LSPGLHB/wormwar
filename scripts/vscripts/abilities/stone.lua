@@ -1,13 +1,9 @@
 require('shoot_init')
-require('damage_operation')
 function createStoneShoot(keys)
 		local caster = keys.caster
 		local ability = keys.ability
 		local speed = ability:GetSpecialValueFor("speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
-
-        --local beat_back_aoe = ability:GetSpecialValueFor("beat_back_aoe")
-        --local beat_back_hero = ability:GetSpecialValueFor("beat_back_hero")
 		local direction = caster:GetForwardVector()
 		local position = caster:GetAbsOrigin() 
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
@@ -22,6 +18,6 @@ function createStoneShoot(keys)
 		end
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)
+		moveShoot(shoot, max_distance, direction, speed, keys, particleID)
 end
 

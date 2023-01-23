@@ -195,7 +195,7 @@ function skillBoom(keys,shoot)
 
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
 		function ()
-			DealDamage(keys,shoot)
+			--DealDamage(keys,shoot)
 			thinkTime = thinkTime + interval
 			if thinkTime == duration then
 				ParticleManager:DestroyParticle(particleBoom, true)
@@ -212,7 +212,7 @@ end
 --命中目标
 function shootHit(shoot, ability)
 	local position=shoot:GetAbsOrigin()
-	local powerLv = shoot.power_lv
+	--local powerLv = shoot.power_lv
 	--寻找目标
 	local aroundUnit=FindUnitsInRadius(DOTA_TEAM_NEUTRALS, 
 										position,

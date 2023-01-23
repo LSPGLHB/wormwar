@@ -24,7 +24,7 @@
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"3000"   //施法距离
+		"AbilityCastRange"				"1000"   //施法距离
 		"AbilityCastPoint"				"0.3"
 
 		// Time		
@@ -56,7 +56,7 @@
 			"03"
 			{
 				"var_type"					"FIELD_INTEGER"
-				"max_distance"				"3000"
+				"max_distance"				"1000"
 			}
 		
 			"04"
@@ -147,9 +147,9 @@
 				"particles_hit"    "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
-				"sound_hit"		"Hero_Disruptor.StaticStorm"		
-				"particlesBoom" "particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
-				"particles_hit_dur" "0.7"
+				"sound_hit"			"Hero_Disruptor.StaticStorm"		
+				"particlesBoom" 	"particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+				"particles_hit_dur" 	"0.7"
 
 				"modifierCountName"		"modifier_shoot_pro_boom_counter_datadriven"
 			}
@@ -181,9 +181,13 @@
 				"EffectAttachType"	"follow_overhead"
 				"Duration"			"%linger_duration"
 				
-				"States"
+				//"States"
+				//{
+				//	"MODIFIER_STATE_SILENCED"		"MODIFIER_STATE_VALUE_ENABLED"
+				//}
+				"Properties"
 				{
-					"MODIFIER_STATE_SILENCED"		"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"     "%movespeed_slow"
 				}
 			}
 		}

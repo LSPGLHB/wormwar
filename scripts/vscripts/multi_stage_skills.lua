@@ -1,5 +1,4 @@
 require('shoot_init')
-
 function stageOne (keys)
     local caster	= keys.caster
 	local ability	= keys.ability
@@ -49,13 +48,9 @@ function LaunchFire(keys)
 	local position = caster:GetAbsOrigin()
 	local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 	shoot:SetOwner(caster)
-
 	shoot.power_lv = 0
 	shoot.power_flag = 0
-
-
-
-	moveShootByBuff(shoot, distance, sDirection, speed, ability, keys, nil)
+	moveShoot(shoot, distance, sDirection, speed, ability, keys, nil)
 
 	-- Update the particle FX
 	local pfx = caster.fire_spirits_pfx

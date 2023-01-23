@@ -118,13 +118,13 @@ function createShoot(keys)
 		
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShootByBuff(shoot, max_distance, direction, speed, ability, keys, particleID)	
+		moveShoot(shoot, max_distance, direction, speed, keys, particleID)	
 	else
 		keys.ability:RefundManaCost()
 	end
 end
 
-
+--充能用的冷却，每个技能需要独立一个字段使用，caster下的弹夹需要是唯一的
 function shoot_start_cooldown( caster, charge_replenish_time )
 	caster.shoot_cooldown = charge_replenish_time
 	Timers:CreateTimer( function()
