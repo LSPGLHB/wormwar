@@ -15,8 +15,9 @@
 #base abilities/running_fire.kv
 #base abilities/windrunner_powershot.kv
 
-#base abilities/stone.kv
+#base abilities/stone_ball.kv
 #base abilities/water_ball.kv
+#base abilities/stone_spirit.kv
 
 
 "DOTAAbilities"
