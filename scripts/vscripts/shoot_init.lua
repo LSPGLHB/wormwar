@@ -1,48 +1,31 @@
 require('skill_operation')
-function moveShoot(shoot, max_distance, direction, speed, keys, particleID)
+function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, particleID)
 	local traveled_distance = 0
-	shoot.shootHight = 100 --子弹高度
-	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	local hitType = keys.hitType --hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-	--默认爆炸弹
-	if hitType == nil then
-		hitType = 1
-	end
-	local boomType = keys.boomType  --boomType:0不是aoe，1普通aoe
-	--默认不是aoe
-	if boomType == nil then
-		boomType = 0
-	end
+	--local speed = minSpeed
+	moveShootInit(keys,shoot,direction)
 	--影响弹道的buff--测试速度调整
-	speed = skillSpeedOperation(keys,speed)
-
+	minSpeed = skillSpeedOperation(keys,minSpeed)
+	maxSpeed = skillSpeedOperation(keys,maxSpeed)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
-			local newPos = shoot:GetOrigin() + direction * speed
-			FindClearSpaceForUnit( shoot, newPos, false )
-			shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
-
+			moveShootTimerInit(keys,shoot,direction,minSpeed)
+			if maxSpeed ~= nil and minSpeed < maxSpeed then
+				minSpeed = minSpeed + 20
+			end
 			--技能加强或减弱粒子效果实现
 			powerShootParticleOperation(keys,shoot,particleID)
-			
-			traveled_distance = traveled_distance + speed
+			traveled_distance = traveled_distance + minSpeed
 			--子弹命中目标
 			local isHitType = shootHit(shoot, keys)
-			--获得子弹法魂是否为0
-			local isHealth = shoot.isHealth
 			--击中目标，行程结束
 			if isHitType == 1 then
-				particleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+				shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
 				return nil
 			end
 			--击中目标，行程继续
 			if isHitType == 2 then
-				--中弹粒子效果
-				ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
-				--中弹声音
-				EmitSoundOn(keys.sound_hit, shoot)
+				shootPenetrateParticleOperation(keys,shoot)
 				return 0.02
 			end
 			--到达指定位置，不命中目标
@@ -50,9 +33,10 @@ function moveShoot(shoot, max_distance, direction, speed, keys, particleID)
 				return 0.02
 			end
 			--法魂被击破，行程结束
-			if isHealth == 0 then
+			--获得子弹法魂是否为0
+			if shoot.isHealth == 0 then
 				if shoot then
-					particleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit)
+					shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit)
 					return nil
 				end
 			end
@@ -63,16 +47,15 @@ function moveShoot(shoot, max_distance, direction, speed, keys, particleID)
 					ParticleManager:DestroyParticle(particleID, true)
 				end	
 			
-				if hitType == 3  then --直达不触碰
-					if boomType == 1 then --单次伤害
-						--onceSkillBoom(keys,shoot)
+				if keys.hitType == 3  then --直达不触碰
+					if keys.isAOE == 1 then --单次伤害
+						onceSkillBoom(keys,shoot)
 					end
-					if boomType == 2 then --持续性伤害
+					if keys.isAOE == 2 then --持续性伤害
 						--durativeSkillBoom(keys,shoot)
 					end
 				else
-					shoot:ForceKill(true)
-					shoot:AddNoDraw()
+					shootKill(shoot)
 				end
 				return nil
 			end
@@ -81,6 +64,7 @@ function moveShoot(shoot, max_distance, direction, speed, keys, particleID)
      end,0)
 end
 
+
 function shootHit(shoot, keys)
 	local caster = keys.caster
 	local ability = keys.ability
@@ -88,7 +72,8 @@ function shootHit(shoot, keys)
 	local casterTeam = caster:GetTeam()
 	local hitType = keys.hitType --hitType：1爆炸，2穿透，3直达指定位置，不命中单位
 	local beatBackFlag = keys.beatBackFlag -- 0不击退，1未定义，2二级击退
-	local boomType = keys.boomType  --boomType:0不是aoe，1普通aoe
+	--local isAOE = keys.isAOE  --isAOE:0不是aoe，1普通aoe
+	local hitRange = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
 	--默认不可穿透
 	if hitType == nil then
 		hitType = 1
@@ -98,13 +83,13 @@ function shootHit(shoot, keys)
 		beatBackFlag = 0
 	end
 	--默认不是aoe
-	if boomType == nil then
-		boomType = 0
-	end
-
+	--if isAOE == nil then
+	--	isAOE = 0
+	--end
+	--local hitRang = ability.
 	--local PlayerID = caster:GetPlayerID() PlayerResource:GetTeam(PlayerID) print("team========:"..team) print("goodguy2:"..DOTA_TEAM_GOODGUYS) print("badguy3:"..DOTA_TEAM_BADGUYS) print("noteam5:"..DOTA_TEAM_NOTEAM) print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1) print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
 	--寻找目标
-	local searchRadius = 100
+	local searchRadius = hitRange
 	local aroundUnits = FindUnitsInRadius(casterTeam, 
 										position,
 										nil,
@@ -155,7 +140,7 @@ function shootHit(shoot, keys)
 					shoot:SetHealth(0)
 					shoot.isHealth = 0
 					tempHealth = tempHealth * -1
-					unit:SetHealth(tempHealth)	
+					unit:SetHealth(tempHealth)
 				end
 				return 0
 			else --如果碰到的不是子弹
@@ -191,6 +176,36 @@ function shootHit(shoot, keys)
 	return 0
 end
 
+function moveShootInit(keys,shoot,direction)
+	shoot.shootHight = 100 --子弹高度
+	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
+	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
+	if keys.hitType  == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
+		keys.hitType  = 1
+	end
+	if keys.isAOE == nil then--isAOE:0不是aoe，1普通aoe
+		keys.isAOE = 0
+	end
+	if keys.isTrack == nil then
+		keys.isTrack = 0
+	end
+end
+
+function moveShootTimerInit(keys,shoot,direction,speed)
+	if keys.isTrack == 1 then
+		local unit = keys.trackUnit
+		direction = (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
+	end
+	local newPos = shoot:GetOrigin() + direction * speed
+	FindClearSpaceForUnit( shoot, newPos, false )
+	shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
+end
+
+function shootKill(shoot)
+	shoot:ForceKill(true)
+	shoot:AddNoDraw()
+end
+
 
 --击退单位
 function beatBackUnit(keys,shoot,hitTarget,flag)
@@ -214,7 +229,7 @@ function beatBackUnit(keys,shoot,hitTarget,flag)
 	end
 	local shootPos = shoot:GetAbsOrigin()
 	local targetPos = hitTarget:GetAbsOrigin()
-	local beatBackDirection =  (targetPos - shootPos):Normalized() 
+	local beatBackDirection =  (targetPos - shootPos):Normalized()
 	local interval = 0.02
 	local speedmod = beat_back_speed * interval
 	local bufferTempDis = hitTarget:GetPaddedCollisionRadius()
@@ -288,10 +303,84 @@ function checkSecondHit(keys,shoot)
 	end
 end
 
+function dealSkillBoom(keys,shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local hitTargetDebuff = keys.hitTargetDebuff
+	local duration = ability:GetSpecialValueFor("duration") --冰冻持续时间
+	local radius = ability:GetSpecialValueFor("radius") --AOE范围
+	local position=shoot:GetAbsOrigin()
+	local casterTeam = caster:GetTeam()
+	
+	local aroundUnits = FindUnitsInRadius(casterTeam, 
+										position,
+										nil,
+										radius,
+										DOTA_UNIT_TARGET_TEAM_BOTH,
+										DOTA_UNIT_TARGET_ALL,
+										0,
+										0,
+										false)
+
+	for k,unit in pairs(aroundUnits) do
+		local unitTeam = unit:GetTeam()
+		local unitHealth = unit.isHealth
+		local lable = unit:GetUnitLabel()
+		--只作用于敌方,非技能单位
+		if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
+			ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
+			local damage = getApplyDamageValue(keys,shoot)
+				
+			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+		end
+		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
+		if lable == GameRules.skillLabel then
+			reinforceEach(unit,shoot,nil)
+		end
+	end
+end
+
+
+function onceSkillBoom(keys,shoot)
+	local ability = keys.ability
+	local delay = ability:GetSpecialValueFor("delay") --延迟爆炸时间
+	if delay == nil then
+		delay = 0
+	end
+	local particleID
+	if delay > 0 then
+		particleID = ParticleManager:CreateParticle(keys.particles_power, PATTACH_ABSORIGIN_FOLLOW , shoot)  --爆炸前悬停特效改变
+	end
+
+	Timers:CreateTimer(delay,function ()
+		local particleBoom = onceAoeRenderParticles(keys,shoot) --粒子效果生成		
+		ParticleManager:DestroyParticle(particleID, true)
+		dealSkillBoom(keys,shoot) --实现aoe效果
+		Timers:CreateTimer(1,function ()
+			ParticleManager:DestroyParticle(particleBoom, true)
+			EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)		
+			return nil
+		end)
+		shoot:ForceKill(true)
+		shoot:AddNoDraw()
+		return nil
+	end)
+end
+
+function onceAoeRenderParticles(keys,shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
+	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
+	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
+	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 1, radius*2))
+end
 
 
 
---技能爆炸,持续伤害，未完成
+
+
+--技能爆炸,持续伤害，未完成，未使用
 function durativeSkillBoom(keys,shoot)
 	local ability = keys.ability
 	local duration = 4--ability:GetSpecialValueFor("duration")
@@ -314,8 +403,8 @@ function durativeSkillBoom(keys,shoot)
 		end,0)
 	EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)
 			
-	shoot:ForceKill(true) 
-	shoot:AddNoDraw() 
+	shoot:ForceKill(true)
+	shoot:AddNoDraw()
 end
 
 

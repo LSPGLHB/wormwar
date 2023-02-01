@@ -71,26 +71,18 @@ function createStoneSpirit(keys)
 	if keys.caster.stone_spirit_charges > 0 then
 		local caster = keys.caster
 		local ability = keys.ability
-	
-		local stone_spirit_speed = ability:GetLevelSpecialValueFor("speed_min", ability:GetLevel() - 1)
-		local max_distance = ability:GetLevelSpecialValueFor("max_distance", ability:GetLevel() - 1)
-
-
-		local speed = stone_spirit_speed
-		--local traveled_distance = 0
-		--local point = ability:GetCursorPosition()
-
-		--local starting_distance = ability:GetLevelSpecialValueFor( "starting_distance", ability:GetLevel() - 1 )
+		local min_speed = ability:GetSpecialValueFor("min_speed")
+		local max_speed = ability:GetSpecialValueFor("max_speed")
+		local max_distance = ability:GetSpecialValueFor("max_distance")
 		local direction = caster:GetForwardVector()
-		local position = caster:GetAbsOrigin() --+ starting_distance * direction
-
+		local position = caster:GetAbsOrigin()
 		local counterModifierName = keys.modifierCountName
-		local maximum_charges = caster.stone_spirit_max_charges
+		local max_charges = caster.stone_spirit_max_charges
 		local charge_replenish_time = caster.stone_spirit_charge_replenish_time
 		local next_charge = caster.stone_spirit_charges - 1
 
 		--满弹情况下开枪启动充能
-		if caster.stone_spirit_charges == maximum_charges then
+		if caster.stone_spirit_charges == max_charges then
 			caster:RemoveModifierByName( counterModifierName )
 			ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = charge_replenish_time } )
 			createCharges(keys)
@@ -115,10 +107,52 @@ function createStoneSpirit(keys)
 		if cp == nil then
 			cp = 0
 		end
-		
+
+		moveShootInit(keys,shoot,direction)
+
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(shoot, max_distance, direction, speed, keys, particleID)	
+
+
+		local casterTeam = caster:GetTeam()
+		local position = shoot:GetAbsOrigin()
+		local searchRadius = ability:GetSpecialValueFor("searchRadius")
+		local shoot_hold_duration = ability:GetSpecialValueFor("shoot_hold_duration")
+		local temp_timer = 0
+		local add_timer = 1
+		Timers:CreateTimer(0,function ()
+			local aroundUnits = FindUnitsInRadius(casterTeam, 
+												position,
+												nil,
+												searchRadius,
+												DOTA_UNIT_TARGET_TEAM_BOTH,
+												DOTA_UNIT_TARGET_ALL,
+												0,
+												0,
+												false)
+			local searchUnit = {}
+			for k,unit in pairs(aroundUnits) do
+				local unitTeam = unit:GetTeam()
+				if unitTeam ~= casterTeam then
+					table.insert(searchUnit,unit)
+				end
+			end
+			
+			local lockUnitNum = #searchUnit
+			if lockUnitNum > 0 then
+				keys.trackUnit = searchUnit[1]--就近目标
+				moveShoot(shoot, max_distance, direction, min_speed, max_speed, keys, particleID)
+				return nil
+			end
+			if temp_timer > shoot_hold_duration then
+				shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+				return nil
+			else
+				temp_timer = temp_timer + add_timer
+				return add_timer
+			end
+			
+		end)
 	else
 		keys.ability:RefundManaCost()
 	end

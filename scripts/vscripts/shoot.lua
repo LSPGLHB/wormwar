@@ -118,7 +118,7 @@ function createShoot(keys)
 		
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(shoot, max_distance, direction, speed, keys, particleID)	
+		moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID)	
 	else
 		keys.ability:RefundManaCost()
 	end

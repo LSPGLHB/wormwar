@@ -176,7 +176,7 @@ function powerShootParticleOperation(keys,shoot,particleID)
 	end
 end
 
-function particleOperation(shoot,destroyParticleID,showParticlesName,soundName,particlesDur)
+function shootBoomParticleOperation(shoot,destroyParticleID,showParticlesName,soundName,particlesDur)
 	--消除子弹以及中弹粒子效果
 	shoot:ForceKill(true)
 	--中弹粒子效果
@@ -188,6 +188,13 @@ function particleOperation(shoot,destroyParticleID,showParticlesName,soundName,p
 		ParticleManager:DestroyParticle(destroyParticleID, true)
 	end
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function () shoot:AddNoDraw() end, particlesDur) --命中后动画持续时间
+end
+
+function shootPenetrateParticleOperation(keys,shoot)
+	--中弹粒子效果
+	ParticleManager:CreateParticle(keys.particles_hit, PATTACH_ABSORIGIN_FOLLOW, shoot) 
+	--中弹声音
+	EmitSoundOn(keys.sound_hit, shoot)
 end
 
 

@@ -17,39 +17,26 @@ function createWaterBall(keys)
     if cp == nil then
         cp = 0
     end
-    local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
+    local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-    
-    moveShootByAoe(shoot, max_distance, direction, speed, keys, particleID)
-
-
+    moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID)
 end
 
+
+
+
+--[[
 function moveShootByAoe(shoot, max_distance, direction, speed, keys, particleID)
 	local traveled_distance = 0
-	shoot.shootHight = 100 --子弹高度
-	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	local hitType = keys.hitType --hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-	--默认爆炸弹
-	if hitType == nil then
-		hitType = 1
-	end
-	local boomType = keys.boomType  --boomType:0不是aoe，1普通aoe
-	--默认不是aoe
-	if boomType == nil then
-		boomType = 0
-	end
+
+	moveShootInit(keys,shoot,direction)
 	--影响弹道的buff--测试速度调整
 	speed = skillSpeedOperation(keys,speed)
 
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
-			local newPos = shoot:GetOrigin() + direction * speed
-			FindClearSpaceForUnit( shoot, newPos, false )
-			shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
-
+			moveShootTimerInit(shoot,direction,speed)
 			--技能加强或减弱粒子效果实现
 			powerShootParticleOperation(keys,shoot,particleID)
 			
@@ -88,13 +75,10 @@ function moveShootByAoe(shoot, max_distance, direction, speed, keys, particleID)
 				if particleID then
 					ParticleManager:DestroyParticle(particleID, true)
 				end	
-				if hitType == 3  then
-		
+				if keys.hitType == 3  then
 					waterBallBoom(keys,shoot)
-
 				else
-					shoot:ForceKill(true)
-					shoot:AddNoDraw()
+					shootKill(shoot)
 				end
 				return nil
 			end
@@ -136,7 +120,6 @@ end
 function novaRenderParticles(keys,shoot)
 	local caster = keys.caster
 	local ability = keys.ability
-
 	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
 	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
 	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
@@ -171,6 +154,7 @@ function dealSkillBoom(keys,shoot)
 		--只作用于敌方,非技能单位
 		if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
 			ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
+
 		end
 		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
 		if lable == GameRules.skillLabel then
@@ -193,3 +177,5 @@ function staticStromRenderParticles(keys,shoot)
 	ParticleManager:SetParticleControl(particleBoom, 2, Vector(duration, 0, 0))
 	return particleBoom
 end
+
+]]

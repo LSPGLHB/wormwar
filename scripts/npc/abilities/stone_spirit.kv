@@ -5,7 +5,7 @@
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
@@ -35,12 +35,12 @@
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed_min"						"450"
+				"min_speed"						"450"
 			}
             "02"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed_max"						"900"
+				"max_speed"						"900"
 			}
 			"03"
 			{
@@ -55,7 +55,7 @@
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"radius"					"500"
+				"searchRadius"				"500"
 			}
             "06"
 			{
@@ -71,7 +71,13 @@
 			{
 				"var_type"					"FIELD_FLOAT"
 				"charge_replenish_time"		"7"
-			}	
+			} 
+			"09"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"shoot_hold_duration"		"5"
+			}
+			
 		}
 
         "OnUpgrade"
@@ -99,6 +105,7 @@
 				"unitModel"			"shootUnit"
 				"unitType"          "tu"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
+				"isTrack"			"1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
