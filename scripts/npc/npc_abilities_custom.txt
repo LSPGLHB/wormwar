@@ -18,6 +18,8 @@
 #base abilities/stone_ball.kv
 #base abilities/water_ball.kv
 #base abilities/stone_spirit.kv
+#base abilities/thunder_ball.kv
+
 
 
 "DOTAAbilities"

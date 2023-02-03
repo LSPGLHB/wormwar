@@ -1,11 +1,14 @@
 require('skill_operation')
-function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, particleID)
+function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, particleID, callback)
 	local traveled_distance = 0
 	--local speed = minSpeed
 	moveShootInit(keys,shoot,direction)
 	--影响弹道的buff--测试速度调整
 	minSpeed = skillSpeedOperation(keys,minSpeed)
-	maxSpeed = skillSpeedOperation(keys,maxSpeed)
+	if maxSpeed ~= nil then
+		maxSpeed = skillSpeedOperation(keys,maxSpeed)
+	end
+	
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
@@ -20,12 +23,17 @@ function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, par
 			local isHitType = shootHit(shoot, keys)
 			--击中目标，行程结束
 			if isHitType == 1 then
-				shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+				if callback ~= nil then
+					callback(keys,shoot,particleID) --到达尽头启动AOE
+				end
 				return nil
 			end
 			--击中目标，行程继续
 			if isHitType == 2 then
 				shootPenetrateParticleOperation(keys,shoot)
+				if callback ~= nil then
+					callback(keys,shoot,particleID) --到达尽头启动AOE
+				end
 				return 0.02
 			end
 			--到达指定位置，不命中目标
@@ -42,20 +50,16 @@ function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, par
 			end
 		else
 			--超出射程没有命中
-			if shoot then
-				if particleID then
-					ParticleManager:DestroyParticle(particleID, true)
-				end	
-			
-				if keys.hitType == 3  then --直达不触碰
-					if keys.isAOE == 1 then --单次伤害
-						onceSkillBoom(keys,shoot)
-					end
-					if keys.isAOE == 2 then --持续性伤害
-						--durativeSkillBoom(keys,shoot)
+			if shoot then		
+				if keys.hitType == 3 and keys.isAOE == 1 then --直达不触碰类AOE	
+					if callback ~= nil then
+						callback(keys,shoot,particleID) --到达尽头启动AOE
 					end
 				else
-					shootKill(shoot)
+					if particleID then
+						ParticleManager:DestroyParticle(particleID, true)
+					end
+					shootKill(shoot)--到达尽头消失
 				end
 				return nil
 			end
@@ -70,7 +74,7 @@ function shootHit(shoot, keys)
 	local ability = keys.ability
 	local position=shoot:GetAbsOrigin()
 	local casterTeam = caster:GetTeam()
-	local hitType = keys.hitType --hitType：1爆炸，2穿透，3直达指定位置，不命中单位
+	local hitType = keys.hitType --hitType：1碰撞伤害，2穿透伤害，3直达指定位置，不命中单位
 	local beatBackFlag = keys.beatBackFlag -- 0不击退，1未定义，2二级击退
 	--local isAOE = keys.isAOE  --isAOE:0不是aoe，1普通aoe
 	local hitRange = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
@@ -82,11 +86,11 @@ function shootHit(shoot, keys)
 	if beatBackFlag == nil then
 		beatBackFlag = 0
 	end
-	--默认不是aoe
-	--if isAOE == nil then
-	--	isAOE = 0
-	--end
-	--local hitRang = ability.
+	--默认不是AOE
+	if keys.isAOE == nil then
+		keys.isAOE = 0
+	end
+
 	--local PlayerID = caster:GetPlayerID() PlayerResource:GetTeam(PlayerID) print("team========:"..team) print("goodguy2:"..DOTA_TEAM_GOODGUYS) print("badguy3:"..DOTA_TEAM_BADGUYS) print("noteam5:"..DOTA_TEAM_NOTEAM) print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1) print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
 	--寻找目标
 	local searchRadius = hitRange
@@ -99,7 +103,8 @@ function shootHit(shoot, keys)
 										0,
 										0,
 										false)
-	local isHitUnit = true   --初始化可击中单位
+
+	local isHitUnit = true   --初始化设单位为可击中状态
 	for k,unit in pairs(aroundUnits) do
 		--local name = unit:GetContext("name")
 		local lable =unit:GetUnitLabel()
@@ -109,10 +114,11 @@ function shootHit(shoot, keys)
 		if shoot.hitUnit == nil then
 			shoot.hitUnit = {}
 		end
+		
 		--让子弹跟目标只碰撞一次
-		--子弹忽略自己，忽略发射者，子弹为穿透弹
-		if shoot ~= unit and unit ~= caster and hitType == 2 then
-			for i = 0, #shoot.hitUnit  do
+		--子弹忽略自己，忽略发射者，忽略友军，忽略子弹，标签不是技能子弹--子弹为穿透弹
+		if shoot ~= unit and unit ~= caster and unitTeam ~= casterTeam and GameRules.skillLabel ~= lable then --and hitType == 2 then
+			for i = 1, #shoot.hitUnit  do
 				if shoot.hitUnit[i] == unit then
 					isHitUnit = false  --如果已经击中过就不再击中
 					break
@@ -155,7 +161,9 @@ function shootHit(shoot, keys)
 					if beatBackFlag == 2 then--会产生二次撞击
 						beatBackUnit(keys,shoot,unit,"one")
 					end
-					ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+					if keys.isAOE ~= 1 then
+						ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
+					end	
 					return hitType
 				end
 				if hitType == 3 then--直达指定位置，中途不命中单位
@@ -164,7 +172,7 @@ function shootHit(shoot, keys)
 			end
 		else--相同队伍的触碰    	 
 			 --不搜索自己，标签为子弹
-			if shoot ~= unit and shootLable == lable and isHitUnit then
+			if shoot ~= unit and GameRules.skillLabel == lable and isHitUnit then
 				--fireStormFlag用于标记该aoe是否已经起作用
 				if unit.shootPowerFlag == nil  then
 					reinforceEach(unit,shoot,nil) --加强运算
@@ -208,7 +216,7 @@ end
 
 
 --击退单位
-function beatBackUnit(keys,shoot,hitTarget,flag)
+function beatBackUnit(keys,shoot,hitTarget,flag)--flag：标记第几次碰撞，目前只有one和two
 	local caster = keys.caster
 	local ability = keys.ability
 	local powerLv = shoot.power_lv
@@ -240,7 +248,6 @@ function beatBackUnit(keys,shoot,hitTarget,flag)
 	local beat_back_distance
 	if flag == "one" then
 		beat_back_distance = beat_back_one
-		--hitTarget.powerLv = powerLv
 	end
 	if flag == "two" then
 		beat_back_distance = beat_back_two
@@ -290,7 +297,6 @@ function checkSecondHit(keys,shoot)
 										0,
 										0,
 										false)
-
 	for k,unit in pairs(aroundUnits) do
 		--local name = unit:GetContext("name")
 		local lable =unit:GetUnitLabel()
@@ -299,43 +305,6 @@ function checkSecondHit(keys,shoot)
 		if(GameRules.skillLabel ~= lable and shoot ~= unit and casterTeam~=unitTeam and unit.stoneBeatBack ~= 1) then --碰到的不是子弹,不是自己,不是发射技能的队伍,没被该技能碰撞过		
 			unit.stoneBeatBack = 1
 			beatBackUnit(keys,shoot,unit,"two")
-		end
-	end
-end
-
-function dealSkillBoom(keys,shoot)
-	local caster = keys.caster
-	local ability = keys.ability
-	local hitTargetDebuff = keys.hitTargetDebuff
-	local duration = ability:GetSpecialValueFor("duration") --冰冻持续时间
-	local radius = ability:GetSpecialValueFor("radius") --AOE范围
-	local position=shoot:GetAbsOrigin()
-	local casterTeam = caster:GetTeam()
-	
-	local aroundUnits = FindUnitsInRadius(casterTeam, 
-										position,
-										nil,
-										radius,
-										DOTA_UNIT_TARGET_TEAM_BOTH,
-										DOTA_UNIT_TARGET_ALL,
-										0,
-										0,
-										false)
-
-	for k,unit in pairs(aroundUnits) do
-		local unitTeam = unit:GetTeam()
-		local unitHealth = unit.isHealth
-		local lable = unit:GetUnitLabel()
-		--只作用于敌方,非技能单位
-		if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
-			ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
-			local damage = getApplyDamageValue(keys,shoot)
-				
-			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-		end
-		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
-		if lable == GameRules.skillLabel then
-			reinforceEach(unit,shoot,nil)
 		end
 	end
 end
@@ -375,10 +344,6 @@ function onceAoeRenderParticles(keys,shoot)
 	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
 	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 1, radius*2))
 end
-
-
-
-
 
 --技能爆炸,持续伤害，未完成，未使用
 function durativeSkillBoom(keys,shoot)

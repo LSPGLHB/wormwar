@@ -1,4 +1,5 @@
 require('shoot_init')
+require('skill_operation')
 function shootStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
@@ -118,7 +119,7 @@ function createShoot(keys)
 		
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID)	
+		moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID, shootBoom)
 	else
 		keys.ability:RefundManaCost()
 	end
@@ -139,7 +140,12 @@ function shoot_start_cooldown( caster, charge_replenish_time )
 	)
 end
 
-
+function shootBoom(keys,shoot,particleID)
+	if particleID ~= nil then
+		ParticleManager:DestroyParticle(particleID, true)
+	end
+	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+end
 
 
 
