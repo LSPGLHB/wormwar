@@ -1,7 +1,7 @@
 //普通射击
 "DOTAAbilities"
 {
-	"shoot_datadriven"
+	"big_fire_ball_datadriven"
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
@@ -12,8 +12,8 @@
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 
 		"FightRecapLevel"				"1"
-		"AbilityTextureName"			"mirana_arrow"
-		//"SpellImmunityType"			"SPELL_IMMUNITY_ENEMIES_NO"
+		"AbilityTextureName"			"lina_dragon_slave"
+
 	
 		
 		"precache"
@@ -24,8 +24,8 @@
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"3000"   //施法距离
-		"AbilityCastPoint"				"0.1"
+		"AbilityCastRange"				"1450"   //施法距离
+		"AbilityCastPoint"				"0.3"
 
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
@@ -37,65 +37,71 @@
 
 		// Damage.
 		//-------------------------------------------------------------------------------------------------------------
-		//"AbilityDamage"					"125 250 375 500"
+		//"AbilityDamage"					"0"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
 		{
-			"01"
+            "01"
 			{
-				"var_type"				"FIELD_INTEGER"
-				"maximum_charges"		"3 4 5 6"
+				"var_type"			"FIELD_FLOAT"
+				"beat_back_one"		"600"
 			}
 			"02"
 			{
-				"var_type"					"FIELD_FLOAT"
-				"charge_replenish_time"		"10 9 8 3"
+				"var_type"				"FIELD_FLOAT"
+				"beat_back_two"			"300"
 			}
 			"03"
 			{
-				"var_type"					"FIELD_INTEGER"
-				"max_distance"				"3000"
+				"var_type"				"FIELD_FLOAT"
+				"beat_back_speed"		"650"
 			}
-		
-			"04"
-			{
-				"var_type"					"FIELD_INTEGER"
-				"starting_distance"			"50"
-			}
+
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed"						"1200"
+				"speed"						"650"
 			}
 			"06"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"damage"						"125 250 375 500"
+				"damage"					"8"
 			}
 			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"100"
+				"hit_range"					"400"
 			}
-			"08"
+            "08"
+            {
+                "var_type"					"FIELD_FLOAT"
+				"aoe_boom_radius"				"600"
+            }
+            "09"
+            {
+                "var_type"					"FIELD_FLOAT"
+				"aoe_duration_radius"			"700"
+            }
+			"10"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"health"					"10"
+				"aoe_duration"					"3"
 			}
-		
-		}
-		
-		"OnUpgrade"
-		{
-			"RunScript"
+            "11"
+            {
+                "var_type"					"FIELD_FLOAT"
+				"vision_radius"					"-600"
+            }
+            "10"
 			{
-				"ScriptFile"			"shoot.lua"
-				"Function"				"shootStartCharge"
-				"modifierCountName"		"modifier_shoot_counter_datadriven"
+				"var_type"					"FIELD_FLOAT"
+				"debuff_duration"					"5"
 			}
+		
 		}
+		
 		
 		"OnSpellStart"
 		{
@@ -107,33 +113,57 @@
 		
 			"RunScript"
 			{
-				"ScriptFile"		"shoot.lua"
-				"Function"			"createShoot"
+				"ScriptFile"		"abilities/big_fire_ball.lua"
+				"Function"			"createBigFireBall"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
 				"unitType"          "lei"
+				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
+                "isAOE"             "1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
 				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"
-				"modifierCountName"	"modifier_shoot_counter_datadriven"
 				"cp"				"0"
-				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
-				
+
+                "particlesBoom" 	"particles/units/heroes/hero_crystalmaiden/maiden_crystal_nova.vpcf"
+                "durationParticlesBoom"  "particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+                "hitTargetDebuff"  "modifier_beat_back"
+				"modifierDebuffName"  "modifier_big_fire_ball_debuff_datadriven"
 			}
 		}
 
 		
 		"Modifiers"
 		{
-			"modifier_shoot_counter_datadriven"
+			"modifier_beat_back"
 			{
-				"Passive"				"1"
-				"IsHidden"				"0"
-				"IsPurgable"			"0"
-				"IsDebuff"				"0"
+				"IsDebuff"				"1"
+				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"States"
+				{
+					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+				}	
+			}
+
+			"modifier_big_fire_ball_debuff_datadriven"
+			{
+				"IsDebuff"				"1"
+				"EffectName"			"particles/generic_gameplay/generic_slowed_cold.vpcf"
+				"StatusEffectName"		"particles/status_fx/status_effect_frost_lich.vpcf"
+				"StatusEffectPriority"	"2"
+
+
+
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_BONUS_DAY_VISION"		"%vision_radius"
+                    "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"		"%vision_radius"
+				}
+				
 			}
 	
 		}

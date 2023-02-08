@@ -1,3 +1,4 @@
+
 "addon"
 {
          "UIButton1"                   "攻击力+5"
@@ -5,4 +6,9 @@
          "UIButton3"                   "充能上限+2"
          "UIButton4"                   "充能速度+1"
          "UIButton5"                   "弹道速度+200"
+
+         "huoren"                      "召唤火人"
 }
+
+
+

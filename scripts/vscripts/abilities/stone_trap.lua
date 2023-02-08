@@ -1,5 +1,5 @@
 require('shoot_init')
-function stoneSpiritStartCharge(keys)
+function stoneTrapStartCharge(keys)
 	--每次升级调用
 	local caster = keys.caster
 	local ability = keys.ability
@@ -7,25 +7,25 @@ function stoneSpiritStartCharge(keys)
 	local maximum_charges = ability:GetLevelSpecialValueFor( "max_charges", ( ability:GetLevel() - 1 ) )
 	local charge_replenish_time = ability:GetLevelSpecialValueFor( "charge_replenish_time", ( ability:GetLevel() - 1 ) )
 	
-	caster.stone_spirit_max_charges = maximum_charges
-	caster.stone_spirit_charge_replenish_time = charge_replenish_time
+	caster.stone_trap_max_charges = maximum_charges
+	caster.stone_trap_charge_replenish_time = charge_replenish_time
 
 	--子弹数刷新
-	if caster.stone_spirit_charges == nil then
-		caster.stone_spirit_cooldown = 0.0
-		caster.stone_spirit_charges = maximum_charges
+	if caster.stone_trap_charges == nil then
+		caster.stone_trap_cooldown = 0.0
+		caster.stone_trap_charges = maximum_charges
 	else
 		local lastmax_charges = ability:GetLevelSpecialValueFor( "max_charges", ( ability:GetLevel() - 2 ) )
-		caster.stone_spirit_charges = caster.stone_spirit_charges + maximum_charges - lastmax_charges
+		caster.stone_trap_charges = caster.stone_trap_charges + maximum_charges - lastmax_charges
 	end
 
 	ability:EndCooldown()
-	caster:SetModifierStackCount( counterModifierName, caster, caster.stone_spirit_charges )
+	caster:SetModifierStackCount( counterModifierName, caster, caster.stone_trap_charges )
 
 	--上弹初始化
 	if keys.ability:GetLevel() == 1 then
 		ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-		caster.stone_spirit_start_charge = false
+		caster.stone_trap_start_charge = false
 		createCharges(keys)
 	end
 end
@@ -39,26 +39,26 @@ function createCharges(keys)
 
 	Timers:CreateTimer(function()
 		-- Restore charge
-		if caster.stone_spirit_start_charge and caster.stone_spirit_charges < caster.stone_spirit_max_charges then
-			local next_charge = caster.stone_spirit_charges + 1
+		if caster.stone_trap_start_charge and caster.stone_trap_charges < caster.stone_trap_max_charges then
+			local next_charge = caster.stone_trap_charges + 1
 			caster:RemoveModifierByName( counterModifierName )
-			if next_charge ~= caster.stone_spirit_max_charges then
-				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.stone_spirit_charge_replenish_time } )
-				stone_spirit_start_cooldown( caster, caster.stone_spirit_charge_replenish_time )
+			if next_charge ~= caster.stone_trap_max_charges then
+				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = caster.stone_trap_charge_replenish_time } )
+				stone_trap_start_cooldown( caster, caster.stone_trap_charge_replenish_time )
 			else
 				ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, {} )
-				caster.stone_spirit_start_charge = false
+				caster.stone_trap_start_charge = false
 			end
 			-- Update stack
 			caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-			caster.stone_spirit_charges = next_charge
+			caster.stone_trap_charges = next_charge
 		end
 		-- Check if max is reached then check every seconds if the charge is used
-		if caster.stone_spirit_charges < caster.stone_spirit_max_charges then
-			caster.stone_spirit_start_charge = true
-			return caster.stone_spirit_charge_replenish_time
+		if caster.stone_trap_charges < caster.stone_trap_max_charges then
+			caster.stone_trap_start_charge = true
+			return caster.stone_trap_charge_replenish_time
 		else
-			caster.stone_spirit_start_charge = false
+			caster.stone_trap_start_charge = false
 			return nil
 		end
 	end)
@@ -67,36 +67,36 @@ end
 
 
 
-function createStoneSpirit(keys)
-	if keys.caster.stone_spirit_charges > 0 then
+function createStoneTrap(keys)
+	if keys.caster.stone_trap_charges > 0 then
 		local caster = keys.caster
 		local ability = keys.ability
-		local low_speed = ability:GetSpecialValueFor("low_speed")
-		local high_speed = ability:GetSpecialValueFor("high_speed")
+		local min_speed = ability:GetSpecialValueFor("min_speed")
+		local max_speed = ability:GetSpecialValueFor("max_speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
-		local direction = (ability:GetCursorPosition() - caster:GetAbsOrigin()):Normalized()
+		local direction = caster:GetForwardVector()
 		local position = caster:GetAbsOrigin()
 		local counterModifierName = keys.modifierCountName
-		local max_charges = caster.stone_spirit_max_charges
-		local charge_replenish_time = caster.stone_spirit_charge_replenish_time
-		local next_charge = caster.stone_spirit_charges - 1
+		local max_charges = caster.stone_trap_max_charges
+		local charge_replenish_time = caster.stone_trap_charge_replenish_time
+		local next_charge = caster.stone_trap_charges - 1
 
 		--满弹情况下开枪启动充能
-		if caster.stone_spirit_charges == max_charges then
+		if caster.stone_trap_charges == max_charges then
 			caster:RemoveModifierByName( counterModifierName )
 			ability:ApplyDataDrivenModifier( caster, caster, counterModifierName, { Duration = charge_replenish_time } )
 			createCharges(keys)
-			stone_spirit_start_cooldown( caster, charge_replenish_time )
+			stone_trap_start_cooldown( caster, charge_replenish_time )
 		end
 		caster:SetModifierStackCount( counterModifierName, caster, next_charge )
-		caster.stone_spirit_charges = next_charge
+		caster.stone_trap_charges = next_charge
 		--无弹后启动技能冷却
-		if caster.stone_spirit_charges == 0 then
-			ability:StartCooldown( caster.stone_spirit_cooldown )
+		if caster.stone_trap_charges == 0 then
+			ability:StartCooldown( caster.stone_trap_cooldown )
 		else
 			ability:EndCooldown()
 		end
-	
+		--unitModel = shootUnit
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
 		shoot.unit_type = keys.unitType
@@ -108,20 +108,19 @@ function createStoneSpirit(keys)
 			cp = 0
 		end
 
-		--moveShootInit(keys,shoot,direction)
+		moveShootInit(keys,shoot,direction)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-        
-        moveShoot(shoot, max_distance, direction, low_speed, nil, keys, particleID, stoneSpiritBoom)
+
 
 		local casterTeam = caster:GetTeam()
-		local position
+		local position = shoot:GetAbsOrigin()
 		local searchRadius = ability:GetSpecialValueFor("searchRadius")
-
-
+		local shoot_hold_duration = ability:GetSpecialValueFor("shoot_hold_duration")
+		local temp_timer = 0
+		local add_timer = 1
 		Timers:CreateTimer(0,function ()
-			position = shoot:GetAbsOrigin()
 			local aroundUnits = FindUnitsInRadius(casterTeam, 
 												position,
 												nil,
@@ -142,14 +141,16 @@ function createStoneSpirit(keys)
 			local lockUnitNum = #searchUnit
 			if lockUnitNum > 0 then
 				keys.trackUnit = searchUnit[1]--就近目标
-                local unit = keys.trackUnit
-                shoot.isBreak = 1
-				keys.isTrack = 1
-                direction =  (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
-				moveShoot(shoot, max_distance, direction, high_speed, nil, keys, particleID, stoneSpiritBoom)
+				moveShoot(shoot, max_distance, direction, min_speed, max_speed, keys, particleID, stoneTrapBoom)
 				return nil
 			end
-			return 0.1
+			if temp_timer > shoot_hold_duration then
+				shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+				return nil
+			else
+				temp_timer = temp_timer + add_timer
+				return add_timer
+			end
 			
 		end)
 	else
@@ -157,7 +158,7 @@ function createStoneSpirit(keys)
 	end
 end
 
-function stoneSpiritBoom(keys,shoot,particleID)
+function stoneTrapBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local damage = getApplyDamageValue(keys,shoot)
 	for i = 1, #shoot.hitUnit  do
@@ -171,12 +172,12 @@ function stoneSpiritBoom(keys,shoot,particleID)
 end
 
 --充能用的冷却，每个技能需要独立一个字段使用，caster下的弹夹需要是唯一的
-function stone_spirit_start_cooldown( caster, charge_replenish_time )
-	caster.stone_spirit_cooldown = charge_replenish_time
+function stone_trap_start_cooldown( caster, charge_replenish_time )
+	caster.stone_trap_cooldown = charge_replenish_time
 	Timers:CreateTimer( function()
-			local current_cooldown = caster.stone_spirit_cooldown - 0.1
+			local current_cooldown = caster.stone_trap_cooldown - 0.1
 			if current_cooldown > 0.1 then
-				caster.stone_spirit_cooldown = current_cooldown
+				caster.stone_trap_cooldown = current_cooldown
 				return 0.1
 			else
 				return nil

@@ -13,8 +13,8 @@
 		"Ability4"  "stone_ball_datadriven"//"nothing_c"//"fire_storm_datadriven"
 		"Ability5"  "stone_spirit_datadriven"//"speed_up_stack_datadriven"//"cannon_datadriven"
 		"Ability6"  "thunder_ball_datadriven"//"speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
-		"Ability7"  "stone_spirit_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
-		"Ability8"	"shoot_speed_up_stack_datadriven"
+		"Ability7"  "stone_double_twine_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
+		"Ability8"	"big_fire_ball_datadriven"//"shoot_speed_up_stack_datadriven"
 		"Ability9" 	"shoot_speed_down_stack_datadriven"
 		"Ability10"  "multi_stage_skills_b_datadriven"
 
@@ -46,9 +46,9 @@
 		// 基础魔抗
 		"MagicalResistance"	"0"
 		// 白天视野范围
-		"VisionDaytimeRange"	"1800"
+		"VisionDaytimeRange"	"1200"
 		// 夜晚视野
-		"VisionNighttimeRange"	"1800"
+		"VisionNighttimeRange"	"1200"
 
 		// 主属性类型
 		"AttributePrimary"	"DOTA_ATTRIBUTE_STRENGTH"

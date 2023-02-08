@@ -1,11 +1,12 @@
 require('shoot_init')
-function createShoot(keys)
+require('skill_operation')
+function createThunderBall(keys)
 		local caster = keys.caster
 		local ability = keys.ability
 		local speed = ability:GetSpecialValueFor("speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
-		local direction = caster:GetForwardVector()
 		local position = caster:GetAbsOrigin()
+		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local directionTable ={}
 		table.insert(directionTable,direction)
 		--local tempPos = position + direction * 1000
@@ -20,7 +21,7 @@ function createShoot(keys)
 		local direction3 = Vector(newX3, newY3, direction.z)
 		table.insert(directionTable,direction3)
 		for i = 1, 3, 1 do
-			print("direction:",directionTable[i])
+			--print("direction:",directionTable[i])
 			local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 			shoot:SetOwner(caster)
 			shoot.unit_type = keys.unitType
@@ -42,8 +43,10 @@ function thunderBallBoom(keys,shoot,particleID)
 	local caster = keys.caster
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration") --debuff持续时间
+	local damage = getApplyDamageValue(keys,shoot)
 	for i = 1, #shoot.hitUnit  do
 		local unit = shoot.hitUnit[i]
+		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		ability:ApplyDataDrivenModifier(caster, unit, keys.modifierDebuffName, {Duration = duration})
 	end
 

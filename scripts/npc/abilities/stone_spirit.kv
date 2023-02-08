@@ -5,19 +5,19 @@
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"FightRecapLevel"				"1"
-		"AbilityTextureName"			"earth_spirit_boulder_smash"
+		"AbilityTextureName"			"earth_spirit_rolling_boulder"
 
          "MaxLevel"                      "1"
 	
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"500"   //施法距离
+		"AbilityCastRange"				"1000"   //施法距离
 		"AbilityCastPoint"				"0.2"
 
 		// Time		
@@ -35,12 +35,12 @@
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"min_speed"						"450"
+				"low_speed"						"450"
 			}
             "02"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"max_speed"						"900"
+				"high_speed"					"900"
 			}
 			"03"
 			{
@@ -72,11 +72,7 @@
 				"var_type"					"FIELD_FLOAT"
 				"charge_replenish_time"		"7"
 			} 
-			"09"
-			{
-				"var_type"					"FIELD_FLOAT"
-				"shoot_hold_duration"		"5"
-			}
+	
 			
 		}
 
@@ -105,8 +101,7 @@
 				"unitModel"			"shootUnit"
 				"unitType"          "tu"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
-				"isTrack"			"1"
-				"isHitDamage"		"1"
+				"isTrack"			"0"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"

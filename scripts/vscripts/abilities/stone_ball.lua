@@ -4,8 +4,8 @@ function createStoneShoot(keys)
 		local ability = keys.ability
 		local speed = ability:GetSpecialValueFor("speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
-		local direction = caster:GetForwardVector()
-		local position = caster:GetAbsOrigin() 
+		local position = caster:GetAbsOrigin()
+		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		shoot:SetOwner(caster)
 		shoot.unit_type = keys.unitType

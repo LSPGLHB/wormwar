@@ -1,28 +1,28 @@
 "DOTAAbilities"
 {
-	"stone_ball_datadriven"
+	"stone_trap_datadriven"
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"FightRecapLevel"				"1"
-		"AbilityTextureName"			"earth_spirit_boulder_smash"
+		"AbilityTextureName"			"earth_spirit_rolling_boulder"
 
          "MaxLevel"                      "1"
 	
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"1200"   //施法距离
+		"AbilityCastRange"				"500"   //施法距离
 		"AbilityCastPoint"				"0.2"
 
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"3"
+		"AbilityCooldown"				"0.1"
 		
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
@@ -31,43 +31,63 @@
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
-		{
+		{	
 			"01"
 			{
-				"var_type"			"FIELD_FLOAT"
-				"beat_back_one"		"500"
+				"var_type"					"FIELD_FLOAT"
+				"min_speed"						"450"
 			}
-			"02"
+            "02"
 			{
-				"var_type"				"FIELD_FLOAT"
-				"beat_back_two"			"500"
+				"var_type"					"FIELD_FLOAT"
+				"max_speed"						"900"
 			}
 			"03"
 			{
-				"var_type"				"FIELD_FLOAT"
-				"beat_back_speed"		"650"
+				"var_type"					"FIELD_FLOAT"
+				"damage"					"15"
 			}
 			"04"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"max_distance"				"1200"
+				"hit_range"					"200"
 			}
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed"						"650"
+				"searchRadius"				"500"
 			}
-			"06"
+            "06"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"damage"					"6"
+				"max_distance"				"1000"
 			}
-			"06"
+            "07"
+			{
+				"var_type"				"FIELD_INTEGER"
+				"max_charges"		    "2"
+			}
+			"08"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"300"
+				"charge_replenish_time"		"7"
+			} 
+			"09"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"shoot_hold_duration"		"5"
 			}
-		
+			
+		}
+
+        "OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"			"abilities/stone_trap.lua"
+				"Function"				"stoneTrapStartCharge"
+				"modifierCountName"		"modifier_stone_spirit_counter_datadriven"
+			}
 		}
 		
 		"OnSpellStart"
@@ -79,36 +99,35 @@
 			}
 			"RunScript"
 			{
-				"ScriptFile"		"abilities/stone_ball.lua"
-				"Function"			"createStoneShoot"
+				"ScriptFile"		"abilities/stone_trap.lua"
+				"Function"			"createStoneTrap"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
 				"unitType"          "tu"
-				"hitType" 			"2"   //3直达施法点，2穿透弹，1为不穿透
-				"beatBackFlag"		"2"	  //二次撞击
+				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
+				"isTrack"			"1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
 				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
-				"hitTargetDebuff"	"modifier_stone_beat_back"	
-				"cp"				"0"
+				"cp"				"0"	
+                "modifierCountName" "modifier_stone_trap_counter_datadriven"
+
 			}
 		}
 
-		"Modifiers"
+        "Modifiers"
 		{
-			"modifier_stone_beat_back"
+			"modifier_stone_trap_counter_datadriven"
 			{
-				"IsDebuff"				"1"
-				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"
-				"EffectAttachType"	"follow_overhead"
-				"States"
-				{
-					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
-				}	
+				"Passive"				"1"
+				"IsHidden"				"0"
+				"IsPurgable"			"0"
+				"IsDebuff"				"0"
 			}
+	
 		}
 	}
 }

@@ -82,7 +82,7 @@ function createShoot(keys)
 		--local point = ability:GetCursorPosition()
 
 		--local starting_distance = ability:GetLevelSpecialValueFor( "starting_distance", ability:GetLevel() - 1 )
-		local direction = caster:GetForwardVector()
+		local direction = (ability:GetCursorPosition() - caster:GetAbsOrigin()):Normalized()
 		local position = caster:GetAbsOrigin() --+ starting_distance * direction
 
 		local counterModifierName = keys.modifierCountName
@@ -140,12 +140,18 @@ function shoot_start_cooldown( caster, charge_replenish_time )
 	)
 end
 
+
 function shootBoom(keys,shoot,particleID)
+	local ability = keys.ability
+	local damage = getApplyDamageValue(keys,shoot)
+	for i = 1, #shoot.hitUnit  do
+		local unit = shoot.hitUnit[i]
+		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
+	end
 	if particleID ~= nil then
 		ParticleManager:DestroyParticle(particleID, true)
 	end
 	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
 end
-
 
 

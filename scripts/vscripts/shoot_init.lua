@@ -1,24 +1,35 @@
 require('skill_operation')
-function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, particleID, callback)
-	local traveled_distance = 0
-	--local speed = minSpeed
+function moveShoot(shoot, max_distance, direction, speed, maxSpeed, keys, particleID, callback)
+	local traveled_distance = 0 --初始化已经飞行的距离
 	moveShootInit(keys,shoot,direction)
 	--影响弹道的buff--测试速度调整
-	minSpeed = skillSpeedOperation(keys,minSpeed)
+	speed = skillSpeedOperation(keys,speed)
 	if maxSpeed ~= nil then
 		maxSpeed = skillSpeedOperation(keys,maxSpeed)
 	end
+	shoot.isBreak = 0 --初始化不跳出
 	
+	local shootHealthMax = shoot:GetHealth()
+	local shootHealthSend = shootHealthMax * 0.5
+	local shootHealthStep = shootHealthMax * 0.5 * speed / 500
+	shoot:SetHealth(shootHealthSend)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
-			moveShootTimerInit(keys,shoot,direction,minSpeed)
-			if maxSpeed ~= nil and minSpeed < maxSpeed then
-				minSpeed = minSpeed + 20
+			if shoot.isBreak == 1 then
+				return nil
+			end
+			moveShootTimerInit(keys,shoot,direction,speed)
+			if shootHealthSend < shootHealthMax then
+				shootHealthSend = shootHealthSend + shootHealthStep
+				shoot:SetHealth(shootHealthSend)
+			end
+			if maxSpeed ~= nil and speed < maxSpeed then
+				speed = speed + 20
 			end
 			--技能加强或减弱粒子效果实现
 			powerShootParticleOperation(keys,shoot,particleID)
-			traveled_distance = traveled_distance + minSpeed
+			traveled_distance = traveled_distance + speed
 			--子弹命中目标
 			local isHitType = shootHit(shoot, keys)
 			--击中目标，行程结束
@@ -32,7 +43,10 @@ function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, par
 			if isHitType == 2 then
 				shootPenetrateParticleOperation(keys,shoot)
 				if callback ~= nil then
+					shoot:SetHealth(0)
+					shoot.isHealth = 0
 					callback(keys,shoot,particleID) --到达尽头启动AOE
+					shootKill(shoot)
 				end
 				return 0.02
 			end
@@ -44,17 +58,18 @@ function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, par
 			--获得子弹法魂是否为0
 			if shoot.isHealth == 0 then
 				if shoot then
-					shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit)
+					callback(keys,shoot,particleID) 
+					shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,keys.particles_hit_dur)
 					return nil
 				end
 			end
 		else
 			--超出射程没有命中
 			if shoot then		
-				if keys.hitType == 3 and keys.isAOE == 1 then --直达不触碰类AOE	
-					if callback ~= nil then
+				if keys.isAOE == 1 and callback ~= nil then --直达不触碰类AOE	
+						shoot:SetHealth(0)
+						shoot.isHealth = 0
 						callback(keys,shoot,particleID) --到达尽头启动AOE
-					end
 				else
 					if particleID then
 						ParticleManager:DestroyParticle(particleID, true)
@@ -68,6 +83,31 @@ function moveShoot(shoot, max_distance, direction, minSpeed, maxSpeed, keys, par
      end,0)
 end
 
+function moveShootInit(keys,shoot,direction)
+	shoot.shootHight = 100 --子弹高度
+	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
+	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
+	if keys.hitType  == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
+		keys.hitType  = 1
+	end
+	if keys.isTrack == nil then
+		keys.isTrack = 0
+	end
+	if keys.isAOE == nil then
+		keys.isAOE = 0
+	end
+end
+
+function moveShootTimerInit(keys,shoot,direction,speed)
+	if keys.isTrack == 1 then
+		local unit = keys.trackUnit
+		direction = (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
+	end
+	local newPos = shoot:GetOrigin() + direction * speed
+	FindClearSpaceForUnit( shoot, newPos, false )
+	shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
+end
+
 
 function shootHit(shoot, keys)
 	local caster = keys.caster
@@ -76,7 +116,6 @@ function shootHit(shoot, keys)
 	local casterTeam = caster:GetTeam()
 	local hitType = keys.hitType --hitType：1碰撞伤害，2穿透伤害，3直达指定位置，不命中单位
 	local beatBackFlag = keys.beatBackFlag -- 0不击退，1未定义，2二级击退
-	--local isAOE = keys.isAOE  --isAOE:0不是aoe，1普通aoe
 	local hitRange = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
 	--默认不可穿透
 	if hitType == nil then
@@ -86,10 +125,7 @@ function shootHit(shoot, keys)
 	if beatBackFlag == nil then
 		beatBackFlag = 0
 	end
-	--默认不是AOE
-	if keys.isAOE == nil then
-		keys.isAOE = 0
-	end
+
 
 	--local PlayerID = caster:GetPlayerID() PlayerResource:GetTeam(PlayerID) print("team========:"..team) print("goodguy2:"..DOTA_TEAM_GOODGUYS) print("badguy3:"..DOTA_TEAM_BADGUYS) print("noteam5:"..DOTA_TEAM_NOTEAM) print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1) print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
 	--寻找目标
@@ -153,17 +189,16 @@ function shootHit(shoot, keys)
 				--返回中弹标记，出发中弹效果
 				if hitType == 1 or hitType == 2 then --爆炸弹，--穿透弹,--并实现伤害
 					--计算增强或减弱的伤害计算
-					local damage = getApplyDamageValue(keys,shoot)
+					
 					--撞开击中单位
 					if beatBackFlag == 1 then--保留撞击类型
 					
 					end
 					if beatBackFlag == 2 then--会产生二次撞击
-						beatBackUnit(keys,shoot,unit,"one")
+						local beatBackDistance = ability:GetSpecialValueFor("beat_back_one")
+						local beatBackSpeed = ability:GetSpecialValueFor("beat_back_speed")
+						beatBackUnit(keys,shoot,unit,1,beatBackDistance,beatBackSpeed)
 					end
-					if keys.isAOE ~= 1 then
-						ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-					end	
 					return hitType
 				end
 				if hitType == 3 then--直达指定位置，中途不命中单位
@@ -184,30 +219,7 @@ function shootHit(shoot, keys)
 	return 0
 end
 
-function moveShootInit(keys,shoot,direction)
-	shoot.shootHight = 100 --子弹高度
-	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射方向
-	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	if keys.hitType  == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-		keys.hitType  = 1
-	end
-	if keys.isAOE == nil then--isAOE:0不是aoe，1普通aoe
-		keys.isAOE = 0
-	end
-	if keys.isTrack == nil then
-		keys.isTrack = 0
-	end
-end
 
-function moveShootTimerInit(keys,shoot,direction,speed)
-	if keys.isTrack == 1 then
-		local unit = keys.trackUnit
-		direction = (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
-	end
-	local newPos = shoot:GetOrigin() + direction * speed
-	FindClearSpaceForUnit( shoot, newPos, false )
-	shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
-end
 
 function shootKill(shoot)
 	shoot:ForceKill(true)
@@ -216,47 +228,48 @@ end
 
 
 --击退单位
-function beatBackUnit(keys,shoot,hitTarget,flag)--flag：标记第几次碰撞，目前只有one和two
+function beatBackUnit(keys,shoot,hitTarget,flag,beatBackDistance,beatBackSpeed)--flag：标记第几次碰撞，目前只有1和2
 	local caster = keys.caster
 	local ability = keys.ability
 	local powerLv = shoot.power_lv
 	hitTarget.power_lv = powerLv
-	local beat_back_one = ability:GetSpecialValueFor("beat_back_one")
-	local beat_back_speed = ability:GetSpecialValueFor("beat_back_speed")
-	local beat_back_two = ability:GetSpecialValueFor("beat_back_two")
+	--local beat_back_one = ability:GetSpecialValueFor("beat_back_one")
+	--local beat_back_speed = ability:GetSpecialValueFor("beat_back_speed")
+	--local beat_back_two = ability:GetSpecialValueFor("beat_back_two")
 	--击退距离受加强削弱影响
-	beat_back_one = powerLevelOperation(powerLv, beat_back_one) 
-	beat_back_two = powerLevelOperation(powerLv, beat_back_two)
+	beatBackDistance = powerLevelOperation(powerLv, beatBackDistance) 
+	--beat_back_two = powerLevelOperation(powerLv, beat_back_two)
 	--print("beat_back_one",beat_back_one)
 	local hitTargetDebuff = keys.hitTargetDebuff
 	--hitTarget:AddNewModifier(caster, ability, hitTargetDebuff, {Duration = control_time} )--需要调用lua的modefier
 	ability:ApplyDataDrivenModifier(caster, hitTarget, hitTargetDebuff, {Duration = -1})
 
-	if flag == "one" then
+	if flag == 1 then
 		shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight*-1))--把子弹的高度降到0
 	end
 	local shootPos = shoot:GetAbsOrigin()
 	local targetPos = hitTarget:GetAbsOrigin()
 	local beatBackDirection =  (targetPos - shootPos):Normalized()
 	local interval = 0.02
-	local speedmod = beat_back_speed * interval
+	local speedmod = beatBackSpeed * interval
 	local bufferTempDis = hitTarget:GetPaddedCollisionRadius()
 	local traveled_distance = 0
 	--记录击退时间
 	local beatTime = GameRules:GetGameTime()
 	hitTarget.lastBeatBackTime = beatTime
-	local beat_back_distance
+	--local beat_back_distance
+	--[[
 	if flag == "one" then
 		beat_back_distance = beat_back_one
 	end
 	if flag == "two" then
 		beat_back_distance = beat_back_two
-	end
+	end]]
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
 	function ()
-		if traveled_distance < beat_back_distance and beatTime == hitTarget.lastBeatBackTime then --如果击退时间没被更改继续执行
+		if traveled_distance < beatBackDistance and beatTime == hitTarget.lastBeatBackTime then --如果击退时间没被更改继续执行
 			local newPosition = hitTarget:GetAbsOrigin() + Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
-			local tempLastDis = beat_back_distance - traveled_distance
+			local tempLastDis = beatBackDistance - traveled_distance
 			--中途可穿模，最后不能穿
 			if tempLastDis > bufferTempDis then
 				hitTarget:SetAbsOrigin(newPosition)
@@ -267,7 +280,7 @@ function beatBackUnit(keys,shoot,hitTarget,flag)--flag：标记第几次碰撞�
 
 			traveled_distance = traveled_distance + speedmod
 
-			if flag == "one" then
+			if flag == 1 then --进入第二次撞击
 				checkSecondHit(keys,hitTarget)
 			end
 		else
@@ -284,7 +297,7 @@ end
 --击退的单位二次击退其他单位
 function checkSecondHit(keys,shoot)
 	local caster = keys.caster
-	--local ability = keys.ability
+	local ability = keys.ability
 	local position = shoot:GetAbsOrigin()
 	local casterTeam = caster:GetTeam()
 	local searchRadius = 100
@@ -304,12 +317,14 @@ function checkSecondHit(keys,shoot)
 		local unitTeam = unit:GetTeam()
 		if(GameRules.skillLabel ~= lable and shoot ~= unit and casterTeam~=unitTeam and unit.stoneBeatBack ~= 1) then --碰到的不是子弹,不是自己,不是发射技能的队伍,没被该技能碰撞过		
 			unit.stoneBeatBack = 1
-			beatBackUnit(keys,shoot,unit,"two")
+			local beatBackSpeed = ability:GetSpecialValueFor("beat_back_speed")
+			local beatBackDistance = ability:GetSpecialValueFor("beat_back_two")
+			beatBackUnit(keys,shoot,unit,2,beatBackDistance,beatBackSpeed)
 		end
 	end
 end
 
-
+--[[
 function onceSkillBoom(keys,shoot)
 	local ability = keys.ability
 	local delay = ability:GetSpecialValueFor("delay") --延迟爆炸时间
@@ -371,6 +386,6 @@ function durativeSkillBoom(keys,shoot)
 	shoot:ForceKill(true)
 	shoot:AddNoDraw()
 end
-
+]]
 
 
