@@ -36,16 +36,17 @@ function waterBallBoom(keys,shoot,particleID)
 	local duration = ability:GetSpecialValueFor("duration") --持续时间
 	--local radius = ability:GetSpecialValueFor("radius") --AOE范围
 	local delay = 1 --延迟作用时间
+	--[[
 	if particleID ~= nil then
 		ParticleManager:DestroyParticle(particleID, true)
 	end
-	
 	if delay ~= nil then
 		particleID = ParticleManager:CreateParticle(keys.particles_power, PATTACH_ABSORIGIN_FOLLOW , shoot)  --爆炸前悬停特效改变
 	end
-
+]]
+	ParticleManager:SetParticleControl(particleID, 13, Vector(0, 1, 0)) --变换粒子效果切换到准备爆炸状态
 	Timers:CreateTimer(delay,function ()
-		local particleBoom = novaRenderParticles(keys,shoot) --粒子效果生成		
+		local particleBoom =  waterBallBoomRenderParticles(keys,shoot)-- novaRenderParticles(keys,shoot) --粒子效果生成		
 		ParticleManager:DestroyParticle(particleID, true)
 		dealSkillBoom(keys,shoot) --实现aoe效果
 		Timers:CreateTimer(1,function ()
@@ -59,6 +60,16 @@ function waterBallBoom(keys,shoot,particleID)
 	end)
 end
 
+function waterBallBoomRenderParticles(keys,shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
+	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
+	ParticleManager:SetParticleControl(particleBoom, 5, shoot:GetAbsOrigin())
+	--ParticleManager:SetParticleControl(particleBoom, 10, Vector(radius, 0, 1))
+	return particleBoom
+end
+--[[
 function novaRenderParticles(keys,shoot)
 	local caster = keys.caster
 	local ability = keys.ability
@@ -68,7 +79,7 @@ function novaRenderParticles(keys,shoot)
 	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 1, radius*2))
 	return particleBoom
 end
-
+]]
 
 
 function dealSkillBoom(keys,shoot)

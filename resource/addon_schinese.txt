@@ -1,0 +1,62 @@
+"lang"
+{
+	"Language"	"Chinese"
+	"Tokens"
+	{
+		"addon_game_name"	"wormwar"
+
+        "DOTA_Tooltip_ability_shoot_datadriven"  "技能名字"   //这是设置技能名字
+        "DOTA_Tooltip_ability_shoot_datadriven_Description"  "技能描述 Description Description"  //这是描述技能的作用啥的
+        "DOTA_Tooltip_ability_shoot_datadriven_Lore"   "ability Lore Lore Lore" //可以当作吐槽用，或者故事背景的描述
+		"DOTA_Tooltip_ability_shoot_datadriven_speed"        "弹道速度："
+        "DOTA_Tooltip_ability_shoot_datadriven_damage"               "攻击力："
+		"DOTA_Tooltip_ability_shoot_datadriven_health"				  "法魂量："
+		"DOTA_Tooltip_ability_shoot_datadriven_maximum_charges"				  "储能上限："
+		"DOTA_Tooltip_ability_shoot_datadriven_charge_replenish_time"		   "充能时间："
+        "DOTA_Tooltip_ability_shoot_datadriven_Note0"                "这是普通攻击"
+		"DOTA_Tooltip_modifier_shoot_counter_datadriven"  "储能数"
+		"DOTA_Tooltip_modifier_shoot_counter_datadriven_Description"  "剩余能量"
+
+
+
+		"DOTA_Tooltip_ability_make_friend_datadriven"  "召唤技能名字"   //这是设置技能名字
+        "DOTA_Tooltip_ability_make_friend_datadriven_Description"  "技能描述 Description Description"  
+        "DOTA_Tooltip_ability_make_friend_datadriven_Lore"   "ability Lore Lore Lore" 
+
+        "DOTA_Tooltip_ability_make_friend_datadriven_Note0"                "这是召唤物"
+
+
+	
+
+		"huoren"                      "召唤火人"
+
+		"yang"						"召唤物"
+
+		"niu"			            "召唤物"	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	}
+
+
+}

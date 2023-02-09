@@ -491,7 +491,7 @@
 
 	"shootUnit"
 	{
-	    "BaseClass"               "npc_dota_creature" // "npc_dota_earth_spirit_stone"
+	    "BaseClass"               "npc_dota_earth_spirit_stone"//"npc_dota_creature" // 
         "Model"                  "models/heroes/snapfire/snapfire_magma_projectile.vmdl" // "models/heroes/mirana/mirana_javelin.vmdl"
         "UnitLabel"					"skillLabel"
 
