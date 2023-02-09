@@ -22,7 +22,7 @@
 
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"2"
+		"AbilityCooldown"				"0.1"
 		
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
@@ -47,7 +47,7 @@
 			"03"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"300"
+				"hit_range"					"75"
 			}
 			"04"
 			{
@@ -90,15 +90,17 @@
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
 				"unitType"          "shui"
-				"hitType" 			"3"   //3直达不触碰,2穿透弹,1触碰爆炸
+				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 				"isAOE"             "1"
+				"canShotDown"		"1"
 				"particles_nm"      "particles/21huojingling_shengcheng.vpcf"//"particles/batrider_flamebreak_test.vpcf"//"particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
-				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
-				"particlesBoom" 	"particles/units/heroes/hero_batrider/batrider_flamebreak_explosion.vpcf"//"particles/21huojingling_baozha.vpcf"//"particles/units/heroes/hero_crystalmaiden/maiden_crystal_nova.vpcf"
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"	
+				"sound_shotDown"	"Hero_Gyrocopter.HomingMissile.Destroy"	
+				"particlesBoom" 	"particles/21huojingling_baozha.vpcf"//"particles/units/heroes/hero_crystalmaiden/maiden_crystal_nova.vpcf"
 				"cp"				"3"
 				"hitTargetDebuff"	"modifier_water_ball_aoe_debuff"	
 				

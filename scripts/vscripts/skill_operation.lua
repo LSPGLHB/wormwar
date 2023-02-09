@@ -181,6 +181,7 @@ function shootBoomParticleOperation(shoot,destroyParticleID,showParticlesName,so
 	shoot:ForceKill(true)
 	--中弹粒子效果
 	ParticleManager:CreateParticle(showParticlesName, PATTACH_ABSORIGIN_FOLLOW, shoot)
+	
 	--中弹声音
 	EmitSoundOn(soundName, shoot)
 	--消除粒子效果

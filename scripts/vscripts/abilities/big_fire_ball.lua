@@ -23,8 +23,6 @@ function createBigFireBall(keys)
     ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 
     moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID, bigFireBallBoom)
-
-
 end
 
 
@@ -154,7 +152,8 @@ function staticStromRenderParticles(keys,shoot)
 	local duration = ability:GetSpecialValueFor("debuff_duration") --持续时间
 	local radius = ability:GetSpecialValueFor("aoe_duration_radius")
 	local particleBoom = ParticleManager:CreateParticle(keys.durationParticlesBoom, PATTACH_WORLDORIGIN, caster)
-	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
+    local shootPos = shoot:GetAbsOrigin()
+	ParticleManager:SetParticleControl(particleBoom, 0, Vector(shootPos.x, shootPos.y, shootPos.z + shoot.shootHight))
 	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 0, 0))
 	ParticleManager:SetParticleControl(particleBoom, 2, Vector(duration, 0, 0))
 	return particleBoom

@@ -44,20 +44,36 @@ function waterBallBoom(keys,shoot,particleID)
 		particleID = ParticleManager:CreateParticle(keys.particles_power, PATTACH_ABSORIGIN_FOLLOW , shoot)  --爆炸前悬停特效改变
 	end
 ]]
-	ParticleManager:SetParticleControl(particleID, 13, Vector(0, 1, 0)) --变换粒子效果切换到准备爆炸状态
-	Timers:CreateTimer(delay,function ()
-		local particleBoom =  waterBallBoomRenderParticles(keys,shoot)-- novaRenderParticles(keys,shoot) --粒子效果生成		
-		ParticleManager:DestroyParticle(particleID, true)
-		dealSkillBoom(keys,shoot) --实现aoe效果
+	if keys.canShotDown == 1 and shoot.isHealth == 0 then
+		local particleShotDown = shotDown(keys, shoot)--shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_shotDown,keys.particles_hit_dur)
+		shootKill(shoot)--消失
 		Timers:CreateTimer(1,function ()
-			ParticleManager:DestroyParticle(particleBoom, true)
-			EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)
+			ParticleManager:DestroyParticle(particleShotDown, true)
 			return nil
 		end)
-		shoot:ForceKill(true)
-		shoot:AddNoDraw()
-		return nil
-	end)
+	else
+		ParticleManager:SetParticleControl(particleID, 13, Vector(0, 1, 0)) --变换粒子效果切换到准备爆炸状态
+		Timers:CreateTimer(delay,function ()
+			local particleBoom =  waterBallBoomRenderParticles(keys,shoot)-- novaRenderParticles(keys,shoot) --粒子效果生成		
+			ParticleManager:DestroyParticle(particleID, true)
+			dealSkillBoom(keys,shoot) --实现aoe效果
+			shootKill(shoot)--到达尽头消失
+			EmitSoundOn("Hero_Gyrocopter.HomingMissile.Destroy", shoot)
+			Timers:CreateTimer(2,function ()
+				ParticleManager:DestroyParticle(particleBoom, true)
+				return nil
+			end)
+			return nil
+		end)
+	end
+end
+
+function shotDown(keys, shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local particleShotDown = ParticleManager:CreateParticle("particles/21huojingling_jiluo.vpcf", PATTACH_WORLDORIGIN, caster)
+	ParticleManager:SetParticleControl(particleShotDown, 3, shoot:GetAbsOrigin())
+	return particleShotDown
 end
 
 function waterBallBoomRenderParticles(keys,shoot)
@@ -65,8 +81,8 @@ function waterBallBoomRenderParticles(keys,shoot)
 	local ability = keys.ability
 	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
 	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
-	ParticleManager:SetParticleControl(particleBoom, 5, shoot:GetAbsOrigin())
-	--ParticleManager:SetParticleControl(particleBoom, 10, Vector(radius, 0, 1))
+	ParticleManager:SetParticleControl(particleBoom, 3, shoot:GetAbsOrigin())
+	ParticleManager:SetParticleControl(particleBoom, 10, Vector(100, 1, 0))
 	return particleBoom
 end
 --[[
