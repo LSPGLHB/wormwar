@@ -8,19 +8,19 @@
 		"override_hero"	"npc_dota_hero_rubick"
 		"AbilityLayout"         "9"
 		"Ability1"	"shoot_datadriven"
-		"Ability2"	"water_ball_datadriven"//"multi_stage_skills_a_datadriven"//"powershot_datadriven"//"mirana_arrow"//"pudge_meat_hook_lua_reb"
+		"Ability2"	"multi_stage_skills_a_datadriven"//"powershot_datadriven"//"mirana_arrow"//"pudge_meat_hook_lua_reb"
 		"Ability3"	"make_friend_datadriven"
-		"Ability4"  "stone_ball_datadriven"//"nothing_c"//"fire_storm_datadriven"
-		"Ability5"  "stone_spirit_datadriven"//"speed_up_stack_datadriven"//"cannon_datadriven"
-		"Ability6"  "thunder_ball_datadriven"//"speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
-		"Ability7"  "stone_double_twine_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
-		"Ability8"	"big_fire_ball_datadriven"//"shoot_speed_up_stack_datadriven"
+		"Ability4"  "nothing_c"//"fire_storm_datadriven"
+		"Ability5"  "speed_up_stack_datadriven"//"cannon_datadriven"
+		"Ability6"  "speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
+		"Ability7"  "bloodseeker_thirst"//"running_fire_datadriven"
+		"Ability8"	"shoot_speed_up_stack_datadriven"
 		"Ability9" 	"shoot_speed_down_stack_datadriven"
 		"Ability10"  "multi_stage_skills_b_datadriven"
 
 
 
-		"BoundsHullName"            "DOTA_HULL_SIZE_SMALL"   // 碰撞边界类型，以下为单位尺寸参数:
+		  "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"   // 碰撞边界类型，以下为单位尺寸参数:
                                                             // 值                             Hammer中的单位半径
                                                             // DOTA_HULL_SIZE_SMALL            8
                                                             // DOTA_HULL_SIZE_REGULAR          16
@@ -46,81 +46,9 @@
 		// 基础魔抗
 		"MagicalResistance"	"0"
 		// 白天视野范围
-		"VisionDaytimeRange"	"1200"
+		"VisionDaytimeRange"	"1800"
 		// 夜晚视野
-		"VisionNighttimeRange"	"1200"
-
-		// 主属性类型
-		"AttributePrimary"	"DOTA_ATTRIBUTE_STRENGTH"
-
-		// 基础力量
-		"AttributeBaseStrength"	"0"
-		// 力量成长
-		"AttributeStrengthGain"	"0"
-		// 基础智力
-		"AttributeBaseIntelligence"	"0"
-		// 智力成长
-		"AttributeIntelligenceGain"	"0"
-		// 基础敏捷
-		"AttributeBaseAgility"	"0"
-		// 敏捷成长
-		"AttributeAgilityGain"	"0"
-
-		// 基础生命值
-		"StatusHealth"	"100"
-		// 生命恢复速度，负值无效
-		"StatusHealthRegen"	"0"
-		// 基础魔法值，设置为0会导致没有魔法条
-		"StatusMana"	"100"
-		// 魔法恢复速度，负值无效
-		"StatusManaRegen"	"10"
-		// 单位诞生时的魔法值，-1意味着默认满魔法值
-		"StatusStartingMana"	"-1"
-	}
-	"npc_dota_hero_lina"
-	{
-		"override_hero"	"npc_dota_hero_lina"
-		"AbilityLayout"         "9"
-		"Ability1"	"shoot_datadriven"
-		"Ability2"	"shoot2_datadriven"
-		"Ability3"	"shoot3_datadriven"
-		"Ability4"	"make_friend_datadriven"
-		"Ability5"  "speed_up_stack_datadriven"
-		"Ability6"  "speed_down_stack_datadriven"
-		"Ability7"  "bloodseeker_thirst"
-		"Ability8"  "shoot_speed_up_stack_datadriven"
-		"Ability9"	"shoot_speed_down_stack_datadriven"
-		
-
-		"BoundsHullName"            "DOTA_HULL_SIZE_SMALL"   // 碰撞边界类型，以下为单位尺寸参数:
-                                                            // 值                             Hammer中的单位半径
-                                                            // DOTA_HULL_SIZE_SMALL            8
-                                                            // DOTA_HULL_SIZE_REGULAR          16
-                                                            // DOTA_HULL_SIZE_SIEGE            16
-                                                            // DOTA_HULL_SIZE_HERO             24
-                                                            // DOTA_HULL_SIZE_HUGE             80
-                                                            // DOTA_HULL_SIZE_BUILDING         81
-                                                            // DOTA_HULL_SIZE_FILLER           96
-                                                            // DOTA_HULL_SIZE_BARRACKS         144
-                                                            // DOTA_HULL_SIZE_TOWER            144
-        "RingRadius"                "100"                    // 选择圈半径
-	
-		//模型大小
-		"ModelScale"	"0.5"
-		//转身速度
-		"MovementTurnRate"	"1.0"
-		//移动速度
-		 "MovementSpeed"             "150"
-
-	
-		// 基础护甲
-		"ArmorPhysical"	"0"
-		// 基础魔抗
-		"MagicalResistance"	"0"
-		// 白天视野范围
-		"VisionDaytimeRange"	"1200"
-		// 夜晚视野
-		"VisionNighttimeRange"	"1200"
+		"VisionNighttimeRange"	"1800"
 
 		// 主属性类型
 		"AttributePrimary"	"DOTA_ATTRIBUTE_STRENGTH"
@@ -216,17 +144,6 @@
 		"VisionNighttimeRange"	"1800"
 	}
 
-	"npc_dota_hero_pudge" 
-	{
-		"override_hero"	"npc_dota_hero_pudge"
-
-		"Ability1"	""
-		"Ability2"	"pudge_meat_hook_lua"
-		"Ability3"	"pudge_meat_hook"
-
-		// 夜晚视野
-		"VisionNighttimeRange"	"1800"
-	}
 
 	
 

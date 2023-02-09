@@ -46,12 +46,12 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"maximum_charges"		"13 14 15 16"
+				"maximum_charges"		"99 99 99 99"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_FLOAT"
-				"charge_replenish_time"	"3 3 3 3"
+				"charge_replenish_time"	"1 1 1 1"
 			}
 			"03"
 			{
@@ -73,6 +73,11 @@
 			{
 				"var_type"					"FIELD_FLOAT"
 				"damage"						"125 250 375 500"
+			}
+			"07"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"hit_range"					"75"
 			}
 		
 		}
@@ -108,7 +113,9 @@
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
 				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"
-				"modifierCountName"	"modifier_shoot_counter_datadriven"
+				"modifierCountName"	"modifier_shoot2_counter_datadriven"
+				"cp" 	"0"
+				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 			
 			}
 		}
@@ -116,7 +123,7 @@
 		
 		"Modifiers"
 		{
-			"modifier_shoot_counter_datadriven"
+			"modifier_shoot2_counter_datadriven"
 			{
 				"Passive"				"1"
 				"IsHidden"				"0"

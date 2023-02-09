@@ -6,5 +6,4 @@
     "npc_dota_hero_juggernaut"          "-1"    
     "npc_dota_hero_rubick"              "-1"
     "npc_dota_hero_lion"                "-1"
-    "npc_dota_hero_lina"                "-1"
 } 

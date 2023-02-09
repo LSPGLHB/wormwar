@@ -11,7 +11,7 @@ function moveShoot(shoot, max_distance, direction, speed, maxSpeed, keys, partic
 	
 	local shootHealthMax = shoot:GetHealth()
 	local shootHealthSend = shootHealthMax * 0.5
-	local shootHealthStep = shootHealthMax * 0.5 * speed / 500
+	local shootHealthStep = shootHealthMax * 0.5 * speed / 10
 	shoot:SetHealth(shootHealthSend)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
@@ -43,8 +43,6 @@ function moveShoot(shoot, max_distance, direction, speed, maxSpeed, keys, partic
 			if isHitType == 2 then
 				shootPenetrateParticleOperation(keys,shoot)
 				if callback ~= nil then
-					shoot:SetHealth(0)
-					shoot.isHealth = 0
 					callback(keys,shoot,particleID) --到达尽头启动AOE
 					shootKill(shoot)
 				end
@@ -56,20 +54,18 @@ function moveShoot(shoot, max_distance, direction, speed, maxSpeed, keys, partic
 			end
 			--法魂被击破，行程结束
 			--获得子弹法魂是否为0
-			if shoot.isHealth == 0 then
+			if shoot.isHealth == 0  then
 				if shoot then
 					callback(keys,shoot,particleID) 
-					shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,keys.particles_hit_dur)
+					--shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_shotDown,keys.particles_hit_dur)
 					return nil
 				end
 			end
 		else
 			--超出射程没有命中
 			if shoot then		
-				if keys.isAOE == 1 and callback ~= nil then --直达不触碰类AOE	
-						shoot:SetHealth(0)
-						shoot.isHealth = 0
-						callback(keys,shoot,particleID) --到达尽头启动AOE
+				if keys.isAOE == 1 and callback ~= nil then --直达尽头发动AOE	
+						callback(keys,shoot,particleID) --启动AOE
 				else
 					if particleID then
 						ParticleManager:DestroyParticle(particleID, true)
@@ -87,14 +83,17 @@ function moveShootInit(keys,shoot,direction)
 	shoot.shootHight = 100 --子弹高度
 	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
 	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	if keys.hitType  == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-		keys.hitType  = 1
+	if keys.hitType == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
+		keys.hitType = 1
 	end
 	if keys.isTrack == nil then
 		keys.isTrack = 0
 	end
 	if keys.isAOE == nil then
 		keys.isAOE = 0
+	end
+	if keys.canShotDown == nil then
+		keys.canShotDown = 0
 	end
 end
 
@@ -173,14 +172,16 @@ function shootHit(shoot, keys)
 				local tempHealth = shoot:GetHealth() - unit:GetHealth()
 				if(tempHealth > 0) then
 					shoot:SetHealth(tempHealth)
-					unit:SetHealth(0)
+					--unit:SetHealth(0.1) --已经死了，但是为了可以删除保留0.1
+					shootKill(unit)
 					unit.isHealth = 0
 				else
 					if tempHealth == 0 then
 						unit.isHealth = 0
 					end
-					shoot:SetHealth(0)
+					--shoot:SetHealth(0.1)
 					shoot.isHealth = 0
+					shootKill(shoot)
 					tempHealth = tempHealth * -1
 					unit:SetHealth(tempHealth)
 				end
