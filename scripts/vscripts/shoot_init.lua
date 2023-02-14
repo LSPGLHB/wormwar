@@ -93,12 +93,12 @@ function moveShootInit(keys,shoot,direction)
 end
 
 function moveShootTimerInit(keys,shoot,direction,speed)
+	local shootTempPos = shoot:GetAbsOrigin()
 	if keys.isTrack == 1 then
-		local unit = keys.trackUnit
-		local shootTempPos = shoot:GetAbsOrigin()
-		direction = (unit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
+		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
 	end
-	local newPos = shoot:GetAbsOrigin() + direction * speed
+	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
+	local newPos = shootTempPos + direction * speed
 	FindClearSpaceForUnit( shoot, newPos, false )
 	shoot:SetAbsOrigin(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight))--把子弹控制在离地面一定高度shoot:SetAbsOrigin(shoot:GetAbsOrigin()+ Vector(0,0,shoot.shootHight))
 end
@@ -250,33 +250,17 @@ function beatBackUnit(keys,shoot,hitTarget,beatBackDistance,beatBackSpeed,isSkil
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
 	function ()
 		if traveled_distance < beatBackDistance and beatTime == hitTarget.lastBeatBackTime then --如果击退时间没被更改继续执行
-			--local tempPos = hitTarget:GetAbsOrigin()
-
-
-			local newPosition = hitTarget:GetAbsOrigin() +  beatBackDirection * speedmod -- Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
-			hitTarget:SetAbsOrigin(newPosition)
-
+			local tempPos = hitTarget:GetAbsOrigin()
+			local newPosition = tempPos +  beatBackDirection * speedmod -- Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
+			local groundPos = GetGroundPosition(newPosition, hitTarget)
 			--中途可穿模，最后不能穿
-			
 			local tempLastDis = beatBackDistance - traveled_distance
---[[
 			if tempLastDis > bufferTempDis then
-				--FindClearSpaceForUnit( hitTarget, newPosition, false )
-				hitTarget:SetAbsOrigin(newPosition)
+				hitTarget:SetAbsOrigin(groundPos)
 			else
-				FindClearSpaceForUnit( hitTarget, newPosition, false )
+				FindClearSpaceForUnit( hitTarget, groundPos, false )
 			end
-]]
-			
-
---[[
-			local newPos = shoot:GetAbsOrigin() + direction * speed
-			FindClearSpaceForUnit( shoot, newPos, false )
-			shoot:SetAbsOrigin(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight))
-]]
-			
 			traveled_distance = traveled_distance + speedmod
-
 			if canSecHit == 1 then --进入第二次撞击
 				checkSecondHit(keys,hitTarget)
 			end

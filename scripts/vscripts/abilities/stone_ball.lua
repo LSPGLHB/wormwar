@@ -21,6 +21,7 @@ function StoneShootBeatbackUnit(keys, shoot, unit)
 	local beatBackSpeed = ability:GetSpecialValueFor("speed")
 	local isSkillHit = 1  --是技能撞击
 	local canSecHit = 1	  --可以二次撞击
+	
 	beatBackUnit(keys, shoot, unit, beatBackDistance, beatBackSpeed, isSkillHit, canSecHit)
 end
 

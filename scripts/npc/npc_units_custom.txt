@@ -261,7 +261,7 @@
 	{										
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models\heroes\gyro\gyro_missile.mdl"	// Model.
+		"Model"						"models/heroes/invoker/forge_spirit.vmdl"//"models\heroes\gyro\gyro_missile.mdl"	// Model.
 		"BaseClass"					"npc_dota_base_additive"
 		"SoundSet"					"0"			// Name of sound set.
 		"Level"						"2"
