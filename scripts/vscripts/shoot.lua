@@ -107,19 +107,12 @@ function createShoot(keys)
 		end
 		--unitModel = shootUnit
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-		shoot:SetOwner(caster)
-		shoot.unit_type = keys.unitType
-		shoot.power_lv = 0
-		shoot.power_flag = 0
-
-		local cp = keys.cp
-		if cp == nil then
-			cp = 0
-		end
+		creatSkillShootInit(keys,shoot,caster)
 		
+
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID, shootBoom)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		moveShoot(keys, shoot, max_distance, direction, speed, particleID, shootBoom, nil)
 	else
 		keys.ability:RefundManaCost()
 	end
@@ -145,13 +138,13 @@ function shootBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local damage = getApplyDamageValue(keys,shoot)
 	for i = 1, #shoot.hitUnit  do
-		local unit = shoot.hitUnit[i]
+		local unit = shoot.hitUnit[1]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
 	end
 	if particleID ~= nil then
 		ParticleManager:DestroyParticle(particleID, true)
 	end
-	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)
+	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,keys.particles_hit_dur)
 end
 
 

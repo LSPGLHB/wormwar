@@ -1,6 +1,6 @@
 "DOTAAbilities"
 {
-	"stone_ball_datadriven"
+	"small_tornado_datadriven"
 	{
 		// General
 		//-------------------------------------------------------------------------------------------------------------
@@ -10,19 +10,19 @@
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"FightRecapLevel"				"1"
-		"AbilityTextureName"			"earth_spirit_boulder_smash"
+		"AbilityTextureName"			"magnataur_shockwave"
 
          "MaxLevel"                      "1"
 	
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastRange"				"1200"   //施法距离
+		"AbilityCastRange"				"1800"   //施法距离
 		"AbilityCastPoint"				"0.2"
 
 		// Time		
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"3"
+		"AbilityCooldown"				"1"
 		
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
@@ -32,41 +32,43 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
 		{
+			
 			"01"
 			{
-				"var_type"			"FIELD_FLOAT"
-				"beat_back"			"500"
+				"var_type"					"FIELD_FLOAT"
+				"max_distance"				"1800"
 			}
 			"02"
 			{
-				"var_type"				"FIELD_FLOAT"
-				"beat_back_two"			"500"
+				"var_type"					"FIELD_FLOAT"
+				"speed"						"750"
 			}
 			"03"
 			{
-				"var_type"				"FIELD_FLOAT"
-				"beat_back_speed"		"650"
+				"var_type"					"FIELD_FLOAT"
+				"damage"					"2"
 			}
 			"04"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"max_distance"				"1200"
+				"hit_range"					"150"
 			}
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"speed"						"650"
+				"aoe_radius"				"150"
 			}
 			"06"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"damage"					"6"
+				"G_speed"				    "50"
 			}
-			"06"
+			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"300"
+				"G_duration"				"2.5"
 			}
+
 		
 		}
 		
@@ -79,12 +81,12 @@
 			}
 			"RunScript"
 			{
-				"ScriptFile"		"abilities/stone_ball.lua"
-				"Function"			"createStoneShoot"
+				"ScriptFile"		"abilities/small_tornado.lua"
+				"Function"			"createSmallTornado"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
-				"unitType"          "tu"
-				"hitType" 			"2"   //3直达施法点，2穿透弹，1为不穿透
+				"unitType"          "feng"
+				"hitType" 			"2"   //3不触碰，2穿透弹，1触碰结束
 				"isBeatBack"		"1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
@@ -99,7 +101,7 @@
 
 		"Modifiers"
 		{
-			"modifier_stone_beat_back"
+			"modifier_wind_"
 			{
 				"IsDebuff"				"1"
 				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"

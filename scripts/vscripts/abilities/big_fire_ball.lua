@@ -10,19 +10,12 @@ function createBigFireBall(keys)
     local direction = (skillPoint - casterPoint):Normalized()
 
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
-    shoot:SetOwner(caster)
-    shoot.unit_type = keys.unitType
-    shoot.power_lv = 0
-    shoot.power_flag = 0
-    local cp = keys.cp
-    if cp == nil then
-        cp = 0
-    end
+    creatSkillShootInit(keys,shoot,caster)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
-    ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+    ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 
-    moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID, bigFireBallBoom)
+    moveShoot(keys, shoot, max_distance, direction, speed, particleID, bigFireBallBoom, nil)
 end
 
 
@@ -30,8 +23,8 @@ end
 function bigFireBallBoom(keys,shoot,particleID)
     ParticleManager:DestroyParticle(particleID, true) --子弹特效消失
     local particleBoom = bigFireBallRenderParticles(keys,shoot) --爆炸粒子效果生成		  
-    dealSkillBoom(keys,shoot) --实现aoe爆炸效果
-    bigFireBallDuration(keys,shoot) --实现持续光环效果
+    dealSkillbigFireBallBoom(keys,shoot) --实现aoe爆炸效果
+    bigFireBallDuration(keys,shoot) --实现持续光环效果以及粒子效果
     Timers:CreateTimer(1,function ()
         ParticleManager:DestroyParticle(particleBoom, true)
         EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)
@@ -51,7 +44,7 @@ end
 
 
 
-function dealSkillBoom(keys,shoot)
+function dealSkillbigFireBallBoom(keys,shoot)
 	local caster = keys.caster
 	local ability = keys.ability
 	local radius = ability:GetSpecialValueFor("aoe_boom_radius") --AOE爆炸范围
@@ -77,7 +70,7 @@ function dealSkillBoom(keys,shoot)
 	        local beatBackSpeed = ability:GetSpecialValueFor("beat_back_speed")
             local tempDistance = (shoot:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D()
             local beatBackDistance = beat_back_one - tempDistance   --只击退到AOE的600码
-            beatBackUnit(keys,shoot,unit,1,beatBackDistance,beatBackSpeed)
+            beatBackUnit(keys,shoot,unit,beatBackDistance,beatBackSpeed,1,1)
 			local damage = getApplyDamageValue(keys,shoot)
 			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		end
@@ -153,7 +146,7 @@ function staticStromRenderParticles(keys,shoot)
 	local radius = ability:GetSpecialValueFor("aoe_duration_radius")
 	local particleBoom = ParticleManager:CreateParticle(keys.durationParticlesBoom, PATTACH_WORLDORIGIN, caster)
     local shootPos = shoot:GetAbsOrigin()
-	ParticleManager:SetParticleControl(particleBoom, 0, Vector(shootPos.x, shootPos.y, shootPos.z + shoot.shootHight))
+	ParticleManager:SetParticleControl(particleBoom, 0, Vector(shootPos.x, shootPos.y, shootPos.z))
 	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 0, 0))
 	ParticleManager:SetParticleControl(particleBoom, 2, Vector(duration, 0, 0))
 	return particleBoom

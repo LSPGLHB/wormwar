@@ -6,7 +6,7 @@
 	"npc_dota_hero_rubick" 
 	{
 		"override_hero"	"npc_dota_hero_rubick"
-		"AbilityLayout"         "9"
+		"AbilityLayout"         "10"
 		"Ability1"	"shoot_datadriven"
 		"Ability2"	"water_ball_datadriven"//"multi_stage_skills_a_datadriven"//"powershot_datadriven"//"mirana_arrow"//"pudge_meat_hook_lua_reb"
 		"Ability3"	"make_friend_datadriven"
@@ -15,8 +15,9 @@
 		"Ability6"  "thunder_ball_datadriven"//"speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
 		"Ability7"  "stone_double_twine_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
 		"Ability8"	"big_fire_ball_datadriven"//"shoot_speed_up_stack_datadriven"
-		"Ability9" 	"shoot_speed_down_stack_datadriven"
-		"Ability10"  "multi_stage_skills_b_datadriven"
+		"Ability9" 	"small_tornado_datadriven"
+		"Ability10"  "bloodseeker_thirst"
+		"Ability11"  "multi_stage_skills_b_datadriven"
 
 
 
@@ -35,6 +36,8 @@
 	
 		//模型大小
 		"ModelScale"	"0.5"
+		// 碰撞边界类型，以下为单位尺寸参数:
+		"BoundsHullName"	"DOTA_HULL_SIZE_SMALL"
 		//转身速度
 		"MovementTurnRate"	"1.0"
 		//移动速度

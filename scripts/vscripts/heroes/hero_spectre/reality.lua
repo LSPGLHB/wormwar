@@ -2,12 +2,12 @@ function RealityCast (keys)
 
 	local caster = keys.caster
 	local ability = keys.ability
-	local unit = caster:GetUnitName()
+	local unitName = caster:GetUnitName()
 	local vPoint = ability:GetCursorPosition()
 
 	if caster.haunting then
 		
-		local target = Entities:FindByNameNearest(unit, vPoint, 0)
+		local target = Entities:FindByNameNearest(unitName, vPoint, 0)
 
 		if target:IsIllusion() then
 			

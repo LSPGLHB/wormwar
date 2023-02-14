@@ -7,17 +7,33 @@ function createStoneShoot(keys)
 		local position = caster:GetAbsOrigin()
 		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-		shoot:SetOwner(caster)
-		shoot.unit_type = keys.unitType
-		shoot.power_lv = 0
-		shoot.power_flag = 0
-		shoot.hitUnit = {}
-		local cp = keys.cp
-		if cp == nil then
-			cp = 0
-		end
+		creatSkillShootInit(keys,shoot,caster)
+
+
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		moveShoot(keys, shoot, max_distance, direction, speed, particleID, StoneShootBoom, StoneShootBeatbackUnit)
 end
 
+function StoneShootBeatbackUnit(keys, shoot, unit)
+	local ability = keys.ability
+	local beatBackDistance = ability:GetSpecialValueFor("beat_back")
+	local beatBackSpeed = ability:GetSpecialValueFor("speed")
+	local isSkillHit = 1  --是技能撞击
+	local canSecHit = 1	  --可以二次撞击
+	beatBackUnit(keys, shoot, unit, beatBackDistance, beatBackSpeed, isSkillHit, canSecHit)
+end
+
+function StoneShootBoom(keys,shoot,particleID)
+	local ability = keys.ability
+	local damage = getApplyDamageValue(keys,shoot)
+	for i = 1, #shoot.hitUnit  do
+		local unit = shoot.hitUnit[1]
+		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
+	end
+	--[[
+	if particleID ~= nil then
+		ParticleManager:DestroyParticle(particleID, true)
+	end
+	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,0.7)]]
+end

@@ -10,19 +10,12 @@ function createWaterBall(keys)
     local direction = (skillPoint - casterPoint):Normalized()
 
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
-    shoot:SetOwner(caster)
-    shoot.unit_type = keys.unitType
-    shoot.power_lv = 0
-    shoot.power_flag = 0
-    local cp = keys.cp
-    if cp == nil then
-        cp = 0
-    end
+	creatSkillShootInit(keys,shoot,caster)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
-    ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+    ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 
-    moveShoot(shoot, max_distance, direction, speed, nil, keys, particleID, waterBallBoom)
+    moveShoot(keys, shoot, max_distance, direction, speed, particleID, waterBallBoom, nil)
 
 
 end

@@ -5,10 +5,10 @@
 {
 	"Version"		"1"
 
-	"yang"
+	"yang22"   
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Model"	"models/heroes/doom/doom.vmdl"
+		"Model"	 "models/heroes/invoker/forge_spirit.vmdl"//"models/heroes/doom/doom.vmdl"
 		"ModelScale"	"1"
 		"ConsideredHero"            "1"  
 		// 小地图图标尺寸
@@ -49,7 +49,7 @@
 		// 警戒范围
 		"AttackAcquisitionRange"	"0"
 		// 攻击范围
-		"AttackRange"	"0"
+		"AttackRange"	"100"
 		// 攻击缓冲范围（不会取消攻击的额外射程范围）
 		"AttackRangeBuffer"	"250"
 		// 投射速率
@@ -82,18 +82,18 @@
 		// 边界设置
 		// ----------------------------------------------------------------
 		// 碰撞边界类型，以下为单位尺寸参数:
-		"BoundsHullName"	"144"//"DOTA_HULL_SIZE_SMALL"
+		"BoundsHullName"	"DOTA_HULL_SIZE_SMALL"
 		// 选择圈半径
 		"RingRadius"	"50"
 		// 血条高度，缺省值为 "-1"，意味着使用默认的模型高度
 		"HealthBarOffset"	"-1"
 		// 移动类型
-		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_NONE"
+		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_GROUND"
 		// DOTA_UNIT_CAP_MOVE_NONE       不能移动
 		// DOTA_UNIT_CAP_MOVE_GROUND     地面
 		// DOTA_UNIT_CAP_MOVE_FLY        飞行
 		// 移动速度
-		"MovementSpeed"	"0"
+		"MovementSpeed"	"100"
 		// 转身速度
 		"MovementTurnRate"	"1.5"
 		// 单位会在接近敌人时切换空闲/跑步的移动动画，比如亚巴顿的模型
@@ -134,7 +134,7 @@
 	"niu"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Model"	"models/heroes/invoker/forge_spirit.vmdl"
+		"Model"	"models/heroes/doom/doom.vmdl"//"models/heroes/invoker/forge_spirit.vmdl"
 		"ModelScale"	"1"
 		"ConsideredHero"            "1"  
 		// 小地图图标尺寸
@@ -165,9 +165,9 @@
 		//           DOTA_UNIT_CAP_MELEE_ATTACK      近战
 		//           DOTA_UNIT_CAP_RANGED_ATTACK     远程
 		// 最小伤害
-		"AttackDamageMin"	"40"
+		"AttackDamageMin"	"4"
 		// 最大伤害
-		"AttackDamageMax"	"50"
+		"AttackDamageMax"	"5"
 		// 攻击间隔
 		"AttackRate"	"0"
 		// 攻击前摇
@@ -214,7 +214,7 @@
 		// 血条高度，缺省值为 "-1"，意味着使用默认的模型高度
 		"HealthBarOffset"	"-1"
 		// 移动类型
-		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_NONE"
+		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_GROUND"
 		// DOTA_UNIT_CAP_MOVE_NONE       不能移动
 		// DOTA_UNIT_CAP_MOVE_GROUND     地面
 		// DOTA_UNIT_CAP_MOVE_FLY        飞行
@@ -227,7 +227,7 @@
 		// 状态设置
 		// ----------------------------------------------------------------
 		// 基础生命值
-		"StatusHealth"	"1"
+		"StatusHealth"	"1000"
 		// 生命恢复速度，负值无效
 		"StatusHealthRegen"	"0"
 		// 基础魔法值，设置为0会导致没有魔法条
@@ -256,6 +256,68 @@
 		"Ability15"	""
 		"Ability16"	""
 	}
+
+	"yang"//"npc_dota_gyrocopter_homing_missile"							
+	{										
+		// General
+		//----------------------------------------------------------------
+		"Model"						"models\heroes\gyro\gyro_missile.mdl"	// Model.
+		"BaseClass"					"npc_dota_base_additive"
+		"SoundSet"					"0"			// Name of sound set.
+		"Level"						"2"
+		"ModelScale"				"1"
+
+		// Abilities
+		//----------------------------------------------------------------
+		"Ability1"					""			// Ability 1
+		"Ability2"					""			// Ability 2
+		"Ability3"					""			// Ability 3
+		"Ability4"					""			// Ability 4
+
+		// Armor
+		//----------------------------------------------------------------
+		"ArmorPhysical"				"0"			// Physical protection.
+
+		// Attack
+		//----------------------------------------------------------------
+		"AttackCapabilities"		"DOTA_UNIT_CAP_NO_ATTACK"
+		"AttackDamageMin"			"0"			// Damage range min.
+		"AttackDamageMax"			"0"			// Damage range max.	
+		"AttackRate"				"1.0"		// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"0"			// Range within a target can be acquired.
+		"AttackRange"				"0"			// Range within a target can be attacked.
+		"ProjectileModel"			""			// Particle system model for projectile.
+		"ProjectileSpeed"			"0"			// Speed of projectile.		   
+
+		// Bounty
+		//----------------------------------------------------------------
+		"BountyXP"					"20"		// Experience earn.
+		"BountyGoldMin"				"20"		// Gold earned min.
+		"BountyGoldMax"				"30"		// Gold earned max.
+
+		// Movement
+		//----------------------------------------------------------------
+		"MovementCapabilities"		"DOTA_UNIT_CAP_MOVE_GROUND"
+		"MovementSpeed"				"0"			// Speed.
+
+		// Status
+		//----------------------------------------------------------------
+		"StatusHealth"				"10000"		// Base health.
+		"StatusHealthRegen"			"0.0"		// Health regeneration rate.
+		
+		// Vision
+		//----------------------------------------------------------------
+		"VisionDaytimeRange"		"400"		// Range of vision during day light.
+		"VisionNighttimeRange"		"400"		// Range of vision at night time.
+
+		// Team
+		//----------------------------------------------------------------
+		"TeamName"					"DOTA_TEAM_NEUTRALS"							// Team name.
+		"CombatClassAttack"			"DOTA_COMBAT_CLASS_ATTACK_BASIC"
+		"CombatClassDefend"			"DOTA_COMBAT_CLASS_DEFEND_SOFT"
+		"UnitRelationshipClass"		"DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+	}	
 
 	"huorenss"
 	{

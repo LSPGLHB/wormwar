@@ -98,22 +98,13 @@ function createStoneSpirit(keys)
 		end
 	
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-		shoot:SetOwner(caster)
-		shoot.unit_type = keys.unitType
-		shoot.power_lv = 0
-		shoot.power_flag = 0
+		creatSkillShootInit(keys,shoot,caster)
 
-		local cp = keys.cp
-		if cp == nil then
-			cp = 0
-		end
-
-		--moveShootInit(keys,shoot,direction)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
         
-        moveShoot(shoot, max_distance, direction, low_speed, nil, keys, particleID, stoneSpiritBoom)
+        moveShoot(keys, shoot, max_distance, direction, low_speed, particleID, stoneSpiritBoom, nil)
 
 		local casterTeam = caster:GetTeam()
 		local position
@@ -143,10 +134,10 @@ function createStoneSpirit(keys)
 			if lockUnitNum > 0 then
 				keys.trackUnit = searchUnit[1]--就近目标
                 local unit = keys.trackUnit
-                shoot.isBreak = 1
+                shoot.isBreak = 1 --
 				keys.isTrack = 1
                 direction =  (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
-				moveShoot(shoot, max_distance, direction, high_speed, nil, keys, particleID, stoneSpiritBoom)
+				moveShoot(keys, shoot, max_distance, direction, high_speed, particleID, stoneSpiritBoom, nil)
 				return nil
 			end
 			return 0.1

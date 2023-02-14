@@ -98,20 +98,13 @@ function createStoneTrap(keys)
 		end
 		--unitModel = shootUnit
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-		shoot:SetOwner(caster)
-		shoot.unit_type = keys.unitType
-		shoot.power_lv = 0
-		shoot.power_flag = 0
+		creatSkillShootInit(keys,shoot,caster)
 
-		local cp = keys.cp
-		if cp == nil then
-			cp = 0
-		end
 
 		moveShootInit(keys,shoot,direction)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
 
 
 		local casterTeam = caster:GetTeam()
@@ -141,7 +134,7 @@ function createStoneTrap(keys)
 			local lockUnitNum = #searchUnit
 			if lockUnitNum > 0 then
 				keys.trackUnit = searchUnit[1]--就近目标
-				moveShoot(shoot, max_distance, direction, min_speed, max_speed, keys, particleID, stoneTrapBoom)
+				moveShoot(keys, shoot, max_distance, direction, min_speed, particleID, stoneTrapBoom, nil)
 				return nil
 			end
 			if temp_timer > shoot_hold_duration then

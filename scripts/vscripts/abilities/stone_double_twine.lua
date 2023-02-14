@@ -27,18 +27,11 @@ function createStoneDoubleTwine(keys)
 
     for i = 1, 2, 1 do
         local shoot = CreateUnitByName(keys.unitModel, shootPos[i], true, nil, nil, caster:GetTeam())
-        shoot:SetOwner(caster)
-        shoot.unit_type = keys.unitType
-        shoot.power_lv = 0
-        shoot.power_flag = 0
-        local cp = keys.cp
-        if cp == nil then
-            cp = 0
-        end
+        creatSkillShootInit(keys,shoot,caster)
         local tempDirection =  (skillPoint - shootPos[i]):Normalized()
         local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
-        ParticleManager:SetParticleControlEnt(particleID, cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-        moveShoot(shoot, max_distance, tempDirection, speed, nil, keys, particleID, stoneDoubleTwineBoom)
+        ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+        moveShoot(keys, shoot, max_distance, tempDirection, speed, particleID, stoneDoubleTwineBoom, nil)
     end
    
 
