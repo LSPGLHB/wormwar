@@ -100,9 +100,9 @@ function moveShootTimerInit(keys,shoot,direction,speed)
 	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
 	local newPos = shootTempPos + direction * speed
 	local groundPos = GetGroundPosition(newPos, shoot)
-	shoot:SetAbsOrigin(Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight))
-	--FindClearSpaceForUnit( shoot, groundPos, false )
-	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight))--把子弹控制在离地面一定高度shoot:SetAbsOrigin(shoot:GetAbsOrigin()+ Vector(0,0,shoot.shootHight))
+	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
+	--FindClearSpaceForUnit( shoot, groundPos, false )--飞行单位可以穿地形不用这个
+	shoot:SetAbsOrigin(shootPos)
 end
 
 
