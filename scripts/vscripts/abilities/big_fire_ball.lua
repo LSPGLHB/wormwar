@@ -8,16 +8,13 @@ function createBigFireBall(keys)
     local casterPoint = caster:GetAbsOrigin()
     local max_distance = (skillPoint - casterPoint ):Length2D()
     local direction = (skillPoint - casterPoint):Normalized()
-
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
     creatSkillShootInit(keys,shoot,caster)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-
     moveShoot(keys, shoot, max_distance, direction, speed, particleID, bigFireBallBoom, nil)
 end
-
 
 --技能爆炸,单次伤害
 function bigFireBallBoom(keys,shoot,particleID)
@@ -41,8 +38,6 @@ function bigFireBallRenderParticles(keys,shoot)
 	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 1, radius*2))
     return particleBoom
 end
-
-
 
 function dealSkillbigFireBallBoom(keys,shoot)
 	local caster = keys.caster
@@ -92,9 +87,7 @@ function bigFireBallDuration(keys,shoot)
     local position=shoot:GetAbsOrigin()
 	local casterTeam = caster:GetTeam()
     local tempTimer = 0
-
     local particleBoom = staticStromRenderParticles(keys,shoot)
-
     Timers:CreateTimer(0,function ()
 		local aroundUnits = FindUnitsInRadius(casterTeam, 
 										position,
@@ -109,13 +102,25 @@ function bigFireBallDuration(keys,shoot)
             local unitTeam = unit:GetTeam()
             local unitHealth = unit.isHealth
             local lable = unit:GetUnitLabel()
-            local shootPos = shoot:GetAbsOrigin()
-            local unitPos = unit:GetAbsOrigin()
-            
-
             --只作用于敌方,非技能单位
             if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
-                ability:ApplyDataDrivenModifier(caster, unit, visionDebuff, {Duration = debuff_duration})
+                local faceAngle = ability:GetSpecialValueFor("face_angle")
+                local blindDirection = shoot:GetAbsOrigin()  - unit:GetAbsOrigin()
+                local blindRadian = math.atan2(blindDirection.y, blindDirection.x) * 180 
+                local blindAngle = blindRadian / math.pi
+                --单位朝向是0-360，相对方向是0-180,-180-0，需要换算
+                if blindAngle < 0 then
+                    blindAngle = blindAngle + 360
+                end
+                local victimAngle = unit:GetAnglesAsVector().y
+                local resultAngle = blindAngle - victimAngle
+                resultAngle = math.abs(resultAngle)
+                if resultAngle > 180 then
+                    resultAngle = 360 - resultAngle
+                end
+                if faceAngle > resultAngle then --固定角度减视野
+                    ability:ApplyDataDrivenModifier(caster, unit, visionDebuff, {Duration = debuff_duration})
+                end
             end
             --如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
             if lable == GameRules.skillLabel and unitHealth ~= 0 then
@@ -132,12 +137,8 @@ function bigFireBallDuration(keys,shoot)
             shoot:AddNoDraw()
             return nil
         end
-	
 	end)
-    
-
 end
-
 
 function staticStromRenderParticles(keys,shoot)
 	local caster = keys.caster

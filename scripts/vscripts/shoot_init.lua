@@ -99,8 +99,10 @@ function moveShootTimerInit(keys,shoot,direction,speed)
 	end
 	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
 	local newPos = shootTempPos + direction * speed
-	FindClearSpaceForUnit( shoot, newPos, false )
-	shoot:SetAbsOrigin(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight))--把子弹控制在离地面一定高度shoot:SetAbsOrigin(shoot:GetAbsOrigin()+ Vector(0,0,shoot.shootHight))
+	local groundPos = GetGroundPosition(newPos, shoot)
+	shoot:SetAbsOrigin(Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight))
+	--FindClearSpaceForUnit( shoot, groundPos, false )
+	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight))--把子弹控制在离地面一定高度shoot:SetAbsOrigin(shoot:GetAbsOrigin()+ Vector(0,0,shoot.shootHight))
 end
 
 
@@ -244,14 +246,10 @@ function beatBackUnit(keys,shoot,hitTarget,beatBackDistance,beatBackSpeed,isSkil
 	--记录击退时间
 	local beatTime = GameRules:GetGameTime()
 	hitTarget.lastBeatBackTime = beatTime
-
-
-	
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
 	function ()
 		if traveled_distance < beatBackDistance and beatTime == hitTarget.lastBeatBackTime then --如果击退时间没被更改继续执行
-			local tempPos = hitTarget:GetAbsOrigin()
-			local newPosition = tempPos +  beatBackDirection * speedmod -- Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
+			local newPosition = hitTarget:GetAbsOrigin() +  beatBackDirection * speedmod -- Vector(beatBackDirection.x, beatBackDirection.y, 0) * speedmod
 			local groundPos = GetGroundPosition(newPosition, hitTarget)
 			--中途可穿模，最后不能穿
 			local tempLastDis = beatBackDistance - traveled_distance
