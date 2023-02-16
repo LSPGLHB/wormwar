@@ -56,7 +56,7 @@
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"aoe_radius"				"150"
+				"aoe_duration_radius"				"300"
 			}
 			"06"
 			{
@@ -66,7 +66,7 @@
 			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"G_duration"				"2.5"
+				"aoe_duration"				"2.5"
 			}
 
 		
@@ -87,21 +87,25 @@
 				"unitModel"			"shootUnit"
 				"unitType"          "feng"
 				"hitType" 			"2"   //3不触碰，2穿透弹，1触碰结束
-				"isBeatBack"		"1"
+				"isHitCallBack"		"1"
+				"isMultipleHit"		"1"  //子弹可多次击中同一单位
+				"isAOE"				"1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
 				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
 				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
-				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
-				"hitTargetDebuff"	"modifier_stone_beat_back"	
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"					
 				"cp"				"0"
+
+				"durationParticlesBoom"  "particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+				"hitTargetDebuff"	"modifier_small_tornado_stun_debuff"	
 			}
 		}
 
 		"Modifiers"
 		{
-			"modifier_wind_"
+			"modifier_small_tornado_stun_debuff"
 			{
 				"IsDebuff"				"1"
 				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"
@@ -109,8 +113,12 @@
 				"States"
 				{
 					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_UNIT_COLLISION"  "MODIFIER_STATE_VALUE_ENABLED"
 				}	
 			}
+
+			
+
 		}
 	}
 }

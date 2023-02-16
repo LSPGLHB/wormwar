@@ -12,20 +12,19 @@ function createStoneShoot(keys)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-		moveShoot(keys, shoot, max_distance, direction, speed, particleID, StoneShootBoom, StoneShootBeatbackUnit)
+		moveShoot(keys, shoot, max_distance, direction, speed, particleID, stoneShootBoom, stoneShootBeatbackUnit)
 end
 
-function StoneShootBeatbackUnit(keys, shoot, unit)
+function stoneShootBeatbackUnit(keys, shoot, unit)
 	local ability = keys.ability
 	local beatBackDistance = ability:GetSpecialValueFor("beat_back")
-	local beatBackSpeed = ability:GetSpecialValueFor("speed")
-	local isSkillHit = 1  --是技能撞击
+	local beatBackSpeed = ability:GetSpecialValueFor("beat_back_speed")
 	local canSecHit = 1	  --可以二次撞击
 	
-	beatBackUnit(keys, shoot, unit, beatBackDistance, beatBackSpeed, isSkillHit, canSecHit)
+	beatBackUnit(keys, shoot, unit, beatBackDistance, beatBackSpeed, canSecHit)
 end
 
-function StoneShootBoom(keys,shoot,particleID)
+function stoneShootBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local damage = getApplyDamageValue(keys,shoot)
 	for i = 1, #shoot.hitUnit  do

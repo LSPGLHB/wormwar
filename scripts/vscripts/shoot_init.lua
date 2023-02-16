@@ -1,16 +1,14 @@
 require('skill_operation')
-function moveShoot(keys, shoot, max_distance, direction, speed, particleID, boomCallback, beatBackUnitCallBack)
+function moveShoot(keys, shoot, max_distance, direction, speed, particleID, boomCallback, hitUnitCallBack)
 	local traveled_distance = 0 --初始化已经飞行的距离
-	moveShootInit(keys,shoot,direction)
-	--影响弹道的buff--测试速度调整
-	speed = skillSpeedOperation(keys,speed)
-
-	shoot.isBreak = 0 --初始化不跳出
-	
+	moveShootInit(keys,shoot,direction,speed)
+	--实现延迟满法魂效果
 	local shootHealthMax = shoot:GetHealth()
 	local shootHealthSend = shootHealthMax * 0.5
 	local shootHealthStep = shootHealthMax * 0.5 * speed / 10
 	shoot:SetHealth(shootHealthSend)
+	--影响弹道的buff--测试速度调整
+	speed = skillSpeedOperation(keys,speed)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
      function ()
 		if traveled_distance < max_distance then
@@ -26,10 +24,9 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, boom
 			powerShootParticleOperation(keys,shoot,particleID)
 			traveled_distance = traveled_distance + speed
 			--子弹命中目标
-			local isHitType = shootHit(keys, shoot, beatBackUnitCallBack)
+			local isHitType = shootHit(keys, shoot, isHitType, hitUnitCallBack)
 			--击中目标，行程结束
-			if isHitType == 1 then
-				shootPenetrateParticleOperation(keys,shoot)--中弹效果
+			if isHitType == 1 then		
 				if boomCallback ~= nil then
 					boomCallback(keys,shoot,particleID) --到达尽头启动AOE
 				end
@@ -37,22 +34,16 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, boom
 			end
 			--击中目标，行程继续
 			if isHitType == 2 then
-				shootPenetrateParticleOperation(keys,shoot)--中弹效果
-				if boomCallback ~= nil then
-					boomCallback(keys,shoot,particleID) --到达尽头启动AOE
-				end
 				return 0.02
 			end
 			--到达指定位置，不命中目标
 			if isHitType == 3 then
 				return 0.02
 			end
-			--法魂被击破，行程结束
-			--获得子弹法魂是否为0
+			--子弹法魂为0，法魂被击破，行程结束
 			if shoot.isHealth == 0  then
 				if shoot then
 					boomCallback(keys,shoot,particleID) 
-					--shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_shotDown,keys.particles_hit_dur)
 					return nil
 				end
 			end
@@ -74,56 +65,19 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, boom
      end,0)
 end
 
-function moveShootInit(keys,shoot,direction)
-	shoot.shootHight = 100 --子弹高度
-	--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
-	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	if keys.hitType == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-		keys.hitType = 1
-	end
-	if keys.isTrack == nil then
-		keys.isTrack = 0
-	end
-	if keys.isAOE == nil then
-		keys.isAOE = 0
-	end
-	if keys.canShotDown == nil then
-		keys.canShotDown = 0
-	end
-end
-
-function moveShootTimerInit(keys,shoot,direction,speed)
-	local shootTempPos = shoot:GetAbsOrigin()
-	if keys.isTrack == 1 then
-		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
-	end
-	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
-	local newPos = shootTempPos + direction * speed
-	local groundPos = GetGroundPosition(newPos, shoot)
-	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
-	--FindClearSpaceForUnit( shoot, groundPos, false )--飞行单位可以穿地形不用这个
-	shoot:SetAbsOrigin(shootPos)
-end
-
-
-function shootHit(keys, shoot, beatBackUnitCallBack)
+function shootHit(keys, shoot,hitType, hitUnitCallBack)
 	local caster = keys.caster
 	local ability = keys.ability
 	local position=shoot:GetAbsOrigin()
 	local casterTeam = caster:GetTeam()
-	local hitType = keys.hitType --hitType：1碰撞伤害，2穿透伤害，3直达指定位置，不命中单位
-	local hitRange = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
-	--默认不可穿透
-	if hitType == nil then
-		hitType = 1
-	end
 	--默认不击退
 	if keys.isBeatBack == nil then
 		keys.isBeatBack = 0
 	end
+	local hitType = keys.hitType
 	--local PlayerID = caster:GetPlayerID() PlayerResource:GetTeam(PlayerID) print("team========:"..team) print("goodguy2:"..DOTA_TEAM_GOODGUYS) print("badguy3:"..DOTA_TEAM_BADGUYS) print("noteam5:"..DOTA_TEAM_NOTEAM) print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1) print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
 	--寻找目标
-	local searchRadius = hitRange
+	local searchRadius = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
 	local aroundUnits = FindUnitsInRadius(casterTeam, 
 										position,
 										nil,
@@ -134,18 +88,19 @@ function shootHit(keys, shoot, beatBackUnitCallBack)
 										0,
 										false)
 	local isHitUnit = true   --初始化设单位为可击中状态
+	local searchUnits = {}
+	local returnVal = 0
 	for k,unit in pairs(aroundUnits) do
-		--local name = unit:GetContext("name")
-		local lable =unit:GetUnitLabel()
+		local lable = unit:GetUnitLabel()
 		local unitTeam = unit:GetTeam()
 		local unitHealth = unit.isHealth
 		local shootHealth = shoot.isHealth
 		if shoot.hitUnit == nil then
 			shoot.hitUnit = {}
 		end
-		--让子弹跟目标只碰撞一次
-		--子弹忽略自己，忽略发射者，忽略友军，忽略子弹，标签不是技能子弹--子弹为穿透弹
-		if shoot ~= unit and unit ~= caster and unitTeam ~= casterTeam and GameRules.skillLabel ~= lable then --and hitType == 2 then
+		--让不可多次碰撞的子弹跟目标只碰撞一次
+		--子弹忽略自己，忽略发射者，忽略友军，忽略子弹，标签不是技能子弹，不可多次碰撞
+		if shoot ~= unit and unit ~= caster and unitTeam ~= casterTeam and GameRules.skillLabel ~= lable and keys.isMultipleHit ~= 1 then
 			for i = 1, #shoot.hitUnit  do
 				if shoot.hitUnit[i] == unit then
 					isHitUnit = false  --如果已经击中过就不再击中
@@ -177,18 +132,18 @@ function shootHit(keys, shoot, beatBackUnitCallBack)
 					tempHealth = tempHealth * -1
 					unit:SetHealth(tempHealth)
 				end
-				return 0
+				returnVal = 0
 			else --如果碰到的不是子弹
 				--返回中弹标记，出发中弹效果
 				if hitType == 1 or hitType == 2 then --爆炸弹，--穿透弹,--并实现伤害
 					--撞开击中单位
-					if keys.isBeatBack == 1 then--会产生撞击
-						beatBackUnitCallBack(keys, shoot, unit)
+					if keys.isHitCallBack == 1 then--会产生撞击
+						hitUnitCallBack(keys, shoot, unit)
 					end
-					return hitType
+					returnVal = hitType
 				end
 				if hitType == 3 then--直达指定位置，中途不命中单位
-					return hitType
+					returnVal = hitType
 				end
 			end
 		else--相同队伍的触碰    	 
@@ -202,7 +157,52 @@ function shootHit(keys, shoot, beatBackUnitCallBack)
 			end
 		end
 	end
-	return 0
+	return returnVal
+end
+
+function moveShootInit(keys,shoot,direction,speed)
+	shoot.shootHight = 100 --子弹高度
+	--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
+	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
+	--保存一些数据到子弹实体
+	shoot.direction = direction
+	shoot.speed = speed
+	shoot.isBreak = 0 --初始化不跳出
+	if keys.hitType == nil then--hitType：1碰撞伤害，2穿透伤害，3直达指定位置，不命中单位
+		keys.hitType = 1
+	end
+	if keys.hitType == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
+		keys.hitType = 1
+	end
+	if keys.isHitCallBack == nil then  --击中有效果，仅类型2穿透技能使用
+		keys.isHitCallBack = 0
+	end 
+	if keys.isTrack == nil then
+		keys.isTrack = 0
+	end
+	if keys.isAOE == nil then
+		keys.isAOE = 0
+	end
+	if keys.canShotDown == nil then
+		keys.canShotDown = 0
+	end 
+	if keys.isMultipleHit == nil then
+		keys.isMultipleHit = 0
+	end 
+	
+end
+
+function moveShootTimerInit(keys,shoot,direction,speed)
+	local shootTempPos = shoot:GetAbsOrigin()
+	if keys.isTrack == 1 then
+		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
+	end
+	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
+	local newPos = shootTempPos + direction * speed
+	local groundPos = GetGroundPosition(newPos, shoot)
+	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
+	--FindClearSpaceForUnit( shoot, groundPos, false )--飞行单位可以穿地形不用这个
+	shoot:SetAbsOrigin(shootPos)
 end
 
 function creatSkillShootInit(keys,shoot,owner)
@@ -218,9 +218,8 @@ function shootKill(shoot)
 	shoot:AddNoDraw()
 end
 
-
 --击退单位
-function beatBackUnit(keys,shoot,hitTarget,beatBackDistance,beatBackSpeed,isSkillHit,canSecHit)--isSkillHit:是否技能击中 ,canSecHit:是否能二次撞击1为能
+function beatBackUnit(keys,shoot,hitTarget,beatBackDistance,beatBackSpeed,canSecHit)--canSecHit:是否能二次撞击1为能
 	local caster = keys.caster
 	local ability = keys.ability
 	local powerLv = shoot.power_lv
@@ -230,15 +229,12 @@ function beatBackUnit(keys,shoot,hitTarget,beatBackDistance,beatBackSpeed,isSkil
 	local hitTargetDebuff = keys.hitTargetDebuff
 	--hitTarget:AddNewModifier(caster, ability, hitTargetDebuff, {Duration = control_time} )--需要调用lua的modefier
 	ability:ApplyDataDrivenModifier(caster, hitTarget, hitTargetDebuff, {Duration = -1})
+	shootPenetrateParticleOperation(keys,shoot)--中弹效果
 	local shootPos = shoot:GetAbsOrigin()
-	local tempShootPos = shootPos
-	if isSkillHit == 1 then
-		tempShootPos = Vector(shootPos.x,shootPos.y,0)--(shoot:GetAbsOrigin() + Vector(0,0,shoot.shootHight*-1))--把子弹的高度降到0
-	end
-	--local shootPos = shoot:GetAbsOrigin()
-	local tempTargetPos = hitTarget:GetAbsOrigin()
-	local targetPos = Vector(tempTargetPos.x ,tempTargetPos.y ,0)
-	local beatBackDirection =  (targetPos - tempShootPos):Normalized()
+	local tempShootPos  = Vector(shootPos.x,shootPos.y,0)--把撞击的高度降到0用于计算
+	local targetPos= hitTarget:GetAbsOrigin()
+	local tempTargetPos = Vector(targetPos.x ,targetPos.y ,0)--把目标的高度降到0用于计算
+	local beatBackDirection =  (tempTargetPos - tempShootPos):Normalized()
 	local interval = 0.02
 	local speedmod = beatBackSpeed * interval
 	local bufferTempDis = hitTarget:GetPaddedCollisionRadius()
@@ -303,5 +299,71 @@ function checkSecondHit(keys,shoot)
 	end
 end
 
+--未注入灵魂
+--[[
+function aoeDuration(keys,shoot,getFlagCallBack)
+    local caster = keys.caster
+	local ability = keys.ability
+    local visionDebuff = keys.modifierDebuffName
+    local aoe_duration_radius = ability:GetSpecialValueFor("aoe_duration_radius") --AOE持续作用范围
+    local aoe_duration = ability:GetSpecialValueFor("aoe_duration") --AOE持续作用时间
+    local debuff_duration = ability:GetSpecialValueFor("debuff_duration") --debuff持续时间
+	
+    local position=shoot:GetAbsOrigin()
+	local casterTeam = caster:GetTeam()
+    local tempTimer = 0
+    local particleBoom = staticStromRenderParticles(keys,shoot)
+    Timers:CreateTimer(0,function ()
+		local aroundUnits = FindUnitsInRadius(casterTeam, 
+										position,
+										nil,
+										aoe_duration_radius,
+										DOTA_UNIT_TARGET_TEAM_BOTH,
+										DOTA_UNIT_TARGET_ALL,
+										0,
+										0,
+										false)
+        for k,unit in pairs(aroundUnits) do
+            local unitTeam = unit:GetTeam()
+            local unitHealth = unit.isHealth
+            local lable = unit:GetUnitLabel()
+            --只作用于敌方,非技能单位
+			--local theFlag = getFlagCallBack(keys,shoot, unit )
+            if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
+                local faceAngle = ability:GetSpecialValueFor("face_angle")
+                local blindDirection = shoot:GetAbsOrigin()  - unit:GetAbsOrigin()
+                local blindRadian = math.atan2(blindDirection.y, blindDirection.x) * 180 
+                local blindAngle = blindRadian / math.pi
+                --单位朝向是0-360，相对方向是0-180,-180-0，需要换算
+                if blindAngle < 0 then
+                    blindAngle = blindAngle + 360
+                end
+                local victimAngle = unit:GetAnglesAsVector().y
+                local resultAngle = blindAngle - victimAngle
+                resultAngle = math.abs(resultAngle)
+                if resultAngle > 180 then
+                    resultAngle = 360 - resultAngle
+                end
+                if faceAngle > resultAngle then --固定角度减视野
+                    ability:ApplyDataDrivenModifier(caster, unit, visionDebuff, {Duration = debuff_duration})
+                end
+            end
+            --如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
+            if lable == GameRules.skillLabel and unitHealth ~= 0 then
+                reinforceEach(unit,shoot,nil)
+            end
+        end
+        if tempTimer < aoe_duration then
+            tempTimer = tempTimer + 0.1
+            return 0.1
+        else 
+            ParticleManager:DestroyParticle(particleBoom, true)
+            EmitSoundOn("Hero_Disruptor.StaticStorm", shoot)	
+            shoot:ForceKill(true)
+            shoot:AddNoDraw()
+            return nil
+        end
+	end)
+end
 
-
+]]
