@@ -13,11 +13,11 @@ function createBigFireBall(keys)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-    moveShoot(keys, shoot, max_distance, direction, speed, particleID, bigFireBallBoom, nil)
+    moveShoot(keys, shoot, max_distance, direction, speed, particleID, bigFireBallBoomCallBack, nil)
 end
 
 --技能爆炸,单次伤害
-function bigFireBallBoom(keys,shoot,particleID)
+function bigFireBallBoomCallBack(keys,shoot,particleID)
     ParticleManager:DestroyParticle(particleID, true) --子弹特效消失
     local particleBoom = bigFireBallRenderParticles(keys,shoot) --爆炸粒子效果生成		  
     dealSkillbigFireBallBoom(keys,shoot) --实现aoe爆炸效果

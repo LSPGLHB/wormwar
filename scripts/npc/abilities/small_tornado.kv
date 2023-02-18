@@ -56,17 +56,17 @@
 			"05"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"aoe_duration_radius"				"300"
+				"aoe_duration_radius"		"300"
 			}
 			"06"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"G_speed"				    "50"
+				"G_speed"				    "100"
 			}
 			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"aoe_duration"				"2.5"
+				"aoe_duration"				"3"
 			}
 
 		
@@ -110,10 +110,12 @@
 				"IsDebuff"				"1"
 				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"
 				"EffectAttachType"	"follow_overhead"
+				"OverrideAnimation"     "ACT_DOTA_FLAIL"
 				"States"
 				{
 					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
 					"MODIFIER_STATE_NO_UNIT_COLLISION"  "MODIFIER_STATE_VALUE_ENABLED"
+					
 				}	
 			}
 

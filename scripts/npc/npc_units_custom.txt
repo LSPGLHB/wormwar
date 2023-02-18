@@ -134,7 +134,7 @@
 	"niu"
 	{
 		"BaseClass"	"npc_dota_creature"
-		"Model"	"models/heroes/doom/doom.vmdl"//"models/heroes/invoker/forge_spirit.vmdl"
+		"Model"	"models/heroes/invoker/forge_spirit.vmdl"//"models/heroes/doom/doom.vmdl"//
 		"ModelScale"	"1"
 		"ConsideredHero"            "1"  
 		// 小地图图标尺寸
@@ -261,7 +261,7 @@
 	{										
 		// General
 		//----------------------------------------------------------------
-		"Model"						"models/heroes/invoker/forge_spirit.vmdl"//"models\heroes\gyro\gyro_missile.mdl"	// Model.
+		"Model"						"models/heroes/doom/doom.vmdl"//"models/heroes/invoker/forge_spirit.vmdl"//"models\heroes\gyro\gyro_missile.mdl"	// Model.
 		"BaseClass"					"npc_dota_base_additive"
 		"SoundSet"					"0"			// Name of sound set.
 		"Level"						"1"
