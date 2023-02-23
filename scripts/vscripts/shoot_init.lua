@@ -1,7 +1,6 @@
 require('skill_operation')
 function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skillBoomCallback, hitUnitCallBack)--skillBoomCallback：技能爆炸形态，hitUnitCallBack：技能中途击中效果（穿透使用）
 	local traveled_distance = 0 --初始化已经飞行的距离0
-	moveShootInit(keys,shoot,direction,speed)
 	--实现延迟满法魂效果
 	local shootHealthMax = shoot:GetHealth()
 	local shootHealthSend = shootHealthMax * 0.5
@@ -9,11 +8,20 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
 	shoot:SetHealth(shootHealthSend)
 	--影响弹道的buff--测试速度调整
 	speed = skillSpeedOperation(keys,speed)
-	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
-     function ()
+	--初始化数据包
+	moveShootInit(keys,shoot,direction,speed)
+	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
 		if traveled_distance < max_distance then
 			if shoot.isBreak == 1 then
 				return nil
+			end
+			if keys.isControl == 1 then
+				if shoot.direction ~= nil then 
+					direction = shoot.direction
+				end
+				if shoot.speed ~= nil then 
+					speed = shoot.speed
+				end
 			end
 			moveShootTimerInit(keys,shoot,direction,speed)
 			if shootHealthSend < shootHealthMax then
@@ -193,6 +201,10 @@ function moveShootInit(keys,shoot,direction,speed)
 	if keys.isMultipleHit == nil then
 		keys.isMultipleHit = 0
 	end 
+	if keys.isControl == nil then
+		keys.isControl = 0
+	end 
+	
 	
 end
 

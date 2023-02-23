@@ -37,8 +37,8 @@ function thunderBallBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration") --debuff持续时间
 	local damage = getApplyDamageValue(keys,shoot)
-	for i = 1, #shoot.hitUnit  do
-		local unit = shoot.hitUnit[i]
+	for i = 1, #shoot.hitUnits  do
+		local unit = shoot.hitUnits[i]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		ability:ApplyDataDrivenModifier(caster, unit, keys.modifierDebuffName, {Duration = duration})
 	end

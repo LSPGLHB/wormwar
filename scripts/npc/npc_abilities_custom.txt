@@ -23,6 +23,7 @@
 #base abilities/stone_double_twine.kv
 #base abilities/big_fire_ball.kv
 #base abilities/small_tornado.kv
+#base abilities/stone_spear.kv
 
 "DOTAAbilities"
 {

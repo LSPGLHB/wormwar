@@ -137,8 +137,8 @@ end
 function shootBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local damage = getApplyDamageValue(keys,shoot)
-	for i = 1, #shoot.hitUnit  do
-		local unit = shoot.hitUnit[1]
+	for i = 1, #shoot.hitUnits  do
+		local unit = shoot.hitUnits[1]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
 	end
 	if particleID ~= nil then

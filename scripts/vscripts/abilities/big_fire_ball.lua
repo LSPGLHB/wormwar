@@ -108,7 +108,7 @@ function bigFireBallDuration(keys,shoot)
                 local blindDirection = shoot:GetAbsOrigin()  - unit:GetAbsOrigin()
                 local blindRadian = math.atan2(blindDirection.y, blindDirection.x) * 180 
                 local blindAngle = blindRadian / math.pi
-                --单位朝向是0-360，相对方向是0-180,-180-0，需要换算
+                --单位朝向是0-360，相对方向是0~180,0~-180，需要换算
                 if blindAngle < 0 then
                     blindAngle = blindAngle + 360
                 end
