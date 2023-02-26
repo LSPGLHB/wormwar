@@ -24,6 +24,7 @@
 #base abilities/big_fire_ball.kv
 #base abilities/small_tornado.kv
 #base abilities/stone_spear.kv
+#base abilities/ice_arrow.kv
 
 "DOTAAbilities"
 {

@@ -6,6 +6,7 @@ function createStoneSpear(keys)
         local player = caster:GetPlayerOwnerID()
 		local speed = ability:GetSpecialValueFor("speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
+		local angleRate = ability:GetSpecialValueFor("angle_rate") * math.pi
 		local position = caster:GetAbsOrigin()
 		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
@@ -52,7 +53,7 @@ function createStoneSpear(keys)
 					end
                 end
 				local currentDirection =  shoot:GetForwardVector()
-				local angleRate = keys.angle_rate * math.pi
+				
 				local newX2 = math.cos(math.atan2(currentDirection.y, currentDirection.x) + angleRate * Steering)
 				local newY2 = math.sin(math.atan2(currentDirection.y, currentDirection.x) + angleRate * Steering)
 				local tempDirection = Vector(newX2, newY2, currentDirection.z)
@@ -89,9 +90,8 @@ function initSkillStage(keys)
 	-- Swap main ability
 	local ability_a_name = keys.ability_a_name
 	local ability_b_name = keys.ability_b_name
-	print("ability_a_name",ability_a_name)
-	print("ability_b_name",ability_b_name)
 	caster:SwapAbilities( ability_a_name, ability_b_name, true, false )
+	--caster:InterruptMotionControllers( true )
 end
 
 function EndStoneSpear( keys )
@@ -130,8 +130,7 @@ end
 
 
 function OnOrder(keys)
-	--print("OnOrderOnOrder")
 	local caster = keys.caster
 	local ability = keys.ability
-	--print("CursorPosition",ability:GetCursorPosition())
+	--print("GetCursorPosition",caster:GetCursorPosition())
 end

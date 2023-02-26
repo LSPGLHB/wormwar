@@ -50,7 +50,7 @@ function LaunchFire(keys)
 	shoot:SetOwner(caster)
 	shoot.power_lv = 0
 	shoot.power_flag = 0
-	moveShoot(shoot, distance, sDirection, speed, ability, keys, nil)
+	moveShoot(keys, shoot, max_distance, direction, speed, nil, shootHitCallBack, nil)
 
 	-- Update the particle FX
 	local pfx = caster.fire_spirits_pfx
@@ -102,6 +102,19 @@ function initStage(keys)
 	caster:SwapAbilities( ability_a_name, ability_b_name, true, false )
 end
 
+
+function shootHitCallBack(keys,shoot,particleID)
+	local ability = keys.ability
+	local damage = getApplyDamageValue(keys,shoot)
+	for i = 1, #shoot.hitUnits  do
+		local unit = shoot.hitUnits[1]
+		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
+	end
+	if particleID ~= nil then
+		ParticleManager:DestroyParticle(particleID, true)
+	end
+	shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_hit,keys.particles_hit_dur)
+end
 --[[
 function power_charge( keys )
 	local ability = keys.ability
