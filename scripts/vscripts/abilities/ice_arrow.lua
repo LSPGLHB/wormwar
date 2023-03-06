@@ -35,11 +35,21 @@ function launchIceArrow(keys)
 	currentStack = currentStack - 1
 	caster:SetModifierStackCount( modifierStageName, caster, currentStack )
 	local position = caster:GetAbsOrigin()
-	local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-	creatSkillShootInit(keys,shoot,caster)
-	local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
-    ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
-	moveShoot(keys, shoot, max_distance, direction, speed, particleID, iceArrowHitCallBack, nil)
+	local shootCount = 0
+	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
+		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
+		creatSkillShootInit(keys,shoot,caster)
+		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)--"attach_hitloc"
+		moveShoot(keys, shoot, max_distance, direction, speed, particleID, iceArrowHitCallBack, nil)
+		shootCount = shootCount + 1
+		if shootCount < 2 then
+			return 0.5
+		else
+			return nil
+		end
+	end,0)
+
 	-- Update the particle FX
 	local pfx = caster.ice_arrow_pfx
 	ParticleManager:SetParticleControl( pfx, 1, Vector( currentStack, 0, 0 ) )
@@ -57,11 +67,27 @@ function launchIceArrow(keys)
 end
 
 function iceArrowHitCallBack(keys,shoot,particleID)
+	local caster = keys.caster
 	local ability = keys.ability
-	local damage = getApplyDamageValue(keys,shoot)
+	local hitTargetDebuff = keys.modifier_ice_arrow_debuff_name
+	local duration = ability:GetSpecialValueFor("debuff_duration") --debuff持续时间
+
+	local stackCount = 0 --caster:GetModifierStackCount( modifierStageName, ability_a_name )
+
 	for i = 1, #shoot.hitUnits  do
-		local unit = shoot.hitUnits[1]
+		local unit = shoot.hitUnits[i]
+		local damage = getApplyDamageValue(keys,shoot)
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
+		local tempModifier = unit:FindModifierByName(hitTargetDebuff)
+        if tempModifier == nil then
+            stackCount = 1
+		else
+			stackCount = unit:GetModifierStackCount( hitTargetDebuff, ability_b_name )
+			stackCount = stackCount + 1
+        end
+		duration = duration * stackCount
+		ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
+		unit:SetModifierStackCount( hitTargetDebuff, caster, stackCount )
 	end
 	if particleID ~= nil then
 		ParticleManager:DestroyParticle(particleID, true)

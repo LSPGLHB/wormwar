@@ -102,19 +102,19 @@ function createStoneSpirit(keys)
 
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
         
         moveShoot(keys, shoot, max_distance, direction, low_speed, particleID, stoneSpiritBoom, nil)
 
 		local casterTeam = caster:GetTeam()
-		local position
+		
 		local searchRadius = ability:GetSpecialValueFor("searchRadius")
 
 
 		Timers:CreateTimer(0,function ()
-			position = shoot:GetAbsOrigin()
+			local shootPosition = shoot:GetAbsOrigin()
 			local aroundUnits = FindUnitsInRadius(casterTeam, 
-												position,
+												shootPosition,
 												nil,
 												searchRadius,
 												DOTA_UNIT_TARGET_TEAM_BOTH,
@@ -132,12 +132,13 @@ function createStoneSpirit(keys)
 			
 			local lockUnitNum = #searchUnit
 			if lockUnitNum > 0 then
-				keys.trackUnit = searchUnit[1]--就近目标
-                local unit = keys.trackUnit
-                shoot.isBreak = 1 --
+				local unit = searchUnit[1]--就近目标
+                keys.trackUnit = unit
 				keys.isTrack = 1
-                direction =  (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
-				moveShoot(keys, shoot, max_distance, direction, high_speed, particleID, stoneSpiritBoom, nil)
+				shoot.traveled_distance = 0
+                --shoot.direction =  (keys.trackUnit:GetOrigin() - shoot:GetOrigin()):Normalized()
+				shoot.speed =  skillSpeedOperation(keys,high_speed)
+				--moveShoot(keys, shoot, max_distance, direction, high_speed, particleID, stoneSpiritBoom, nil)
 				return nil
 			end
 			return 0.1
@@ -151,8 +152,12 @@ end
 function stoneSpiritBoom(keys,shoot,particleID)
 	local ability = keys.ability
 	local damage = getApplyDamageValue(keys,shoot)
-	for i = 1, #shoot.hitUnit  do
-		local unit = shoot.hitUnit[i]
+	local doubleDamageFlag = RollPercentage(25)
+	if doubleDamageFlag then
+		damage = damage * 2
+	end
+	for i = 1, #shoot.hitUnits  do
+		local unit = shoot.hitUnits[1]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
 	end
 	if particleID ~= nil then

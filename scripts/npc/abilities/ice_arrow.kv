@@ -116,6 +116,7 @@
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
 		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"AbilityTextureName"			"phoenix_launch_fire_spirit"
 
 	
@@ -168,6 +169,16 @@
 				"var_type"			"FIELD_INTEGER"
 				"shoot_count"		"2"
 			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"debuff_duration"		"2"
+			}
+			"07"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"movespeed_slow"		"-20"
+			}
 		
 		}
 		
@@ -196,13 +207,29 @@
 				"cp"				"0"
 
 				"modifier_caster_buff_name"	   "modifier_ice_arrow_ready_datadriven"
+				"modifier_ice_arrow_debuff_name" "modifier_ice_arrow_debuff_datadriven"
 
 				"ability_a_name"		   "ice_arrow_datadriven"
 				"ability_b_name"		   "ice_arrow_launch_ready_datadriven"
 
-			}
-
-			
+			}	
 		}	
+
+		 "Modifiers"
+		{
+			"modifier_ice_arrow_debuff_datadriven"
+			{
+				"IsBuff"	"1"
+				"EffectName"			"particles/generic_gameplay/generic_slowed_cold.vpcf"
+				"StatusEffectName"		"particles/status_fx/status_effect_frost_lich.vpcf"
+				"StatusEffectPriority"	"2"
+				//"Duration"				"%duration"
+
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"     "%movespeed_slow"
+				}
+			}
+		}
 	}
 }

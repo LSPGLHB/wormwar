@@ -1,6 +1,6 @@
 require('skill_operation')
 function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skillBoomCallback, hitUnitCallBack)--skillBoomCallback：技能爆炸形态，hitUnitCallBack：技能中途击中效果（穿透使用）
-	local traveled_distance = 0 --初始化已经飞行的距离0
+	
 	--实现延迟满法魂效果
 	local shootHealthMax = shoot:GetHealth()
 	local shootHealthSend = shootHealthMax * 0.5
@@ -9,20 +9,10 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
 	--影响弹道的buff--测试速度调整
 	speed = skillSpeedOperation(keys,speed)
 	--初始化数据包
-	moveShootInit(keys,shoot,direction,speed)
+	moveShootInit(keys,shoot,max_distance,direction,speed)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
-		if traveled_distance < max_distance then
-			if shoot.isBreak == 1 then
-				return nil
-			end
-			if keys.isControl == 1 then
-				if shoot.direction ~= nil then 
-					direction = shoot.direction
-				end
-				if shoot.speed ~= nil then 
-					speed = shoot.speed
-				end
-			end
+
+		if shoot.traveled_distance < shoot.max_distance then
 			moveShootTimerInit(keys,shoot,direction,speed)
 			if shootHealthSend < shootHealthMax then
 				shootHealthSend = shootHealthSend + shootHealthStep
@@ -30,7 +20,7 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
 			end
 			--技能加强或减弱粒子效果实现
 			powerShootParticleOperation(keys,shoot,particleID)
-			traveled_distance = traveled_distance + speed
+			shoot.traveled_distance = shoot.traveled_distance + speed
 			--子弹命中目标
 			local isHitType = shootHit(keys, shoot, isHitType, hitUnitCallBack)
 			--击中目标，行程结束
@@ -109,7 +99,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 		--让不可多次碰撞的子弹跟目标只碰撞一次
 		--子弹忽略自己，忽略发射者，忽略友军，忽略子弹(标签不是技能子弹)
 		if shoot ~= unit and unit ~= caster and unitTeam ~= casterTeam and GameRules.skillLabel ~= lable  then
-			for i = 1, #shoot.hitUnits  do
+			for i = 1, #shoot.hitUnits do
 				if shoot.hitUnits[i] == unit then
 					isHitUnit = false  --如果已经击中过就不再击中
 					break
@@ -149,7 +139,6 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 				if hitType == 1 or hitType == 2 then --爆炸弹，--穿透弹,--并实现伤害
 					--撞开击中单位
 					if hitUnitCallBack ~= nil then--会产生撞击
-						
 						hitUnitCallBack(keys, shoot, unit)
 					end
 					returnVal = hitType
@@ -172,8 +161,10 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 	return returnVal
 end
 
-function moveShootInit(keys,shoot,direction,speed)
+function moveShootInit(keys,shoot,max_distance,direction,speed)
+	shoot.traveled_distance = 0 --初始化已经飞行的距离0
 	shoot.shootHight = 100 --子弹高度
+	shoot.max_distance = max_distance
 	--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
 	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
 	--保存一些数据到子弹实体
@@ -210,10 +201,22 @@ end
 
 function moveShootTimerInit(keys,shoot,direction,speed)
 	local shootTempPos = shoot:GetAbsOrigin()
+	if keys.isControl == 1 then
+		if shoot.direction ~= nil then 
+			direction = shoot.direction
+		end
+		if shoot.speed ~= nil then 
+			speed = shoot.speed
+		end
+	end
 	if keys.isTrack == 1 then
 		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
+		speed = shoot.speed
 	end
-	--shootTempPos = shootTempPos + Vector(0 ,0 ,shoot.shootHight)
+
+
+	
+	
 	local newPos = shootTempPos + direction * speed
 	local groundPos = GetGroundPosition(newPos, shoot)
 	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
@@ -329,10 +332,8 @@ function takeAwayUnit(keys,shoot,hitTarget)
 	local ability = keys.ability
 	local interval = 0.02
 	local speed = shoot.speed
-	speed = speed * interval
 	local direction = shoot.direction
 	local hitTargetDebuff = keys.hitTargetDebuff
-	--local duration = ability:GetSpecialValueFor("aoe_duration") --持续时间
 	local debuffTable = hitTarget:FindModifierByName(hitTargetDebuff)
 	if debuffTable == nil then
 		ability:ApplyDataDrivenModifier(caster, hitTarget, hitTargetDebuff, {Duration = -1})
@@ -340,7 +341,6 @@ function takeAwayUnit(keys,shoot,hitTarget)
 	local newPosition = hitTarget:GetAbsOrigin() +  direction * speed 
 	local groundPos = GetGroundPosition(newPosition, hitTarget)
 	hitTarget:SetAbsOrigin(groundPos)
-	--FindClearSpaceForUnit( hitTarget, groundPos, false )
 end
 
 --黑洞效果

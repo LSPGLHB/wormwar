@@ -3,14 +3,14 @@ require('skill_operation')
 function createStoneSpear(keys)
 		local caster = keys.caster
 		local ability = keys.ability
-        local player = caster:GetPlayerOwnerID()
+        --local player = caster:GetPlayerOwnerID()
 		local speed = ability:GetSpecialValueFor("speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
 		local angleRate = ability:GetSpecialValueFor("angle_rate") * math.pi
 		local position = caster:GetAbsOrigin()
 		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
-        shoot:SetControllableByPlayer(player, true)
+        --shoot:SetControllableByPlayer(player, true)
         shoot:SetForwardVector(direction)
 		
         local casterBuff = keys.modifier_caster_name
@@ -23,7 +23,7 @@ function createStoneSpear(keys)
         
         creatSkillShootInit(keys,shoot,caster)
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
 		moveShoot(keys, shoot, max_distance, direction, speed, particleID, stoneSpearHitCallBack, nil)
 
 		local timeCount = 0

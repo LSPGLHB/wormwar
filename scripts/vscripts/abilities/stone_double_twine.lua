@@ -30,7 +30,7 @@ function createStoneDoubleTwine(keys)
         creatSkillShootInit(keys,shoot,caster)
         local tempDirection =  (skillPoint - shootPos[i]):Normalized()
         local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
-        ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+        ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
         moveShoot(keys, shoot, max_distance, tempDirection, speed, particleID, stoneDoubleTwineBoom, nil)
     end
    
@@ -43,15 +43,23 @@ function stoneDoubleTwineBoom(keys,shoot,particleID)
     local caster = keys.caster
 	local ability = keys.ability
     local duration = ability:GetSpecialValueFor("duration") --debuff持续时间
-	local damage = getApplyDamageValue(keys,shoot)
-	for i = 1, #shoot.hitUnit  do
-		local unit = shoot.hitUnit[i]
-		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
-        local tempModifier = unit:FindModifierByName(keys.modifierDebuffName)
-        if tempModifier ~= nil then
-            duration = duration * 2
+	local hitTargetDebuff = keys.modifierDebuffName
+	for i = 1, #shoot.hitUnits  do
+		
+
+        local unit = shoot.hitUnits[i]
+		local damage = getApplyDamageValue(keys,shoot)
+		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
+		local tempModifier = unit:FindModifierByName(hitTargetDebuff)
+        if tempModifier == nil then
+            stackCount = 1
+		else
+			stackCount = unit:GetModifierStackCount( hitTargetDebuff, ability_b_name )
+			stackCount = stackCount + 1
         end
-        ability:ApplyDataDrivenModifier(caster, unit, keys.modifierDebuffName, {Duration = duration})
+		duration = duration * stackCount
+		ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
+		unit:SetModifierStackCount( hitTargetDebuff, caster, stackCount )
 	end
 	if particleID ~= nil then
 		ParticleManager:DestroyParticle(particleID, true)

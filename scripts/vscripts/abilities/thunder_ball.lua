@@ -24,9 +24,8 @@ function createThunderBall(keys)
 			--print("direction:",directionTable[i])
 			local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 			creatSkillShootInit(keys,shoot,caster)
-
 			local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
-			ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, "attach_hitloc", shoot:GetAbsOrigin(), true)
+			ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)--"attach_hitloc"
 			moveShoot(keys, shoot, max_distance, directionTable[i], speed, particleID, thunderBallBoom, nil)
 		end
 		

@@ -139,7 +139,7 @@
 		"ConsideredHero"            "1"  
 		// 小地图图标尺寸
 		"MinimapIconSize"	"50"
-		"UnitLabel"	""
+		"UnitLabel"	"niuniu"
 		// 技能 1.
 		"Ability1"	""
 		// 技能 2.
@@ -263,6 +263,7 @@
 		//----------------------------------------------------------------
 		"Model"						"models/heroes/doom/doom.vmdl"//"models/heroes/invoker/forge_spirit.vmdl"//"models\heroes\gyro\gyro_missile.mdl"	// Model.
 		"BaseClass"					"npc_dota_base_additive"
+		"UnitLabel"					"yangyang"
 		"SoundSet"					"0"			// Name of sound set.
 		"Level"						"1"
 		"ModelScale"				"1"
@@ -448,7 +449,8 @@
 	"shootUnit"
 	{
 		"BaseClass"                 "npc_dota_earth_spirit_stone"//"npc_dota_base" // Class of entity of link to.
-        "Model"						"models/heroes/snapfire/snapfire_magma_projectile.vmdl"
+        "Model"						"models/development/invisiblebox.vmdl"//"models/heroes/snapfire/snapfire_magma_projectile.vmdl"
+		"UnitLabel"					""
         "SoundSet"                  "0"                 // Name of sound set.
         "Level"                     "1"
         "IsAncient"                 "0"
