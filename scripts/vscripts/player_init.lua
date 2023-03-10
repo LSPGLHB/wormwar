@@ -10,6 +10,32 @@ function initPlayerStats()
         PlayerStats[i]['changdu'] = 0
     end
 
+   
+
+    --刷怪
+    for i=1, 8 ,1 do
+        createUnit('yang',DOTA_TEAM_NOTEAM)
+    end
+    
+   
+   
+    creatShop()
+
+    
+    --createHuohai()
+    --CreateHeroForPlayer("niu",-1)
+
+end
+
+function creatShop()
+    local shop1=Entities:FindByName(nil,"shop1") 
+    local shop1Pos = shop1:GetAbsOrigin()
+    local unit = CreateUnitByName("shopUnit", shop1Pos, true, nil, nil, DOTA_TEAM_GOODGUYS)
+    unit:SetContext("name", "shop", 0)
+end
+
+
+function createUnit(unitName,team)
     --初始化刷怪
     local temp_zuoshang=Entities:FindByName(nil,"zuoshang") --找到左上的实体
     zuoshang_zuobiao=temp_zuoshang:GetAbsOrigin()
@@ -17,27 +43,6 @@ function initPlayerStats()
     local temp_youxia=Entities:FindByName(nil,"youxia") --找到左上的实体
     youxia_zuobiao=temp_youxia:GetAbsOrigin()
 
-    --刷怪
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-    createUnit('yang',DOTA_TEAM_NOTEAM)
-   
-
-    --createHuohai()
-    --CreateHeroForPlayer("niu",-1)
-
-end
-
-
-
-function createUnit(unitName,team)
     local temp_x =math.random(youxia_zuobiao.x - zuoshang_zuobiao.x) + zuoshang_zuobiao.x
     local temp_y =math.random(youxia_zuobiao.y - zuoshang_zuobiao.y) + zuoshang_zuobiao.y
     local location = Vector(temp_x, temp_y ,0)

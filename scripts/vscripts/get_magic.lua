@@ -1,46 +1,6 @@
---取出n个随机技能
-function getRandomArrayList(arrayList, randomNumList)
-
-    local randomArrayList = {}
-    for i = 1, #randomNumList do
-        local tempNum = randomNumList[i]
-        table.insert(randomArrayList,arrayList[tempNum])
-        --print("randomNumList"..tempNum..":"..abilityNameList[tempNum])
-    end
-   --[[
-    print("randomAbilityList------------: "..#randomAbilityList)
-    for i = 1, #randomAbilityList do
-        print(i ..":".. randomAbilityList[i])
-    end]]
-    return randomArrayList
-end
-
---获取count个F-T的不重复的随机数组      有问题，随机数不是理论数据
-function getRandomNumList(from, to, count)
-    local randomNum = 0
-    local randomBox = {}
-    local tempBox = {}
-	--local count2 = count
-
-    for  i = from , to do
-       table.insert(tempBox,i)
-    end
-	--print("randomNum:============:",from,"-",to)
-    while count > 0 do
-        randomNum = math.random(1, to-from+1)
-        table.insert(randomBox,tempBox[randomNum])
-        table.remove(tempBox,randomNum)
-        to = to - 1
-        count = count -1
-
-    end
-    return randomBox
-end
-
+require('myMaths')
 
 function getRandomMagic(keys)
-    
-	
     local abilityNameList = GameRules.abilityNameListC
 	local iconSrcList = GameRules.iconSrcListC
 	local nameList = GameRules.showNameListC
@@ -73,7 +33,7 @@ end
 --传参案例
 function OnMyUIOpen( playerID )
 	CustomUI:DynamicHud_Destroy(playerID,"UIPanelBox")
-	CustomUI:DynamicHud_Create(playerID,"UIPanelBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
+	CustomUI:DynamicHud_Create(playerID,"UIPanelBox","file://{resources}/layout/custom_game/UI_test.xml",nil)
 end
 
 --点击学习技能
@@ -132,7 +92,6 @@ function GetAbilityList()
 
 	--重新组装数组
 	local abilityListC = {}
-
 	local abilityNameListC = {}
 	local iconSrcListC = {}
 	local showNameListC ={}
@@ -170,7 +129,6 @@ function GetAbilityList()
 				c=c+1
 				break
 			end
-			
 		end
 	end
 --[[

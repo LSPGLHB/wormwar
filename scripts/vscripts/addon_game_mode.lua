@@ -3,6 +3,8 @@
 require('player_init')
 require('game_progress')
 require('get_magic')
+require('shop')
+require('button')
 require('util')
 require('timers')
 require('physics')
@@ -11,8 +13,6 @@ require('barebones')
 if wormWar == nil then
 	wormWar = class({})
 end
-
-temp_flag = 0
 
 function PrecacheEveryThingFromKV( context )
 	local kv_files = {
@@ -117,7 +117,7 @@ end
 
 function wormWar:InitGameMode()
 	print( "============Init Game Mode============" )
-
+	local init_flag = 0
 	--GameRules:SetHeroSelectionTime(20)--选英雄时间(可用)
 	GameRules:SetStrategyTime(0) --选英雄了后选装备时间（可用）
 	
@@ -132,6 +132,7 @@ function wormWar:InitGameMode()
 	GameRules.PreTime = 10
 	GameRules:SetPreGameTime(GameRules.PreTime) --选择英雄与开始时间，吹号角时间
 	GameRules.skillLabel = "skillLabel"
+	GameRules.shopLabel ="shopLabel"
 	--GameRules:SetHeroSelectPenaltyTime( 0.0 )
 
 
@@ -153,6 +154,11 @@ function wormWar:InitGameMode()
 
 	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
 	GameRules.customAbilities = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")--导入技能表
+
+	GameRules.itemList = LoadKeyValues("scripts/npc/npc_items_custom.txt")--导入技能表
+
+
+
 
 
 	--设置4*4队伍组合
@@ -185,6 +191,11 @@ function wormWar:InitGameMode()
 
 	--监听UI事件,这是按钮事件管理器 --(监听名，回调函数)
 	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )  
+
+	--打开商店监听
+	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShop )  
+
+
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -193,10 +204,14 @@ function wormWar:InitGameMode()
 
 
 	--初始化玩家数据
-	if temp_flag == 0 then
+	if init_flag == 0 then
 		initPlayerStats()
 		GetAbilityList()
-		temp_flag = 1
+		getItemList()
+
+
+		
+		init_flag = 1
 	end
 
 end
@@ -311,12 +326,23 @@ function wormWar:OnGameRulesStateChange( keys )
 
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then		
 		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
-		--所有玩家金钱置零
+		--运行检查商店进程
+		checkShop()
+		--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
+		--CustomUI:DynamicHud_Create(-1,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
+		
 		for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
 			if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
-					PlayerResource:SetGold(playerID,0,true)			
+					--PlayerResource:SetGold(playerID,50,true)	--所有玩家金钱增量
+				
+					--getRandomItem(playerID) 商店打开测试
+					--print("============initbutton============")
+					--CustomUI:DynamicHud_Destroy(-1,"UIButtonBox")
+					CustomUI:DynamicHud_Create(playerID,"UIButtonBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
 			end
 		end
+
+		
 --[[
 		--开启游戏进程
 		local countPreTime = GameRules.PreTime
@@ -346,7 +372,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		--print("DOTA_GAMERULES_STATE_INIT"..getNowTime())
 	end
 	if state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-
+		
 		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
 		
 		--gameProgress()

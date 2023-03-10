@@ -5,6 +5,8 @@ function OnGetTimeCount(round,step,stepTime,gameTime,playerID)
     CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "get_time_count", {round=round,step=step,stepTime=stepTime,gameTime=gameTime} )
 end
 
+
+
 function getNowTime()
     local time = GameRules:GetGameTime() - GameRules.PreTime
     time = math.floor(time)
