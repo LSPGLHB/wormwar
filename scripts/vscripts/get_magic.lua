@@ -108,17 +108,17 @@ function GetAbilityList()
 			if k == "AbilityLevel" and v == "C" then			
 
 				tempAbilityName = key
-				print("idName:"..key)
+				--print("idName:"..key)
 				c= c+1
 			end
 			if k == "iconSrc"  then
 				tempiconSrc = v
-				print("icon:"..v)
+				--print("icon:"..v)
 				c = c+1
 			end
 			if k == "AbilityShowName"  then
 				tempShowName = v
-				print("showName:"..v)
+				--print("showName:"..v)
 				c = c+1
 			end	
 

@@ -190,11 +190,10 @@ function wormWar:InitGameMode()
 
 
 	--监听UI事件,这是按钮事件管理器 --(监听名，回调函数)
-	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )  
-
-	--打开商店监听
-	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShop )  
-
+	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua ) 
+	--打开和关闭商店监听
+	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShopJSTOLUA )  
+	CustomGameEventManager:RegisterListener( "closeShopJSTOLUA", closeShopJSTOLUA )  
 
 	
 	--没用的家伙
@@ -205,9 +204,10 @@ function wormWar:InitGameMode()
 
 	--初始化玩家数据
 	if init_flag == 0 then
-		initPlayerStats()
+		initMapStats()
+		initItemList()
 		GetAbilityList()
-		getItemList()
+		
 
 
 		
@@ -327,7 +327,7 @@ function wormWar:OnGameRulesStateChange( keys )
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then		
 		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
 		--运行检查商店进程
-		checkShop()
+		initShopStats()
 		--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
 		--CustomUI:DynamicHud_Create(-1,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
 		

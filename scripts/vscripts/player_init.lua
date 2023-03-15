@@ -1,4 +1,4 @@
-function initPlayerStats()
+function initMapStats()
 
     --真随机设定
     local timeTxt = string.gsub(string.gsub(GetSystemTime(), ':', ''), '0','') 
@@ -18,15 +18,16 @@ function initPlayerStats()
     end
     
    
-   
-    creatShop()
 
-    
+
+
+    creatShop()
     --createHuohai()
     --CreateHeroForPlayer("niu",-1)
 
 end
 
+-- 模拟商人
 function creatShop()
     local shop1=Entities:FindByName(nil,"shop1") 
     local shop1Pos = shop1:GetAbsOrigin()
@@ -57,6 +58,8 @@ function createUnit(unitName,team)
     unit:SetContext("name", unitName, 0)
 end
 
+
+
 function createBaby(playerid)
     local followed_unit=PlayerStats[playerid]['group'][PlayerStats[playerid]['group_pointer']]
     local chaoxiang=followed_unit:GetForwardVector()
@@ -76,7 +79,7 @@ function createBaby(playerid)
     PlayerStats[playerid]['group'][PlayerStats[playerid]['group_pointer']]=new_unit
 
   end	
-
+--[[
 function createShoot(keys)
     for k,v in pairs(keys) do
         print("keys:",k,v)
@@ -93,21 +96,4 @@ function createShoot(keys)
       return 0.2
      end,0) 
 end
-
-function createHuohai()
-  local temp_huohai = Entities:FindByName(nil,"huohai")
-  local location = temp_huohai:GetAbsOrigin()
-  local unit = CreateUnitByName("niu", location, true, nil, nil, DOTA_TEAM_NEUTRALS)
-  GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),
-     function ()
-        unit:ForceKill(true) 
-        unit:AddNoDraw() 
-     end,10) 
-
-  --[[
-  local particle  = ParticleManager:CreateParticle("particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf", PATTACH_WORLDORIGIN, unit)
-	ParticleManager:SetParticleControl(particle, 0, unit:GetAbsOrigin())
-	ParticleManager:SetParticleControl(particle, 1, Vector(450, 450, 0))
-	ParticleManager:SetParticleControl(particle, 2, Vector(450, 450, 0))
-    ]]
-end
+]]

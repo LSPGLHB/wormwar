@@ -1,15 +1,17 @@
 require('myMaths')
-
 --打开商店界面
-function OnMyUIShopOpen( playerID )
-	CustomUI:DynamicHud_Destroy(playerID,"UIShopBox")
-	CustomUI:DynamicHud_Create(playerID,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
+function OnMyUIShopOpen( PlayerID )
+	--CustomUI:DynamicHud_Destroy(PlayerID,"UIShopBox")
+	CustomUI:DynamicHud_Create(PlayerID,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
 end
 
+function OnMyUIShopClose(PlayerID)
+	CustomUI:DynamicHud_Destroy(PlayerID,"UIShopBox")
+end
 
-function getItemList()
-	
+function initItemList()
 	local itemList = GameRules.itemList
+	--print("itemListitemList",itemList)
 	local itemNameList = {}
 	local itemShowNameList = {}
 	local itemCostList = {}
@@ -23,24 +25,24 @@ function getItemList()
 		local itemDescribe
 		local c = 0
 		for key, value in pairs(item) do
-			if key == "itemType" and value == "equip" then
+			if key == "ItemType" and value == "equip" then
 				itemName = name
-				print("itemName",itemName)
+				--print("itemName",itemName)
 				c = c+1
 			end
 			if key == "ItemShowName" then
 				itemShowName = value
 				c = c+1
 			end
-			if key == "itemCost" then
+			if key == "ItemCost" then
 				itemCost = value
 				c = c+1
 			end
-			if key == "itenIcon" then
+			if key == "IconSrc" then
 				itenIcon = value
 				c = c+1
 			end
-			if key == "itemDescribe" then
+			if key == "ItemDescribe" then
 				itemDescribe = value
 				c = c+1
 			end
@@ -59,18 +61,18 @@ function getItemList()
 	GameRules.itemCostList = itemCostList
 	GameRules.itenIconList = itenIconList
 	GameRules.itemDescribeList = itemDescribeList
+
+
+
+	
 end
 
-function getRandomItem(playerID)
+function getPlayerShopListByRandomList(playerID, randomNumList)
 	local itemNameList = GameRules.itemNameList
 	local itemShowNameList = GameRules.itemShowNameList
 	local itemCostList = GameRules.itemCostList
 	local itenIconList = GameRules.itenIconList
 	local itemDescribeList = GameRules.itemDescribeList
-
-	local count = #itemNameList
-
-	local randomNumList= getRandomNumList(1,count,2)
 
 	local randomItemNameList = getRandomArrayList(itemNameList, randomNumList)
 	local randomItemShowNameList = getRandomArrayList(itemShowNameList, randomNumList)
@@ -78,13 +80,10 @@ function getRandomItem(playerID)
 	local randomItemIconList = getRandomArrayList(itenIconList, randomNumList)
 	local randomItemDescribeList = getRandomArrayList(itemDescribeList, randomNumList)
 
-	OnMyUIShopOpen(playerID)
-
-    
 	local listLength = #randomItemNameList
-
+	--print("listLength",listLength)
 	CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "getShopItemListLUATOJS", {
-		num=listLength, 
+		num = listLength, 
 		randomItemNameList = randomItemNameList, 
 		randomItemShowNameList = randomItemShowNameList, 
 		randomItemCostList = randomItemCostList,
@@ -92,4 +91,9 @@ function getRandomItem(playerID)
 		randomItemDescribeList = randomItemDescribeList
 	})
 end
+
+
+
+
+
 
