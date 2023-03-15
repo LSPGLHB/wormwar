@@ -194,6 +194,7 @@ function wormWar:InitGameMode()
 	--打开和关闭商店监听
 	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShopJSTOLUA )  
 	CustomGameEventManager:RegisterListener( "closeShopJSTOLUA", closeShopJSTOLUA )  
+	CustomGameEventManager:RegisterListener( "refreshShopJSTOLUA", refreshShopJSTOLUA ) 
 
 	
 	--没用的家伙

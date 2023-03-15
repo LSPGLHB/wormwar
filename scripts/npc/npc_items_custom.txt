@@ -2,6 +2,10 @@
 #base items/lvxie2.kv
 #base items/lvxie3.kv
 #base items/lvxie4.kv
+#base items/lvxie5.kv
+#base items/lvxie6.kv
+#base items/lvxie7.kv
+
 
 "DOTAAbilities"
 {

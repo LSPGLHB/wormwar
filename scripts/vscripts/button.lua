@@ -60,6 +60,9 @@ end
 function refreshShopJSTOLUA(index,keys)
     local playerID = keys.PlayerID
     refreshShopList(playerID)
+    OnMyUIShopClose(playerID)
+    OnMyUIShopOpen(playerID)
+    getPlayerShopListByRandomList(playerID, player.randomItemNumList)
 end
 
 
@@ -67,7 +70,7 @@ function refreshShopList(playerID)
     local itemNameList = GameRules.itemNameList
     local count = #itemNameList
     --print("itemNameList=====================",count)
-    local randomItemNumList= getRandomNumList(1,count,3)
+    local randomItemNumList= getRandomNumList(1,count,6)
     --print("randomItemNumList",#randomItemNumList)
     local player = PlayerResource:GetPlayer(playerID)
     player.randomItemNumList = randomItemNumList
