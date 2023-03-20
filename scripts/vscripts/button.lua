@@ -15,8 +15,9 @@ function initShopStats()
                 local hero = player:GetAssignedHero()
                 local position = hero:GetAbsOrigin()
                 local heroTeam = hero:GetTeam()
-                local searchRadius = 500
+                local searchRadius = 700
                 local shopFlag = "unkown"  
+                local playerGold = PlayerResource:GetGold(playerID)
                 local aroundUnits = FindUnitsInRadius(heroTeam, 
                                                     position,
                                                     nil,
@@ -36,11 +37,12 @@ function initShopStats()
                     end
                 end
                 CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "checkShopLUATOJS", {
-                    flag = shopFlag
+                    flag = shopFlag,
+                    playerGold = playerGold
                 })
             end
         end
-        return 1
+        return 0.3
     end)
 end
 
@@ -59,8 +61,10 @@ end
 
 function refreshShopJSTOLUA(index,keys)
     local playerID = keys.PlayerID
+    local player = PlayerResource:GetPlayer(playerID)
     refreshShopList(playerID)
     OnMyUIShopClose(playerID)
+
     OnMyUIShopOpen(playerID)
     getPlayerShopListByRandomList(playerID, player.randomItemNumList)
 end

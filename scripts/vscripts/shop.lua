@@ -93,6 +93,42 @@ function getPlayerShopListByRandomList(playerID, randomNumList)
 end
 
 
+function buyShopJSTOLUA(index,keys)
+    local playerID = keys.PlayerID
+	local num  = keys.num
+	local player = PlayerResource:GetPlayer(playerID)
+	local hHero = PlayerResource:GetSelectedHeroEntity(playerID)
+	local currentGold = PlayerResource:GetGold(playerID)
+	
+	local randomItemNumList = player.randomItemNumList
+	local itemNameList = GameRules.itemNameList
+	local itemShowNameList = GameRules.itemShowNameList
+	local itemCostList = GameRules.itemCostList
+	local itenIconList = GameRules.itenIconList
+	local itemDescribeList = GameRules.itemDescribeList
+	local randomItemNameList = getRandomArrayList(itemNameList, randomItemNumList)
+	local randomItemShowNameList = getRandomArrayList(itemShowNameList, randomItemNumList)
+	local randomItemCostList = getRandomArrayList(itemCostList, randomItemNumList)
+	local randomItemIconList = getRandomArrayList(itenIconList, randomItemNumList)
+	local randomItemDescribeList = getRandomArrayList(itemDescribeList, randomItemNumList)
+	local itemName = randomItemNameList[num]
+	local itemCost = randomItemCostList[num]
+	--print("buyShopJSTOLUA",itemName)
+	--CreateItem(itemName,player,player)
+	if(currentGold >= itemCost) then
+		hHero:AddItemByName(itemName)
+		PlayerResource:SpendGold(playerID,itemCost,0)
+		currentGold = PlayerResource:GetGold(playerID)
+		CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "checkGoldLUATOJS", {
+			playerGold = currentGold
+		})
+	else
+		print("金币不足")
+	end
+	
+end
+
+
 
 
 

@@ -191,11 +191,11 @@ function wormWar:InitGameMode()
 
 	--监听UI事件,这是按钮事件管理器 --(监听名，回调函数)
 	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua ) 
-	--打开和关闭商店监听
+	--商店按钮监听
 	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShopJSTOLUA )  
 	CustomGameEventManager:RegisterListener( "closeShopJSTOLUA", closeShopJSTOLUA )  
 	CustomGameEventManager:RegisterListener( "refreshShopJSTOLUA", refreshShopJSTOLUA ) 
-
+	CustomGameEventManager:RegisterListener( "buyShopJSTOLUA", buyShopJSTOLUA ) 
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -208,10 +208,7 @@ function wormWar:InitGameMode()
 		initMapStats()
 		initItemList()
 		GetAbilityList()
-		
 
-
-		
 		init_flag = 1
 	end
 
