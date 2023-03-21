@@ -11,8 +11,8 @@
 
         "ItemType"               "equip"
         "IconSrc"                "file://{images}/custom_game/shop_item/skadi_lg.png" 
-		"ItemShowName"           "#itemShowName1"
-        "ItemDescribe"           "#itemDescribe1" 
+		"ItemShowName"           "#DOTA_Tooltip_ability_item_lvxie"
+        "ItemDescribe"           "#DOTA_Tooltip_ability_item_lvxie_Description" 
         "ItemCost"               "50"
 
 
@@ -31,6 +31,8 @@
         "ItemQuality"                        "rare"
         "ItemPermanent"                 "0"		//永久的
 
+
+
         //"ItemShareability"                "ITEM_FULLY_SHAREABLE"
 
 
@@ -46,12 +48,12 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_damage"			"100"
+                "bonus_damage"			"300"
             }
             "02"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_shoot_speed"			"1000"
+                "bonus_shoot_speed"			"1500"
             }
             
         }
@@ -84,4 +86,24 @@
             }
         }
     }
+
+    "item_recipe_6_7"
+    {
+        "ID"                                        "7001"
+        "BaseClass"                        "item_recipe_arcane_boots"
+        "ItemCost"                        "0"        
+        "ItemShopTags"                ""
+
+        ItemRecipe                 "1" 
+        ItemResult                  "item_lvxie"
+        ItemRequirements   
+        {
+                "01"    "item_lvxie6;item_lvxie7"
+        }
+        
+
+
+    }
+
 }
+

@@ -28,15 +28,13 @@ function initShopStats()
                                                     0,
                                                     false)             
                 for k,unit in pairs(aroundUnits) do
-                    --local name = unit:GetContext("name")
                     local lable =unit:GetUnitLabel()
                     local unitTeam = unit:GetTeam()		
                     if hero ~= unit and unitTeam == heroTeam and  GameRules.shopLabel == lable then
-                        --print("lable",lable)
                         shopFlag = "active"
                     end
                 end
-                CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "checkShopLUATOJS", {
+                CustomGameEventManager:Send_ServerToPlayer( player , "checkShopLUATOJS", {
                     flag = shopFlag,
                     playerGold = playerGold
                 })
@@ -51,7 +49,6 @@ function openShopJSTOLUA(index,keys)
     local player = PlayerResource:GetPlayer(playerID)
     OnMyUIShopOpen(playerID)
     getPlayerShopListByRandomList(playerID, player.randomItemNumList)
-    
 end
 
 function closeShopJSTOLUA(index,keys)
@@ -64,7 +61,6 @@ function refreshShopJSTOLUA(index,keys)
     local player = PlayerResource:GetPlayer(playerID)
     refreshShopList(playerID)
     OnMyUIShopClose(playerID)
-
     OnMyUIShopOpen(playerID)
     getPlayerShopListByRandomList(playerID, player.randomItemNumList)
 end

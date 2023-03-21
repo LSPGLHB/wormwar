@@ -29,10 +29,65 @@
 	
 
 		"huoren"                      "召唤火人"
+		"yang"						  "召唤物"
+		"niu"			              "召唤物"	
+		"shopUnit"					  "我是商人"
 
-		"yang"						"召唤物"
+		"Buy"							"买"
 
-		"niu"			            "召唤物"	
+
+
+		"itemShowName2"    			  "防具1"
+		"itemDescribe2"    			  "防具111111111111111"
+		"itemShowName3"    			  "披风1"
+		"itemDescribe3"    			  "披风111111111111111"
+		"itemShowName4"    			  "武器1"
+		"itemDescribe4"    			  "武器1111111111111111"
+		"itemShowName5"    			  "魔法石"
+		"itemDescribe5"    			  "魔法石111111111111111"
+		"itemShowName6"    			  "次元门"
+		"itemDescribe6"    			  "次元门111111111111111"
+		"itemShowName7"    			  "电荷炮"
+		"itemDescribe7"    			  "电荷炮111111111111111"
+
+		"DOTA_Tooltip_ability_item_lvxie"   "绿鞋"
+		"DOTA_Tooltip_ability_item_lvxie_Description"  "攻击力和速度增加"
+		"DOTA_Tooltip_ability_item_lvxie_Lore" "穿了会飞的鞋子"   
+		"DOTA_Tooltip_ability_item_lvxie_bonus_damage"  "攻击力："
+		"DOTA_Tooltip_ability_item_lvxie_bonus_shoot_speed"  "速度："
+
+
+		"DOTA_Tooltip_ability_item_lvxie2"   "绿鞋2"
+		"DOTA_Tooltip_ability_item_lvxie2_Description"  "攻击力和速度增加2"
+		"DOTA_Tooltip_ability_item_lvxie2_Lore" "穿了会飞的鞋子"   
+		"DOTA_Tooltip_ability_item_lvxie2_bonus_damage"  "攻击力："
+		"DOTA_Tooltip_ability_item_lvxie2_bonus_shoot_speed"  "速度："
+
+
+		"DOTA_Tooltip_ability_item_lvxie3"   "绿鞋3"
+		"DOTA_Tooltip_ability_item_lvxie3_Description"  "攻击力和速度增加2"
+
+		"DOTA_Tooltip_ability_item_lvxie4"   "绿鞋4"
+		"DOTA_Tooltip_ability_item_lvxie4_Description"  "攻击力和速度增加2"
+
+		"DOTA_Tooltip_ability_item_lvxie5"   "绿鞋5"
+		"DOTA_Tooltip_ability_item_lvxie5_Description"  "攻击力和速度增加2"
+
+
+		"DOTA_Tooltip_ability_item_lvxie6"   "绿鞋6"
+		"DOTA_Tooltip_ability_item_lvxie6_Description"  "合成用+7=1"
+
+		"DOTA_Tooltip_ability_item_lvxie7"   "绿鞋7"
+		"DOTA_Tooltip_ability_item_lvxie7_Description"  "合成用+6=1"
+
+
+
+		"UIButton1"                   "攻击+222"
+		"UIButton2"                   "射程+200"
+        "UIButton3"                   "充能上限+2"
+        "UIButton4"                   "充能速度+1"
+        "UIButton5"                   "弹道速度+200"
+
 
 
 
