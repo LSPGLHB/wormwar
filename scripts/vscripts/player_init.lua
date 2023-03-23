@@ -3,13 +3,13 @@ function initMapStats()
     --真随机设定
     local timeTxt = string.gsub(string.gsub(GetSystemTime(), ':', ''), '0','') 
     math.randomseed(tonumber(timeTxt))
-
+--[[
     PlayerStats={}
     for i = 0, 9 do
         PlayerStats[i] = {} --每个玩家数据包
         PlayerStats[i]['changdu'] = 0
     end
-
+]]
    
 
     --刷怪

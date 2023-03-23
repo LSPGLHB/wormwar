@@ -75,3 +75,81 @@ function refreshShopList(playerID)
     local player = PlayerResource:GetPlayer(playerID)
     player.randomItemNumList = randomItemNumList
 end
+
+function openPlayerStatusJSTOLUA(index,keys)
+    local myPlayerID = keys.PlayerID
+    local myPlayer = PlayerResource:GetPlayer(myPlayerID)
+    
+    local playerStatusAbility={}
+    local playerStatusHero = {}
+    for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
+        if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
+        --print("playerID",playerID)
+            playerStatusAbility[playerID] = {}
+            local abilityNameList = {}
+            local hHero = PlayerResource:GetSelectedHeroEntity(playerID)
+            local heroName = PlayerResource:GetSelectedHeroName(playerID)
+           
+            local hAbilityC = hHero:GetAbilityByIndex(3)
+            local abilityNameC = hAbilityC:GetAbilityName()
+            local hAbilityB = hHero:GetAbilityByIndex(4)
+            local abilityNameB = hAbilityB:GetAbilityName()
+            local hAbilityA = hHero:GetAbilityByIndex(5)
+            local abilityNameA = hAbilityA:GetAbilityName()
+            table.insert(abilityNameList,abilityNameC)
+            table.insert(abilityNameList,abilityNameB)
+            table.insert(abilityNameList,abilityNameA)
+            local abilityIconList = getAbilityIconListByNameList(abilityNameList)
+            local itemIconList =  getItemIconListByHero(hHero)
+            --print("iconList",iconList[1])
+           
+            playerStatusHero[playerID] = heroName
+            playerStatusAbility[playerID] = abilityIconList
+            playerStatusItem[playerID] = itemIconList
+        end
+    end
+    
+    --print("abilityName",abilityName)
+    CustomGameEventManager:Send_ServerToPlayer( myPlayer , "showPlayerStatusLUATOJS", {
+        playerStatusHero = playerStatusHero,
+        playerStatusAbility = playerStatusAbility,
+        playerStatusItem = playerStatusItem
+    })
+end
+
+function getAbilityIconListByNameList(nameList)
+    local abilityList = GameRules.customAbilities
+    local abilityIconList = {}
+
+    for i = 1 , #nameList , 1 do
+        for key, value in pairs(abilityList) do         
+            if( key == nameList[i] ) then
+                for k,v in pairs(value) do
+                    if(k == "iconSrc") then
+                        abilityIconList[i] = v
+                    end
+                end
+            end
+        end
+    end
+    return abilityIconList
+end
+
+function getItemIconListByHero(hHero)
+    local itemList = GameRules.itemList
+    local itemIconList = {}
+    for i = 1 , 6 , 1 do
+        local item = hHero:GetItemInSlot(i-1)--物品栏从0开始
+        local itemName = item:GetName()
+        for key, value in pairs(itemList) do
+            if(key == itemName) then
+                for k, v pairs(value) do
+                    if(k == "iconSrc") then
+                        itemIconList[i] = v
+                    end
+                end
+            end
+        end
+    end
+    return itemIconList
+end

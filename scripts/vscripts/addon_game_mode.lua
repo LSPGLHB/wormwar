@@ -196,6 +196,9 @@ function wormWar:InitGameMode()
 	CustomGameEventManager:RegisterListener( "closeShopJSTOLUA", closeShopJSTOLUA )  
 	CustomGameEventManager:RegisterListener( "refreshShopJSTOLUA", refreshShopJSTOLUA ) 
 	CustomGameEventManager:RegisterListener( "buyShopJSTOLUA", buyShopJSTOLUA ) 
+
+	--信息板按钮
+	CustomGameEventManager:RegisterListener( "openPlayerStatusJSTOLUA", openPlayerStatusJSTOLUA ) 
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -336,7 +339,10 @@ function wormWar:OnGameRulesStateChange( keys )
 					--getRandomItem(playerID) 商店打开测试
 					--print("============initbutton============")
 					--CustomUI:DynamicHud_Destroy(-1,"UIButtonBox")
+					--右下商店按钮显示
 					CustomUI:DynamicHud_Create(playerID,"UIButtonBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
+					--玩家信息显示
+					CustomUI:DynamicHud_Create(playerID,"UIPlayerStatusPanelBG","file://{resources}/layout/custom_game/UI_player_status.xml",nil)
 			end
 		end
 
