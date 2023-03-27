@@ -5,6 +5,7 @@ require('game_progress')
 require('get_magic')
 require('shop')
 require('button')
+require('player_status')
 require('util')
 require('timers')
 require('physics')
@@ -155,7 +156,9 @@ function wormWar:InitGameMode()
 	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
 	GameRules.customAbilities = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")--导入技能表
 
-	GameRules.itemList = LoadKeyValues("scripts/npc/npc_items_custom.txt")--导入技能表
+	GameRules.itemList = LoadKeyValues("scripts/npc/npc_items_custom.txt")--导入装备表
+
+	GameRules.contractList = LoadKeyValues("scripts/npc/abilities/contract_all.kv")--导入契约表
 
 
 
@@ -198,7 +201,10 @@ function wormWar:InitGameMode()
 	CustomGameEventManager:RegisterListener( "buyShopJSTOLUA", buyShopJSTOLUA ) 
 
 	--信息板按钮
-	CustomGameEventManager:RegisterListener( "openPlayerStatusJSTOLUA", openPlayerStatusJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "openPlayerStatusJSTOLUA", openPlayerStatusJSTOLUA )
+	CustomGameEventManager:RegisterListener( "closePlayerStatusJSTOLUA", closePlayerStatusJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "refreshPlayerStatusJSTOLUA", refreshPlayerStatusJSTOLUA ) 
+
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -339,10 +345,11 @@ function wormWar:OnGameRulesStateChange( keys )
 					--getRandomItem(playerID) 商店打开测试
 					--print("============initbutton============")
 					--CustomUI:DynamicHud_Destroy(-1,"UIButtonBox")
-					--右下商店按钮显示
+					--右下按钮显示
 					CustomUI:DynamicHud_Create(playerID,"UIButtonBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
-					--玩家信息显示
-					CustomUI:DynamicHud_Create(playerID,"UIPlayerStatusPanelBG","file://{resources}/layout/custom_game/UI_player_status.xml",nil)
+					--契约板面
+					CustomUI:DynamicHud_Create(playerID,"UIContractPanelBG","file://{resources}/layout/custom_game/UI_contract_box.xml",nil)
+					
 			end
 		end
 
