@@ -3,6 +3,10 @@
 require('player_init')
 require('game_progress')
 require('get_magic')
+require('get_contract')
+require('shop')
+require('button')
+require('player_status')
 require('util')
 require('timers')
 require('physics')
@@ -11,8 +15,6 @@ require('barebones')
 if wormWar == nil then
 	wormWar = class({})
 end
-
-temp_flag = 0
 
 function PrecacheEveryThingFromKV( context )
 	local kv_files = {
@@ -117,7 +119,7 @@ end
 
 function wormWar:InitGameMode()
 	print( "============Init Game Mode============" )
-
+	local init_flag = 0
 	--GameRules:SetHeroSelectionTime(20)--选英雄时间(可用)
 	GameRules:SetStrategyTime(0) --选英雄了后选装备时间（可用）
 	
@@ -132,6 +134,7 @@ function wormWar:InitGameMode()
 	GameRules.PreTime = 10
 	GameRules:SetPreGameTime(GameRules.PreTime) --选择英雄与开始时间，吹号角时间
 	GameRules.skillLabel = "skillLabel"
+	GameRules.shopLabel ="shopLabel"
 	--GameRules:SetHeroSelectPenaltyTime( 0.0 )
 
 
@@ -153,6 +156,13 @@ function wormWar:InitGameMode()
 
 	GameRules.DropTable = LoadKeyValues("scripts/kv/drops.kv") -- 导入掉落率的列表
 	GameRules.customAbilities = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")--导入技能表
+
+	GameRules.itemList = LoadKeyValues("scripts/npc/npc_items_custom.txt")--导入装备表
+
+	GameRules.contractList = LoadKeyValues("scripts/npc/abilities/contract_all.kv")--导入契约表
+
+
+
 
 
 	--设置4*4队伍组合
@@ -184,7 +194,23 @@ function wormWar:InitGameMode()
 
 
 	--监听UI事件,这是按钮事件管理器 --(监听名，回调函数)
-	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua )  
+	CustomGameEventManager:RegisterListener( "js_to_lua", OnJsToLua ) 
+	--商店按钮监听
+	CustomGameEventManager:RegisterListener( "openShopJSTOLUA", openShopJSTOLUA )  
+	CustomGameEventManager:RegisterListener( "closeShopJSTOLUA", closeShopJSTOLUA )  
+	CustomGameEventManager:RegisterListener( "refreshShopJSTOLUA", refreshShopJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "buyShopJSTOLUA", buyShopJSTOLUA ) 
+
+	--信息板按钮
+	CustomGameEventManager:RegisterListener( "openPlayerStatusJSTOLUA", openPlayerStatusJSTOLUA )
+	CustomGameEventManager:RegisterListener( "closePlayerStatusJSTOLUA", closePlayerStatusJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "refreshPlayerStatusJSTOLUA", refreshPlayerStatusJSTOLUA ) 
+
+	--契约列表
+	--CustomGameEventManager:RegisterListener( "openContractListJSTOLUA", openContractListJSTOLUA ) --打开启用KVTPLUA通道
+	CustomGameEventManager:RegisterListener( "closeContractListJSTOLUA", closeContractListJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "refreshContractListJSTOLUA", refreshContractListJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "learnContractByNameJSTOLUA", learnContractByNameJSTOLUA ) 
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -193,10 +219,13 @@ function wormWar:InitGameMode()
 
 
 	--初始化玩家数据
-	if temp_flag == 0 then
-		initPlayerStats()
+	if init_flag == 0 then
+		initMapStats()
+		initItemList()
+		initContractList()
 		GetAbilityList()
-		temp_flag = 1
+
+		init_flag = 1
 	end
 
 end
@@ -311,12 +340,28 @@ function wormWar:OnGameRulesStateChange( keys )
 
 	if state == DOTA_GAMERULES_STATE_PRE_GAME then		
 		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
-		--所有玩家金钱置零
+		--运行检查商店进程
+		initShopStats()
+		
+		--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
+		--CustomUI:DynamicHud_Create(-1,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
+		
 		for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
 			if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
-					PlayerResource:SetGold(playerID,0,true)			
+					--PlayerResource:SetGold(playerID,50,true)	--所有玩家金钱增量
+				
+					--getRandomItem(playerID) 商店打开测试
+					--print("============initbutton============")
+					--CustomUI:DynamicHud_Destroy(-1,"UIButtonBox")
+					--右下按钮显示
+					CustomUI:DynamicHud_Create(playerID,"UIButtonBox","file://{resources}/layout/custom_game/UI_button.xml",nil)
+					--契约板面
+					CustomUI:DynamicHud_Create(playerID,"UIContractPanelBG","file://{resources}/layout/custom_game/UI_contract_box.xml",nil)
+					
 			end
 		end
+
+		
 --[[
 		--开启游戏进程
 		local countPreTime = GameRules.PreTime
@@ -346,7 +391,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		--print("DOTA_GAMERULES_STATE_INIT"..getNowTime())
 	end
 	if state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-
+		
 		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
 		
 		--gameProgress()

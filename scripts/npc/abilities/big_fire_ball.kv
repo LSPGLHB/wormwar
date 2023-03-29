@@ -1,4 +1,3 @@
-//普通射击
 "DOTAAbilities"
 {
 	"big_fire_ball_datadriven"
@@ -6,17 +5,17 @@
 		// General
 		//-------------------------------------------------------------------------------------------------------------
 		"BaseClass"				"ability_datadriven"
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
 		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"lina_dragon_slave"
-
-	
+		"MaxLevel"                      "1"
+		"AOERadius"                      "600"
 		
-		"precache"
+		"precache"						
 		{
 			"soundfile"			"soundevents/game_sounds_heroes/game_sounds_mirana.vsndevts"
 		}
@@ -72,7 +71,7 @@
 			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"400"
+				"hit_range"					"200"
 			}
             "08"
             {
@@ -98,6 +97,11 @@
 			{
 				"var_type"					"FIELD_FLOAT"
 				"debuff_duration"					"5"
+			}
+			"11"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"face_angle"					"45"
 			}
 		
 		}
@@ -155,17 +159,12 @@
 				"EffectName"			"particles/generic_gameplay/generic_slowed_cold.vpcf"
 				"StatusEffectName"		"particles/status_fx/status_effect_frost_lich.vpcf"
 				"StatusEffectPriority"	"2"
-
-
-
 				"Properties"
 				{
 					"MODIFIER_PROPERTY_BONUS_DAY_VISION"		"%vision_radius"
                     "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"		"%vision_radius"
 				}
-				
 			}
-	
 		}
 	}
 }

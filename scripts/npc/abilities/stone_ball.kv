@@ -12,8 +12,8 @@
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"earth_spirit_boulder_smash"
 
-         "MaxLevel"                      "1"
-	
+        "MaxLevel"                      "1"
+		"iconSrc" 				"file://{images}/custom_game/ability_button/invoker_wex.png"
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@
 			"01"
 			{
 				"var_type"			"FIELD_FLOAT"
-				"beat_back_one"		"500"
+				"beat_back"			"500"
 			}
 			"02"
 			{
@@ -65,7 +65,7 @@
 			"06"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"hit_range"					"300"
+				"hit_range"					"150"
 			}
 		
 		}
@@ -77,6 +77,7 @@
 				"EffectName"			"Hero_Mirana.ArrowCast"
 				"Target"				"CASTER"
 			}
+			
 			"RunScript"
 			{
 				"ScriptFile"		"abilities/stone_ball.lua"
@@ -85,7 +86,6 @@
 				"unitModel"			"shootUnit"
 				"unitType"          "tu"
 				"hitType" 			"2"   //3直达施法点，2穿透弹，1为不穿透
-				"beatBackFlag"		"2"	  //二次撞击
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
 				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
 				"particles_hit_dur" "0.7"
@@ -107,7 +107,10 @@
 				"States"
 				{
 					"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+					//"MODIFIER_STATE_FLYING"			"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_UNIT_COLLISION"  "MODIFIER_STATE_VALUE_ENABLED"
 				}	
+			
 			}
 		}
 	}

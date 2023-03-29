@@ -1,0 +1,235 @@
+"DOTAAbilities"
+{  
+    ice_arrow_datadriven
+    {
+        "BaseClass"				"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"	
+		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_NO"
+		//"FightRecapLevel"				"1"
+		"AbilityTextureName"			"phoenix_fire_spirits"
+
+        
+		"AbilityCastPoint"				"0.1"
+		
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"5"
+		"AbilityChannelTime"			"1.5"
+
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"1"
+
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			"01"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"stage_duration"	"10"
+			}
+            "02"
+			{
+				"var_type"			"FIELD_FLOAT"
+				"spirit_count"	    "2"
+			}
+			
+		}
+
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"Target"				"CASTER"
+				"EffectName"			"Ability.PowershotPull"
+			}
+		
+		}
+
+		"OnChannelSucceeded"
+		{
+			
+			"FireSound"
+			{
+				"EffectName"		"Hero_Phoenix.FireSpirits.Cast"
+				"Target"			"CASTER"
+			}
+			
+			"ApplyModifier"
+			{
+				"Target"			"CASTER"
+				"ModifierName"		"modifier_ice_arrow_ready_datadriven"
+			}
+			
+
+			"RunScript"
+			{
+				"ScriptFile"		"abilities/ice_arrow.lua"
+				"Function"			"getReadyForIceArrow"
+				"particles_nm"      "particles/units/heroes/hero_phoenix/phoenix_fire_spirits.vpcf"
+				"modifier_caster_buff_name"	 "modifier_ice_arrow_ready_datadriven"
+                "ability_a_name"		"ice_arrow_datadriven"
+				"ability_b_name"		"ice_arrow_launch_ready_datadriven"
+			}
+		}
+
+
+		"OnUpgrade"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"abilities/ice_arrow.lua"
+				"Function"		"LevelUpAbility"
+				"ability_b_name"	"ice_arrow_launch_ready_datadriven"
+			}
+		}
+
+        "Modifiers"
+		{
+			"modifier_ice_arrow_ready_datadriven"
+			{
+				"IsBuff"	"1"
+				"Duration"	"%stage_duration"
+				
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"		"abilities/ice_arrow.lua"
+						"Function"			"endSkill"
+						
+						"ability_a_name"		"ice_arrow_datadriven"
+				        "ability_b_name"		"ice_arrow_launch_ready_datadriven"
+					}
+				}
+			}
+		}
+    }
+
+
+
+    "ice_arrow_launch_ready_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"				"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
+		"AbilityTextureName"			"phoenix_launch_fire_spirit"
+
+	
+		
+		// Casting
+        "AbilityCastRange"				"1800"
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastPoint"				"0"
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"0.5"
+		
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"0"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			
+			
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"max_distance"				"1800"
+			}
+			"02"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"speed"			    "1000"
+			}
+			"03"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"hit_range"			"150"
+			}
+			"04"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"damage"			"3"
+			}
+			"05"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"spirit_count"		"2"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"shoot_count"		"2"
+			}
+			"06"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"debuff_duration"		"2"
+			}
+			"07"
+			{
+				"var_type"			"FIELD_INTEGER"
+				"movespeed_slow"		"-20"
+			}
+		
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"			"Hero_Mirana.ArrowCast"
+				"Target"				"CASTER"
+			}
+			
+			"RunScript"
+			{
+				"ScriptFile"		"abilities/ice_arrow.lua"
+				"Function"			"launchIceArrow"
+                "Target"			"POINT"
+				"unitModel"			"shootUnit"
+				"unitType"          "shui"
+				"hitType" 			"1"   //3直达施法点，2穿透弹，1为不穿透
+				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles_hit_dur" "0.7"
+				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
+				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
+				"cp"				"0"
+
+				"modifier_caster_buff_name"	   "modifier_ice_arrow_ready_datadriven"
+				"modifier_ice_arrow_debuff_name" "modifier_ice_arrow_debuff_datadriven"
+
+				"ability_a_name"		   "ice_arrow_datadriven"
+				"ability_b_name"		   "ice_arrow_launch_ready_datadriven"
+
+			}	
+		}	
+
+		 "Modifiers"
+		{
+			"modifier_ice_arrow_debuff_datadriven"
+			{
+				"IsBuff"	"1"
+				"EffectName"			"particles/generic_gameplay/generic_slowed_cold.vpcf"
+				"StatusEffectName"		"particles/status_fx/status_effect_frost_lich.vpcf"
+				"StatusEffectPriority"	"2"
+				//"Duration"				"%duration"
+
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"     "%movespeed_slow"
+				}
+			}
+		}
+	}
+}

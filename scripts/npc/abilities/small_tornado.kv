@@ -1,0 +1,124 @@
+"DOTAAbilities"
+{
+	"small_tornado_datadriven"
+	{
+		// General
+		//-------------------------------------------------------------------------------------------------------------
+		"BaseClass"				"ability_datadriven"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+		"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
+		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
+		"FightRecapLevel"				"1"
+		"AbilityTextureName"			"magnataur_shockwave"
+
+         "MaxLevel"                      "1"
+	
+		
+		// Casting
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCastRange"				"1800"   //施法距离
+		"AbilityCastPoint"				"0.2"
+
+		// Time		
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityCooldown"				"1"
+		
+		// Cost
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilityManaCost"				"1"
+		
+		// Special
+		//-------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			
+			"01"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"max_distance"				"1800"
+			}
+			"02"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"speed"						"750"
+			}
+			"03"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"damage"					"2"
+			}
+			"04"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"hit_range"					"150"
+			}
+			"05"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"aoe_duration_radius"		"300"
+			}
+			"06"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"G_speed"				    "100"
+			}
+			"07"
+			{
+				"var_type"					"FIELD_FLOAT"
+				"aoe_duration"				"3"
+			}
+
+		
+		}
+		
+		"OnSpellStart"
+		{
+			"FireSound"
+			{
+				"EffectName"			"Hero_Mirana.ArrowCast"
+				"Target"				"CASTER"
+			}
+			"RunScript"
+			{
+				"ScriptFile"		"abilities/small_tornado.lua"
+				"Function"			"createSmallTornado"
+				"Target"			"POINT"
+				"unitModel"			"shootUnit"
+				"unitType"          "feng"
+				"hitType" 			"2"   //3不触碰，2穿透弹，1触碰结束
+				"isMultipleHit"		"1"  //子弹可多次击中同一单位
+				"isAOE"				"1"
+				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
+				"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
+				"particles_hit_dur" "0.7"
+				"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
+				"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
+				"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"					
+				"cp"				"0"
+
+				"durationParticlesBoom"  "particles/units/heroes/hero_disruptor/disruptor_static_storm.vpcf"
+				"hitTargetDebuff"	"modifier_small_tornado_stun_debuff"	
+			}
+		}
+
+		"Modifiers"
+		{
+			"modifier_small_tornado_stun_debuff"
+			{
+				"IsDebuff"				"1"
+				"EffectName"		"particles/generic_gameplay/generic_silenced.vpcf"
+				"EffectAttachType"	"follow_overhead"
+				"OverrideAnimation"     "ACT_DOTA_FLAIL"
+				"States"
+				{
+					//"MODIFIER_STATE_STUNNED"		"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_UNIT_COLLISION"  "MODIFIER_STATE_VALUE_ENABLED"	
+				}	
+			}
+
+			
+
+		}
+	}
+}
