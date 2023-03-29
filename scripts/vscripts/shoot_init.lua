@@ -32,46 +32,25 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
 			end
 			--击中目标，行程继续
 			if isHitType == 2 then
-<<<<<<< HEAD
-				shootPenetrateParticleOperation(keys,shoot)
-				if callback ~= nil then
-					callback(keys,shoot,particleID) --到达尽头启动AOE
-					shootKill(shoot)
-				end
-=======
->>>>>>> 4a6ed2537cf420f57c67e49bab4043ba4175f14e
 				return 0.02
 			end
 			--到达指定位置，不命中目标
 			if isHitType == 3 then
 				return 0.02
 			end
-<<<<<<< HEAD
-			--法魂被击破，行程结束
-			--获得子弹法魂是否为0
-			if shoot.isHealth == 0  then
-				if shoot then
-					callback(keys,shoot,particleID) 
-					--shootBoomParticleOperation(shoot,particleID,keys.particles_hit,keys.sound_shotDown,keys.particles_hit_dur)
-=======
+
 			--子弹法魂为0，法魂被击破，行程结束
 			if shoot.isHealth == 0  then
 				if shoot then
 					skillBoomCallback(keys,shoot,particleID) 
->>>>>>> 4a6ed2537cf420f57c67e49bab4043ba4175f14e
 					return nil
 				end
 			end
 		else
 			--超出射程没有命中
 			if shoot then		
-<<<<<<< HEAD
-				if keys.isAOE == 1 and callback ~= nil then --直达尽头发动AOE	
-						callback(keys,shoot,particleID) --启动AOE
-=======
 				if keys.isAOE == 1 and skillBoomCallback ~= nil then --直达尽头发动AOE	
 					skillBoomCallback(keys,shoot,particleID) --启动AOE
->>>>>>> 4a6ed2537cf420f57c67e49bab4043ba4175f14e
 				else
 					if particleID then
 						ParticleManager:DestroyParticle(particleID, true)
@@ -85,40 +64,8 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
      end,0)
 end
 
-<<<<<<< HEAD
-function moveShootInit(keys,shoot,direction)
-	shoot.shootHight = 100 --子弹高度
-	shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
-	shoot:SetOrigin(shoot:GetOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	if keys.hitType == nil then--hitType：1爆炸，2穿透，3直达指定位置，不命中单位
-		keys.hitType = 1
-	end
-	if keys.isTrack == nil then
-		keys.isTrack = 0
-	end
-	if keys.isAOE == nil then
-		keys.isAOE = 0
-	end
-	if keys.canShotDown == nil then
-		keys.canShotDown = 0
-	end
-end
 
-function moveShootTimerInit(keys,shoot,direction,speed)
-	if keys.isTrack == 1 then
-		local unit = keys.trackUnit
-		direction = (unit:GetOrigin() - shoot:GetOrigin()):Normalized()
-	end
-	local newPos = shoot:GetOrigin() + direction * speed
-	FindClearSpaceForUnit( shoot, newPos, false )
-	shoot:SetOrigin(shoot:GetOrigin() + Vector(0,0,shoot.shootHight))--shoot:SetAbsOrigin(shoot:GetOrigin()+ Vector(0,0,shoot.shootHight))
-end
-
-
-function shootHit(shoot, keys)
-=======
 function shootHit(keys, shoot,hitType, hitUnitCallBack)
->>>>>>> 4a6ed2537cf420f57c67e49bab4043ba4175f14e
 	local caster = keys.caster
 	local ability = keys.ability
 	local position=shoot:GetAbsOrigin()
@@ -175,12 +122,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 				local tempHealth = shoot:GetHealth() - unit:GetHealth()
 				if(tempHealth > 0) then
 					shoot:SetHealth(tempHealth)
-<<<<<<< HEAD
-					--unit:SetHealth(0.1) --已经死了，但是为了可以删除保留0.1
-					shootKill(unit)
-=======
 					--unit:SetHealth(0) --不能设为0，否则不能kill掉进程
->>>>>>> 4a6ed2537cf420f57c67e49bab4043ba4175f14e
 					unit.isHealth = 0
 					shootKill(unit)--直接kill掉进程
 				else
