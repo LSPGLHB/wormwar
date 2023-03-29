@@ -102,15 +102,15 @@ function buyShopJSTOLUA(index,keys)
 	
 	local randomItemNumList = player.randomItemNumList
 	local itemNameList = GameRules.itemNameList
-	local itemShowNameList = GameRules.itemShowNameList
+	--local itemShowNameList = GameRules.itemShowNameList
 	local itemCostList = GameRules.itemCostList
-	local itenIconList = GameRules.itenIconList
-	local itemDescribeList = GameRules.itemDescribeList
+	--local itenIconList = GameRules.itenIconList
+	--local itemDescribeList = GameRules.itemDescribeList
 	local randomItemNameList = getRandomArrayList(itemNameList, randomItemNumList)
-	local randomItemShowNameList = getRandomArrayList(itemShowNameList, randomItemNumList)
+	--local randomItemShowNameList = getRandomArrayList(itemShowNameList, randomItemNumList)
 	local randomItemCostList = getRandomArrayList(itemCostList, randomItemNumList)
-	local randomItemIconList = getRandomArrayList(itenIconList, randomItemNumList)
-	local randomItemDescribeList = getRandomArrayList(itemDescribeList, randomItemNumList)
+	--local randomItemIconList = getRandomArrayList(itenIconList, randomItemNumList)
+	--local randomItemDescribeList = getRandomArrayList(itemDescribeList, randomItemNumList)
 	local itemName = randomItemNameList[num]
 	local itemCost = randomItemCostList[num]
 	--print("buyShopJSTOLUA",itemName)

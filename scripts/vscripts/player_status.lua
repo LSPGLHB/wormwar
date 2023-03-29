@@ -8,6 +8,7 @@ function OnMyUIPlayerStatusClose(playerID)
 end
 
 function  showPlayerStatusPanel( myPlayerID )
+    --print("showPlayerStatusPanel")
     local playerStatusHero = {}
     local playerStatusAbility = {}
     local playerStatusItem = {}
@@ -45,6 +46,8 @@ function  showPlayerStatusPanel( myPlayerID )
         end
     end
     local myPlayer = PlayerResource:GetPlayer(myPlayerID)
+
+    --print("playerStatusHero",playerStatusHero[0])
     CustomGameEventManager:Send_ServerToPlayer( myPlayer , "openPlayerStatusLUATOJS", {  
         playerStatusHero = playerStatusHero,
         playerStatusAbility = playerStatusAbility,
@@ -95,7 +98,7 @@ function getItemIconListByHero(hHero)
     return itemIconList
 end
 
-
+--重做此处为指定阶段刷新
 function refreshPlayerStatus(playerID)
     local player = PlayerResource:GetPlayer(playerID)
     Timers:CreateTimer(0,function ()
@@ -106,8 +109,5 @@ function refreshPlayerStatus(playerID)
             return 1
         end
         return nil
-    end)
-
-
-    
+    end)   
 end

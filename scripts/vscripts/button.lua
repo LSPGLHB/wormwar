@@ -85,7 +85,7 @@ function openPlayerStatusJSTOLUA(index,keys)
     myPlayer.playerStatusShow = true
     OnMyUIPlayerStatusOpen( myPlayerID )
     showPlayerStatusPanel( myPlayerID )  
-    refreshPlayerStatus(myPlayerID) 
+    --refreshPlayerStatus(myPlayerID) 
 end
 
 function closePlayerStatusJSTOLUA(index,keys)

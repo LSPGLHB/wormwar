@@ -358,6 +358,8 @@ function wormWar:OnGameRulesStateChange( keys )
 					--契约板面
 					CustomUI:DynamicHud_Create(playerID,"UIContractPanelBG","file://{resources}/layout/custom_game/UI_contract_box.xml",nil)
 					
+					showPlayerStatusPanel( playerID ) 
+					
 			end
 		end
 
