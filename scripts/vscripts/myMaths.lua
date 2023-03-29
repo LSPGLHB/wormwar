@@ -4,6 +4,7 @@ function getRandomArrayList(arrayList, randomNumList)
     local randomArrayList = {}
     for i = 1, #randomNumList do
         local tempNum = randomNumList[i]
+        --print("randomNumList",tempNum,arrayList[tempNum])
         table.insert(randomArrayList,arrayList[tempNum])
         --print("randomNumList"..tempNum..":"..abilityNameList[tempNum])
     end

@@ -3,6 +3,7 @@
 require('player_init')
 require('game_progress')
 require('get_magic')
+require('get_contract')
 require('shop')
 require('button')
 require('player_status')
@@ -205,6 +206,11 @@ function wormWar:InitGameMode()
 	CustomGameEventManager:RegisterListener( "closePlayerStatusJSTOLUA", closePlayerStatusJSTOLUA ) 
 	CustomGameEventManager:RegisterListener( "refreshPlayerStatusJSTOLUA", refreshPlayerStatusJSTOLUA ) 
 
+	--契约列表
+	--CustomGameEventManager:RegisterListener( "openContractListJSTOLUA", openContractListJSTOLUA ) --打开启用KVTPLUA通道
+	CustomGameEventManager:RegisterListener( "closeContractListJSTOLUA", closeContractListJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "refreshContractListJSTOLUA", refreshContractListJSTOLUA ) 
+	CustomGameEventManager:RegisterListener( "learnContractByNameJSTOLUA", learnContractByNameJSTOLUA ) 
 	
 	--没用的家伙
 	--CustomGameEventManager:RegisterListener( "lua_to_js", OnLuaToJs )
@@ -216,6 +222,7 @@ function wormWar:InitGameMode()
 	if init_flag == 0 then
 		initMapStats()
 		initItemList()
+		initContractList()
 		GetAbilityList()
 
 		init_flag = 1
@@ -335,6 +342,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
 		--运行检查商店进程
 		initShopStats()
+		
 		--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
 		--CustomUI:DynamicHud_Create(-1,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
 		
