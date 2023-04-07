@@ -16,13 +16,6 @@
         "ItemCost"               "50"
 
 
-        //"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
-        //"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-        //"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
-        //"Model"							"models/props_gameplay/red_box.vmdl" 
-        //"Effect"						"particles/generic_gameplay/dropped_item.vpcf"
-
-        
         
         "ItemDroppable"                        "1"
         "ItemSellable"                        "1"
@@ -33,16 +26,27 @@
 
 
 
-        //"ItemShareability"                "ITEM_FULLY_SHAREABLE"
+        "vision_bonus"              "300" //增加英雄基础视野
+        "health_bonus"              "40"  //增加基础生命
+        "speed_bouns"               "25"  //增加基础移速
+        "speed_sp_precent"          "20"  //增加移速百分比
+        "speed_sp_duration"         "1.25"  //增加移速持续时间
+        "mana_bonus"                "20"  //增加蓝量
+        "mana_regen_bouns"          "1.5"  //增加蓝量恢复速度
+        "C_speed_bonus"             "100"  //增加C技能射速
+        "C_speed_bouns_precent"     "10"  //增加C技能射速百分比
+        "C_range_bonus"             "100"  //增加C技能射程
+        "C_range_bonus_precent"     "10"  //增加C技能射程百分比
+        "C_damage_bonus"            "4"  //增加C技能的攻击力
+        "C_damage_bonus_precent"    "22"  //增加C技能的攻击力百分比
+        "C_control_bonus_precent"   "20"  //增加C技能控制时间百分比
+        "C_energy_bonus_precent"    "50"  //增加C技能法魂量百分比
+        "C_mana_expend_precent"     "40"  //增加C技能蓝量消耗
+        "C_match_damage_bonus_precent" "20"  //增加C技能相生时增加伤害百分比
+        "C_match_control_bonus_precent" "15"  //增加C技能相生时控制时间百分比
+        "C_match_energy_bonus"      "20"  //增加C技能相生时法魂量
 
-
-        // Stats
-        //-------------------------------------------------------------------------------------------------------------
-        //"AbilityCooldown"				"3"
-        //"AbilityCastRange"				"200"
-        //"AbilityCastPoint"				"0.0"
-        //"AbilityManaCost"				"20"
-
+        
         "AbilitySpecial"
         {
             "01"
@@ -54,6 +58,11 @@
             {
                 "var_type"				"FIELD_INTEGER"
                 "bonus_shoot_speed"			"1500"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "move_speed"			"100"
             }
             
         }
@@ -83,6 +92,11 @@
                         "Function"			"modifier_item_lvxie_on_destroy"
                     }
                 }
+            }
+
+            "Properties"
+            {
+                "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "%move_speed"
             }
         }
     }

@@ -1,0 +1,111 @@
+"DOTAAbilities"
+{
+    "ability_health_control"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+        "AbilityType"                   "abilityBuff"
+        "Modifiers"
+        {
+            "modifier_health_buff"
+            {
+                    "Passive"		    "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
+                    }
+            }
+
+            "modifier_health_debuff"
+            {
+                    "Passive"		    "1"
+                    "IsDebuff"          "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
+                    }
+            }
+        }
+    }
+
+    "ability_vision_control"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+        "AbilityType"                   "abilityBuff"
+        "Modifiers"
+        {
+            "modifier_vision_buff"
+            {
+                    "Passive"		    "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "100"
+                            "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "100"
+                    }
+            }
+            "modifier_vision_debuff"
+            {
+                    "Passive"		    "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "-100"
+                            "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "-100"
+                    }
+            }
+        }
+    }
+
+    "ability_speed_control"
+    {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+        "AbilityType"                   "abilityBuff"
+        "Modifiers"
+        {
+            "modifier_speed_buff"
+            {
+                    "Passive"		    "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "1"
+                    }
+            }
+            "modifier_speed_debuff"
+            {
+                    "Passive"		    "1"
+                    "IsHidden"          "0"
+                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                    "Properties"
+                    {
+                            "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "-1"
+                    }
+            }
+        }
+    }
+
+    
+
+
+
+
+
+
+
+}

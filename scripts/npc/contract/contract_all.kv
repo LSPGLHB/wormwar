@@ -3,23 +3,116 @@
      "contract_a"
     {
         "BaseClass"	                "ability_datadriven"
-        "AbilityTextureName"        "riki_smoke_screen"
-        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "AbilityTextureName"        "furion_sprout"
+        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
         "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
+
+        "AbilityType"               "contract"
         "ShowName"                  "name_a"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract.png"
         "Describe"                  "DescribeDescribeA"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_vision"			"400"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_speed"			"100"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_health_precent_final"			"-50"
+            }
+        }
+
+        "Modifiers"
+        {
+            "modifier_contract_contract_a_datadriven"
+            {
+                "Passive"			"1"
+                //"IsHidden"			"1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_a.lua"
+                        "Function"			"modifier_contract_contract_a_on_created"
+                    }
+                }
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_a.lua"
+                        "Function"			"modifier_contract_contract_a_on_destroy"
+                    }
+                }
+            }
+        }
+
+
     }
 
     "contract_b"
     {
         "BaseClass"	                "ability_datadriven"
-        "AbilityTextureName"        "riki_smoke_screen"
-        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "AbilityTextureName"        "furion_teleportation"
+        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN "
         "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
+
+        "AbilityType"               "contract"
         "ShowName"                  "name_b"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract2.png"                              
         "Describe"                  "DescribeDescribeB"
+
+         "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_health_precent_final"		"50"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_speed_flag"			"0"
+            }
+           
+        }
+
+        "Modifiers"
+        {
+            "modifier_contract_contract_b_datadriven"
+            {
+                "Passive"			"1"
+                //"IsHidden"			"1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_b.lua"
+                        "Function"			"modifier_contract_contract_b_on_created"
+                    }
+                }
+                
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_b.lua"
+                        "Function"			"modifier_contract_contract_b_on_destroy"
+                    }
+                }
+            }
+        }
     }
 
     "contract_c"

@@ -26,10 +26,12 @@
 #base abilities/stone_spear.kv
 #base abilities/ice_arrow.kv
 
+#base contract/contract_all.kv
+#base contract/ability_buff.kv
+
 
 "DOTAAbilities"
 {
-
 	//屠夫钩重建
 	"pudge_meat_hook_lua_reb"
 	{
@@ -41,7 +43,7 @@
 		"SpellImmunityType"				"SPELL_IMMUNITY_ENEMIES_YES"
 		"FightRecapLevel"				"1"
 
-
+		"AbilityLevel" "C"
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------

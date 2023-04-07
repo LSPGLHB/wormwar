@@ -4,6 +4,7 @@ require('player_init')
 require('game_progress')
 require('get_magic')
 require('get_contract')
+require('contract_power')
 require('shop')
 require('button')
 require('player_status')
@@ -159,7 +160,7 @@ function wormWar:InitGameMode()
 
 	GameRules.itemList = LoadKeyValues("scripts/npc/npc_items_custom.txt")--导入装备表
 
-	GameRules.contractList = LoadKeyValues("scripts/npc/abilities/contract_all.kv")--导入契约表
+	GameRules.contractList = LoadKeyValues("scripts/npc/contract/contract_all.kv")--导入契约表
 
 
 
@@ -220,10 +221,12 @@ function wormWar:InitGameMode()
 
 	--初始化玩家数据
 	if init_flag == 0 then
-		initMapStats()
-		initItemList()
-		initContractList()
-		GetAbilityList()
+		initMapStats() -- 初始化地图数据
+		initItemList() -- 初始化物品信息
+		initContractPower() --初始化契约容器
+		initContractList() --初始化契约信息
+		
+		GetAbilityList()--初始化技能信息
 
 		init_flag = 1
 	end
@@ -342,9 +345,9 @@ function wormWar:OnGameRulesStateChange( keys )
 		--print("DOTA_GAMERULES_STATE_PRE_GAME"..getNowTime())
 		--运行检查商店进程
 		initShopStats()
+
 		
-		--CustomUI:DynamicHud_Create(-1,"MyUIButton","file://{resources}/layout/custom_game/MyUI_button.xml",nil)
-		--CustomUI:DynamicHud_Create(-1,"UIShopBox","file://{resources}/layout/custom_game/UI_shop.xml",nil)
+
 		
 		for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
 			if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
@@ -358,10 +361,12 @@ function wormWar:OnGameRulesStateChange( keys )
 					--契约板面
 					CustomUI:DynamicHud_Create(playerID,"UIContractPanelBG","file://{resources}/layout/custom_game/UI_contract_box.xml",nil)
 					
-					showPlayerStatusPanel( playerID ) 
+					--showPlayerStatusPanel( playerID ) 
 					
 			end
 		end
+
+		
 
 		
 --[[

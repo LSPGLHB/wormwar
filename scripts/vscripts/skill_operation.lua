@@ -1,4 +1,4 @@
---LinkLuaModifier( "modifier_stone_beat_back_aoe_lua", "abilities/modifier_stone_beat_back_aoe_lua.lua" ,LUA_MODIFIER_MOTION_NONE )
+--LinkLuaModifier( "modifier_stone_beat_back_aoe_lua", "abilities/modifier_stone_beat_back_aoe_lua.lua",LUA_MODIFIER_MOTION_NONE )
 ----伤害计算(keys, 子弹实体)
 function getApplyDamageValue(keys,shoot)
 	local caster = keys.caster
