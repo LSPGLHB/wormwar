@@ -1,111 +1,171 @@
 "DOTAAbilities"
 {
-    "ability_health_control"
-    {
+        "ability_health_control"
+        {
         "BaseClass"                     "ability_datadriven"
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
         "AbilityType"                   "abilityBuff"
         "Modifiers"
         {
-            "modifier_health_buff"
-            {
-                    "Passive"		    "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                "modifier_health_buff"
+                {
+                        "Passive"		    "1"
+                        "IsHidden"          "0"
+                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
-                    }
-            }
+                        "Properties"
+                        {
+                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
+                        }
+                }
 
-            "modifier_health_debuff"
-            {
-                    "Passive"		    "1"
-                    "IsDebuff"          "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                "modifier_health_debuff"
+                {
+                        "Passive"		    "1"
+                        "IsDebuff"          "1"
+                        "IsHidden"          "0"
+                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
-                    }
-            }
+                        "Properties"
+                        {
+                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
+                        }
+                }
         }
-    }
+        }
 
-    "ability_vision_control"
-    {
-        "BaseClass"                     "ability_datadriven"
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
-        "AbilityType"                   "abilityBuff"
-        "Modifiers"
+        "ability_vision_control"
         {
-            "modifier_vision_buff"
-            {
-                    "Passive"		    "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_vision_buff"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "100"
-                            "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "100"
-                    }
-            }
-            "modifier_vision_debuff"
-            {
-                    "Passive"		    "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "1"
+                                        "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "1"
+                                }
+                        }
+                        "modifier_vision_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "-100"
-                            "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "-100"
-                    }
-            }
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "-1"
+                                        "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "-1"
+                                }
+                        }
+                }
         }
-    }
 
-    "ability_speed_control"
-    {
-        "BaseClass"                     "ability_datadriven"
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"// | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
-        "AbilityType"                   "abilityBuff"
-        "Modifiers"
+        "ability_speed_control"
         {
-            "modifier_speed_buff"
-            {
-                    "Passive"		    "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_speed_buff"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "1"
-                    }
-            }
-            "modifier_speed_debuff"
-            {
-                    "Passive"		    "1"
-                    "IsHidden"          "0"
-                    "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "1"
+                                }
+                        }
+                        "modifier_speed_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-                    "Properties"
-                    {
-                            "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "-1"
-                    }
-            }
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "-1"
+                                }
+                        }
+                }
         }
-    }
 
-    
+        "ability_mana_control"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_mana_buff"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_BONUS"        "1"
+                                }
+                        }
+                        "modifier_mana_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_BONUS"        "-1"
+                                }
+                        }
+                }
+        }
+        "ability_mana_regen_control"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_mana_regen_buff"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"        "1"
+                                }
+                        }
+                        "modifier_mana_regen_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
 
-
-
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"        "-1"
+                                }
+                        }
+                }
+        }
 
 }

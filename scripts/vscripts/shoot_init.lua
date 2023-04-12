@@ -8,6 +8,7 @@ function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skil
 	shoot:SetHealth(shootHealthSend)
 	--影响弹道的buff--测试速度调整
 	speed = skillSpeedOperation(keys,speed)
+
 	--初始化数据包
 	moveShootInit(keys,shoot,max_distance,direction,speed)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
@@ -216,9 +217,6 @@ function moveShootTimerInit(keys,shoot,direction,speed)
 		speed = shoot.speed
 	end
 
-
-	
-	
 	local newPos = shootTempPos + direction * speed
 	local groundPos = GetGroundPosition(newPos, shoot)
 	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
@@ -227,11 +225,54 @@ function moveShootTimerInit(keys,shoot,direction,speed)
 end
 
 function creatSkillShootInit(keys,shoot,owner)
+	local caster = keys.caster
+	local ability = keys.ability
+	local playerID = caster:GetPlayerID()
+	local AbilityLevel = keys.AbilityLevel
+
 	shoot:SetOwner(owner)
 	shoot.unit_type = keys.unitType --用于计算克制和加强
 	shoot.power_lv = 0 --用于实现克制和加强
 	shoot.power_flag = 0 --用于实现克制和加强
 	shoot.hitUnits = {}--用于记录命中的目标
+
+	--已处理
+	local manaCost = ability:GetManaCost()
+	shoot.mana_cost_bonus = PlayerPower[playerID]['player_mana_cost_'..AbilityLevel] + manaCost * PlayerPower[playerID]['player_mana_cost_'..AbilityLevel..'_precent']
+	caster:ReduceMana(shoot.mana_cost_bonus)
+
+	--半成品
+	local damageBase = ability:GetSpecialValueFor("damage")
+	shoot.damage = finalValueOperation(damageBase, PlayerPower[playerID]['player_damage_'..AbilityLevel],PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_base'], PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_final'])
+	shoot.damage_match = finalValueOperation(shoot.damage, PlayerPower[playerID]['player_damage_match_'..AbilityLevel],PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_base'] ,PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_final'])
+
+	local speedBase =  ability:GetSpecialValueFor("speed")
+	shoot.speed = finalValueOperation(speedBase,PlayerPower[playerID]['player_speed_'..AbilityLevel],PlayerPower[playerID]['player_speed_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_speed_'..AbilityLevel..'_precent_final'])
+
+	local abilityEnergy = shoot:GetHealth()
+	shoot.energy = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_'..AbilityLevel],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_final'])
+	shoot.energy_match = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_match_'..AbilityLevel],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_final'])	
+
+	--预处理
+	shoot.control_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel]
+	shoot.control_precent_base_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel..'_precent_base']
+	shoot.control_precent_final_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel..'_precent_final']
+	
+	shoot.control_match_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel]
+	shoot.control_match_precent_base_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel..'_precent_base']
+	shoot.control_match_precent_final_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel..'_precent_final']
+	
+	shoot.range_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel]
+	shoot.range_precent_base_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_base']
+	shoot.range_precent_final_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_final']
+
+	
+
+end
+
+function finalValueOperation(baseValue,bonusValue,precentBase,precentFinal)
+	local operationValue = (baseValue * (1+precentBase/100) + bonusValue) * (1+precentFinal/100)
+	return operationValue
 end
 
 function shootKill(shoot)
@@ -316,7 +357,7 @@ function checkSecondHit(keys,shoot)
 										false)
 	for k,unit in pairs(aroundUnits) do
 		--local name = unit:GetContext("name")
-		local lable =unit:GetUnitLabel()
+		local lable = unit:GetUnitLabel()
 		local casterTeam = caster:GetTeam()
 		local unitTeam = unit:GetTeam()
 		if(GameRules.skillLabel ~= lable and shoot ~= unit and casterTeam~=unitTeam and unit.beatBackFlag ~= 1) then --碰到的不是子弹,不是自己,不是发射技能的队伍,没被该技能碰撞过		

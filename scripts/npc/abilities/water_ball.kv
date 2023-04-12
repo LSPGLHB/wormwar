@@ -10,10 +10,16 @@
 		"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
 		"AbilityUnitDamageType"			"DAMAGE_TYPE_MAGICAL"
 		"FightRecapLevel"				"1"
-		"AbilityTextureName"			"crystal_maiden_crystal_nova"
+		"AbilityTextureName"			"crystal_maiden_crystal_nova"    //技能栏图标
 
-         "MaxLevel"                      "1"
-		"AOERadius"                      "500"
+        "MaxLevel"                      "1"
+		"AOERadius"                     "500"
+
+		"UnitType"         				"shui"
+		"AbilityLevel"					"C"
+		"IconSrc" "file://{images}/custom_game/ability_button/invoker_cold_snap.png"  //选择框图标
+		"AbilityShowName" "#UIButton4"
+
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -26,14 +32,12 @@
 		
 		// Cost
 		//-------------------------------------------------------------------------------------------------------------
-		"AbilityManaCost"				"1"
+		"AbilityManaCost"				"10"
 		
 		// Special
 		//-------------------------------------------------------------------------------------------------------------
 		"AbilitySpecial"
 		{
-			
-			
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
@@ -52,7 +56,7 @@
 			"04"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"radius"					"500"
+				"radius"					"100"
 			}
 			"05"
 			{
@@ -72,7 +76,7 @@
 			"07"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"delay"				"1"
+				"delay"						"1"
 			}
 		}
 		
@@ -90,6 +94,7 @@
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
 				"unitType"          "shui"
+				"AbilityLevel"		"C"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 				"isAOE"             "1"
 				"canShotDown"		"1"

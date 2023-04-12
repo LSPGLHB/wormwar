@@ -4,10 +4,12 @@ function createWaterBall(keys)
     local caster = keys.caster
     local ability = keys.ability
     local skillPoint = ability:GetCursorPosition()
-    local speed = ability:GetSpecialValueFor("speed")
+    
     local casterPoint = caster:GetAbsOrigin() 
     local max_distance = (skillPoint - casterPoint):Length2D()
     local direction = (skillPoint - casterPoint):Normalized()
+
+
 
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
 	creatSkillShootInit(keys,shoot,caster)
@@ -26,7 +28,7 @@ function waterBallBoom(keys,shoot,particleID)
 	--local caster = keys.caster
 	local ability = keys.ability
 	--local modifierName = keys.modifierName
-	local duration = ability:GetSpecialValueFor("duration") --持续时间
+	--local duration = ability:GetSpecialValueFor("duration") --持续时间
 	--local radius = ability:GetSpecialValueFor("radius") --AOE范围
 	local delay = 1 --延迟作用时间
 	--[[
@@ -72,10 +74,10 @@ end
 function waterBallBoomRenderParticles(keys,shoot)
 	local caster = keys.caster
 	local ability = keys.ability
-	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
+	local radius = ability:GetSpecialValueFor("radius")
 	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
 	ParticleManager:SetParticleControl(particleBoom, 3, shoot:GetAbsOrigin())
-	ParticleManager:SetParticleControl(particleBoom, 10, Vector(100, 1, 0))
+	ParticleManager:SetParticleControl(particleBoom, 10, Vector(radius, 1, 0))
 	return particleBoom
 end
 --[[

@@ -26,25 +26,17 @@
 
 
 
-        "vision_bonus"              "300" //增加英雄基础视野
-        "health_bonus"              "40"  //增加基础生命
-        "speed_bouns"               "25"  //增加基础移速
-        "speed_sp_precent"          "20"  //增加移速百分比
-        "speed_sp_duration"         "1.25"  //增加移速持续时间
-        "mana_bonus"                "20"  //增加蓝量
-        "mana_regen_bouns"          "1.5"  //增加蓝量恢复速度
-        "C_speed_bonus"             "100"  //增加C技能射速
-        "C_speed_bouns_precent"     "10"  //增加C技能射速百分比
-        "C_range_bonus"             "100"  //增加C技能射程
-        "C_range_bonus_precent"     "10"  //增加C技能射程百分比
-        "C_damage_bonus"            "4"  //增加C技能的攻击力
-        "C_damage_bonus_precent"    "22"  //增加C技能的攻击力百分比
-        "C_control_bonus_precent"   "20"  //增加C技能控制时间百分比
-        "C_energy_bonus_precent"    "50"  //增加C技能法魂量百分比
-        "C_mana_expend_precent"     "40"  //增加C技能蓝量消耗
-        "C_match_damage_bonus_precent" "20"  //增加C技能相生时增加伤害百分比
-        "C_match_control_bonus_precent" "15"  //增加C技能相生时控制时间百分比
-        "C_match_energy_bonus"      "20"  //增加C技能相生时法魂量
+       
+       
+  
+       
+        
+        
+        
+        
+        
+        
+        
 
         
         "AbilitySpecial"
@@ -52,19 +44,94 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_damage"			"300"
+                "item_health"              "40"  //增加基础生命
             }
             "02"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_shoot_speed"			"1500"
+                "item_speed_precent"          "20"  //增加移速百分比
             }
             "03"
             {
                 "var_type"				"FIELD_INTEGER"
-                "move_speed"			"100"
+                "item_speed_duration"         "1.25"  //增加移速持续时间
             }
-            
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                 "item_mana"                "20"  //增加蓝量
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_mana_regen"          "1.5"  //增加蓝量恢复速度
+            }
+            "06"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_ability_speed_C"             "100"  //增加C技能射速
+            }
+            "07"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_ability_speed_C_precent"     "10"  //增加C技能射速百分比
+            }
+            "08"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_range_C"             "100"  //增加C技能射程
+            }
+            "09"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_range_C_precent"     "10"  //增加C技能射程百分比
+            }
+            "10"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_damage_C"            "4"  //增加C技能的攻击力
+            }
+            "11"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_damage_C_precent"    "22"  //增加C技能的攻击力百分比
+            }
+            "12"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_control_C_precent"   "20"  //增加C技能控制时间百分比
+            }
+            "13"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_energy_C_precent"    "50"  //增加C技能法魂量百分比
+            }
+            "14"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_mana_cost_C_precent"     "40"  //增加C技能蓝量消耗
+            }
+            "15"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_damage_match_C_precent" "20"  //增加C技能相生时增加伤害百分比
+            }
+            "16"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_control_match_C_precent" "15"  //增加C技能相生时控制时间百分比
+            }
+            "17"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_energy_match_C"      "20"  //增加C技能相生时法魂量
+            }
+            "18"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_speed"            "25"  //增加移速
+            }
+
         }
 
 
@@ -94,10 +161,7 @@
                 }
             }
 
-            "Properties"
-            {
-                "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "%move_speed"
-            }
+           
         }
     }
 

@@ -1,10 +1,10 @@
 -- Generated from template
 
 require('player_init')
+require('player_power')
 require('game_progress')
 require('get_magic')
 require('get_contract')
-require('contract_power')
 require('shop')
 require('button')
 require('player_status')
@@ -136,6 +136,11 @@ function wormWar:InitGameMode()
 	GameRules:SetPreGameTime(GameRules.PreTime) --选择英雄与开始时间，吹号角时间
 	GameRules.skillLabel = "skillLabel"
 	GameRules.shopLabel ="shopLabel"
+	GameRules.playerBaseHealth = 50
+	GameRules.playerBaseMana = 100
+	GameRules.playerBaseSpeed = 300
+	GameRules.playerBaseVision = 1200
+	GameRules.playerManaRegen = 10
 	--GameRules:SetHeroSelectPenaltyTime( 0.0 )
 
 
@@ -223,7 +228,7 @@ function wormWar:InitGameMode()
 	if init_flag == 0 then
 		initMapStats() -- 初始化地图数据
 		initItemList() -- 初始化物品信息
-		initContractPower() --初始化契约容器
+		initPlayerPower() --初始化契约容器
 		initContractList() --初始化契约信息
 		
 		GetAbilityList()--初始化技能信息

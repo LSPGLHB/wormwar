@@ -5,7 +5,6 @@
         "BaseClass"	                "ability_datadriven"
         "AbilityTextureName"        "furion_sprout"
         "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
-        "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
 
         "AbilityType"               "contract"
         "ShowName"                  "name_a"
@@ -36,7 +35,7 @@
             "modifier_contract_contract_a_datadriven"
             {
                 "Passive"			"1"
-                //"IsHidden"			"1"
+                "IsHidden"			"1"
 
                 "OnCreated"
                 {
@@ -65,14 +64,13 @@
         "BaseClass"	                "ability_datadriven"
         "AbilityTextureName"        "furion_teleportation"
         "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN "
-        "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
 
         "AbilityType"               "contract"
         "ShowName"                  "name_b"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract2.png"                              
         "Describe"                  "DescribeDescribeB"
 
-         "AbilitySpecial"
+        "AbilitySpecial"
         {
             "01"
             {
@@ -92,7 +90,7 @@
             "modifier_contract_contract_b_datadriven"
             {
                 "Passive"			"1"
-                //"IsHidden"			"1"
+                "IsHidden"			"1"
 
                 "OnCreated"
                 {
@@ -118,34 +116,219 @@
     "contract_c"
     {
         "BaseClass"	                "ability_datadriven"
-        "AbilityTextureName"        "riki_smoke_screen"
-        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
-        "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
+        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+
+
+        "AbilityType"               "contract"
         "ShowName"                  "name_c"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract3.png"
         "Describe"                  "DescribeDescribeC"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_energy_C_precent_base"		"25"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_energy_B_precent_base"		"25"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_energy_A_precent_base"		"25"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_vision_flag"			"0"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_damage_flag"			"0"
+            }
+            "06"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_control_flag"			"0"
+            }
+
+           
+        }
+
+        "Modifiers"
+        {
+            "modifier_contract_contract_c_datadriven"
+            {
+                "Passive"			"1"
+                "IsHidden"			"1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_c.lua"
+                        "Function"			"modifier_contract_contract_c_on_created"
+                    }
+                }
+                
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_c.lua"
+                        "Function"			"modifier_contract_contract_c_on_destroy"
+                    }
+                }
+            }
+        }
+
     }
 
     "contract_d"
     {
         "BaseClass"	                "ability_datadriven"
-        "AbilityTextureName"        "riki_smoke_screen"
-        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
-        "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
+        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+
+        "AbilityType"               "contract"
         "ShowName"                  "name_d"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract4.png"
         "Describe"                  "DescribeDescribeD"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_control_precent_final"		"20"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_speed_precent_final"		"25"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_damage_flag"		"0"
+            }
+
+           
+        }
+
+        "Modifiers"
+        {
+            "modifier_contract_contract_d_datadriven"
+            {
+                "Passive"			"1"
+                //"IsHidden"			"1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_d.lua"
+                        "Function"			"modifier_contract_contract_d_on_created"
+                    }
+                }
+                
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_d.lua"
+                        "Function"			"modifier_contract_contract_d_on_destroy"
+                    }
+                }
+            }
+        }
     }
+
+
     "contract_e"
     {
         "BaseClass"	                "ability_datadriven"
-        "AbilityTextureName"        "riki_smoke_screen"
-        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE"
-        "AbilityUnitDamageType"		"DAMAGE_TYPE_PHYSICAL"
+        "AbilityBehavior"	        "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+       
+        "AbilityType"               "contract"
         "ShowName"                  "name_e"
         "IconSrc"                   "file://{images}/custom_game/contract_icon/contract5.png"
         "Describe"                  "DescribeDescribee"
+
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_vision"		"-400"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_health_precent_final"		"-50"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_speed"		"-50"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_mana_precent_final"		"25"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_range_precent_final"       "20"
+            }
+            "06"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_damage_precent_final"       "28"
+            }
+            "07"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "contract_control_precent_final"       "20"
+            }
+
+           
+        }
+
+        "Modifiers"
+        {
+            "modifier_contract_contract_e_datadriven"
+            {
+                "Passive"			"1"
+                "IsHidden"			"1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_e.lua"
+                        "Function"			"modifier_contract_contract_e_on_created"
+                    }
+                }
+                
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"contract/contract_e.lua"
+                        "Function"			"modifier_contract_contract_e_on_destroy"
+                    }
+                }
+            }
+        }
+
     }
+
     "contract_f"
     {
         "BaseClass"	                "ability_datadriven"
