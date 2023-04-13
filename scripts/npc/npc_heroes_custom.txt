@@ -7,7 +7,7 @@
 	{
 		"override_hero"	"npc_dota_hero_rubick"
 		"AbilityLayout"         "6"
-		"Ability1"	"stone_spear_datadriven"
+		"Ability1"	"water_ball_datadriven"//"stone_spear_datadriven"
 		"Ability2"	"ice_arrow_datadriven"//""//"multi_stage_skills_a_datadriven"//"powershot_datadriven"//"mirana_arrow"//"pudge_meat_hook_lua_reb"
 		"Ability3"	"make_friend_datadriven"//"multi_stage_skills_a_datadriven"//
 		"Ability4"  "stone_ball_datadriven"//"nothing_c"//"fire_storm_datadriven"
@@ -21,10 +21,6 @@
 		"Ability12"  "ice_arrow_launch_ready_datadriven"
 		"Ability13"  "stone_spear_stage_b_datadriven"
 		"Ability14"  "multi_stage_skills_b_datadriven"
-
-
-
-
 
 
 

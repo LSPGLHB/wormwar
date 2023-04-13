@@ -1,33 +1,21 @@
 --LinkLuaModifier( "modifier_stone_beat_back_aoe_lua", "abilities/modifier_stone_beat_back_aoe_lua.lua",LUA_MODIFIER_MOTION_NONE )
 ----伤害计算(keys, 子弹实体)
-function getApplyDamageValue(keys,shoot)
-	local caster = keys.caster
-	local ability = keys.ability
-	local powerLv = shoot.power_lv
-	local damage = ability:GetLevelSpecialValueFor( "damage" , ability:GetLevel() - 1) 
-	if damage == nil then
-		damage = ability:GetAbilityDamage()
-	end
-	local item_bonus_damage = getShootPower(caster, "item_damage")--caster.item_bonus_damage
-	if item_bonus_damage == nil then
-		item_bonus_damage = 0
-	end
-	damage = powerLevelOperation(powerLv, damage)
-	damage = damage + item_bonus_damage
+function getAbilityShootDamageValue(shoot)
+	local damage = powerLevelOperation(shoot.power_lv, shoot.damage) --克制增强运算
 	if damage < 0 then
 		damage = 0  --伤害保底
 	end
 	return damage
 end
-
-function powerLevelOperation(powerLv, result)
+--克制增强运算
+function powerLevelOperation(powerLv, damage)
 	if powerLv > 0 then
-		result = result * 1.25
+		damage = damage * 1.25
 	end
 	if powerLv < 0 then
-		result = result * 0.75
+		damage = damage * 0.75
 	end
-	return result
+	return damage
 end
 
 --power_lv：标记增强等级

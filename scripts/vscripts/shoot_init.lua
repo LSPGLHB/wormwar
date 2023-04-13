@@ -1,18 +1,19 @@
 require('skill_operation')
-function moveShoot(keys, shoot, max_distance, direction, speed, particleID, skillBoomCallback, hitUnitCallBack)--skillBoomCallback：技能爆炸形态，hitUnitCallBack：技能中途击中效果（穿透使用）
-	
+function moveShoot(keys, shoot, max_distance, direction, particleID, skillBoomCallback, hitUnitCallBack)--skillBoomCallback：技能爆炸形态，hitUnitCallBack：技能中途击中效果（穿透使用）
+	--初始化数据包
+	moveShootInit(keys,shoot,max_distance,direction)
+	local speed = shoot.speed * 0.02
+
 	--实现延迟满法魂效果
 	local shootHealthMax = shoot:GetHealth()
-	local shootHealthSend = shootHealthMax * 0.5
-	local shootHealthStep = shootHealthMax * 0.5 * speed / 10
+	local shootHealthSend = shootHealthMax * 0.8
+	local shootHealthStep = shootHealthMax * 0.2 * speed / 10
 	shoot:SetHealth(shootHealthSend)
+
 	--影响弹道的buff--测试速度调整
-	speed = skillSpeedOperation(keys,speed)
+	--speed = skillSpeedOperation(keys,speed)
 
-	--初始化数据包
-	moveShootInit(keys,shoot,max_distance,direction,speed)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
-
 		if shoot.traveled_distance < shoot.max_distance then
 			moveShootTimerInit(keys,shoot,direction,speed)
 			if shootHealthSend < shootHealthMax then
@@ -78,7 +79,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 	local hitType = keys.hitType
 	--local PlayerID = caster:GetPlayerID() PlayerResource:GetTeam(PlayerID) print("team========:"..team) print("goodguy2:"..DOTA_TEAM_GOODGUYS) print("badguy3:"..DOTA_TEAM_BADGUYS) print("noteam5:"..DOTA_TEAM_NOTEAM) print("CUSTOM_1=6:"..DOTA_TEAM_CUSTOM_1) print("CUSTOM_2=7:"..DOTA_TEAM_CUSTOM_2)
 	--寻找目标
-	local searchRadius = ability:GetLevelSpecialValueFor("hit_range", ability:GetLevel() - 1)
+	local searchRadius = ability:GetSpecialValueFor("hit_range")
 	local aroundUnits = FindUnitsInRadius(casterTeam, 
 										position,
 										nil,
@@ -92,7 +93,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 	local searchUnits = {}
 	local returnVal = 0
 	for k,unit in pairs(aroundUnits) do
-		local lable = unit:GetUnitLabel()
+		local lable = unit:GetUnitLabel() --该单位为技能子弹
 		local unitTeam = unit:GetTeam()
 		local unitHealth = unit.isHealth
 		local shootHealth = shoot.isHealth
@@ -119,7 +120,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 		if(casterTeam ~= unitTeam and shootHealth ~= 0 and isHitUnit) then --触碰到的不是自家队伍，且自身法魂不为0，是否实现撞击
 			if(GameRules.skillLabel == lable and unitHealth ~= 0) then --如果碰到的是子弹，且法魂不为0：此处需要比拼法魂大小
 				--获取触碰双方的属性--print("shoot-nuit-Type:",shoot.unit_type,unit.unit_type)
-				--法魂计算过程
+				--法魂计算过程(还需加入克制计算)
 				local tempHealth = shoot:GetHealth() - unit:GetHealth()
 				if(tempHealth > 0) then
 					shoot:SetHealth(tempHealth)
@@ -155,8 +156,8 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 			if shoot ~= unit and GameRules.skillLabel == lable and isHitUnit then
 				--fireStormFlag用于标记该aoe是否已经起作用
 				if unit.shootPowerFlag == nil  then
-					reinforceEach(unit,shoot,nil) --加强运算
-					unit.shootPowerFlag = 1;
+					reinforceEach(unit,shoot,nil) --加强运算记录在shoot.power_lv
+					unit.shootPowerFlag = 1;--与unit.power_flag是否同一个东西？？？？
 				end
 			end
 		end
@@ -164,16 +165,36 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 	return returnVal
 end
 
-function moveShootInit(keys,shoot,max_distance,direction,speed)
+function moveShootTimerInit(keys,shoot,direction,speed)
+	local shootTempPos = shoot:GetAbsOrigin()
+	if keys.isControl == 1 then
+		if shoot.direction ~= nil then 
+			direction = shoot.direction
+		end
+		if shoot.speed ~= nil then 
+			speed = shoot.speed
+		end
+	end
+	if keys.isTrack == 1 then
+		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
+		speed = shoot.speed
+	end
+
+	local newPos = shootTempPos + direction * speed
+	local groundPos = GetGroundPosition(newPos, shoot)
+	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
+	--FindClearSpaceForUnit( shoot, groundPos, false )--飞行单位可以穿地形不用这个
+	shoot:SetAbsOrigin(shootPos)
+end
+
+function moveShootInit(keys,shoot,max_distance,direction)
+	
+	shoot.max_distance = max_distance
+	shoot.direction = direction
 	shoot.traveled_distance = 0 --初始化已经飞行的距离0
 	shoot.shootHight = 100 --子弹高度
-	shoot.max_distance = max_distance
-	--shoot:SetForwardVector(Vector(direction.x, direction.y, 0))--发射初始方向
-	--shoot:SetAbsOrigin(shoot:GetAbsOrigin() + direction * 50 + Vector(0,0,shoot.shootHight)) --发射高度
-	--保存一些数据到子弹实体
-	shoot.direction = direction
-	shoot.speed = speed
 	shoot.isBreak = 0 --初始化不跳出
+
 	if keys.hitType == nil then--hitType：1碰撞伤害，2穿透伤害，3直达指定位置，不命中单位
 		keys.hitType = 1
 	end
@@ -199,29 +220,6 @@ function moveShootInit(keys,shoot,max_distance,direction,speed)
 		keys.isControl = 0
 	end 
 	
-	
-end
-
-function moveShootTimerInit(keys,shoot,direction,speed)
-	local shootTempPos = shoot:GetAbsOrigin()
-	if keys.isControl == 1 then
-		if shoot.direction ~= nil then 
-			direction = shoot.direction
-		end
-		if shoot.speed ~= nil then 
-			speed = shoot.speed
-		end
-	end
-	if keys.isTrack == 1 then
-		direction = (keys.trackUnit:GetAbsOrigin() - Vector(shootTempPos.x, shootTempPos.y, 0)):Normalized()
-		speed = shoot.speed
-	end
-
-	local newPos = shootTempPos + direction * speed
-	local groundPos = GetGroundPosition(newPos, shoot)
-	local shootPos = Vector(groundPos.x, groundPos.y, groundPos.z + shoot.shootHight)
-	--FindClearSpaceForUnit( shoot, groundPos, false )--飞行单位可以穿地形不用这个
-	shoot:SetAbsOrigin(shootPos)
 end
 
 function creatSkillShootInit(keys,shoot,owner)
@@ -237,23 +235,36 @@ function creatSkillShootInit(keys,shoot,owner)
 	shoot.hitUnits = {}--用于记录命中的目标
 
 	--已处理
-	local manaCost = ability:GetManaCost()
+	--蓝耗
+	local manaCost = ability:GetManaCost(1)
 	shoot.mana_cost_bonus = PlayerPower[playerID]['player_mana_cost_'..AbilityLevel] + manaCost * PlayerPower[playerID]['player_mana_cost_'..AbilityLevel..'_precent']
 	caster:ReduceMana(shoot.mana_cost_bonus)
 
-	--半成品
+	--法魂
+	local abilityEnergy = shoot:GetHealth()
+	shoot.energy_bonus = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_'..AbilityLevel],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_final']) - abilityEnergy
+	shoot.energy_match_bonus = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_match_'..AbilityLevel],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_final']) - abilityEnergy
+	shoot:AddAbility('ability_health_control'):SetLevel(1)
+	shoot:RemoveModifierByName('modifier_health_debuff')
+    shoot:SetModifierStackCount('modifier_health_buff', shoot, shoot.energy_bonus)
+	print("abilityEnergy",abilityEnergy)
+	print("energy_bonus",shoot.energy_bonus)
+
+	--直接可用数据
+	--伤害
 	local damageBase = ability:GetSpecialValueFor("damage")
 	shoot.damage = finalValueOperation(damageBase, PlayerPower[playerID]['player_damage_'..AbilityLevel],PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_base'], PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_final'])
 	shoot.damage_match = finalValueOperation(shoot.damage, PlayerPower[playerID]['player_damage_match_'..AbilityLevel],PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_base'] ,PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_final'])
-
+	print("damage",shoot.damage)
+	--弹道速度
 	local speedBase =  ability:GetSpecialValueFor("speed")
-	shoot.speed = finalValueOperation(speedBase,PlayerPower[playerID]['player_speed_'..AbilityLevel],PlayerPower[playerID]['player_speed_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_speed_'..AbilityLevel..'_precent_final'])
+	shoot.speed = finalValueOperation(speedBase,PlayerPower[playerID]['player_ability_speed_'..AbilityLevel],PlayerPower[playerID]['player_ability_speed_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_ability_speed_'..AbilityLevel..'_precent_final'])
+	
 
-	local abilityEnergy = shoot:GetHealth()
-	shoot.energy = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_'..AbilityLevel],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_'..AbilityLevel..'_precent_final'])
-	shoot.energy_match = finalValueOperation(abilityEnergy,PlayerPower[playerID]['player_energy_match_'..AbilityLevel],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_energy_match_'..AbilityLevel..'_precent_final'])	
 
-	--预处理
+
+	--半成品（还需加工）
+	--控制时间
 	shoot.control_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel]
 	shoot.control_precent_base_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel..'_precent_base']
 	shoot.control_precent_final_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel..'_precent_final']
@@ -261,12 +272,10 @@ function creatSkillShootInit(keys,shoot,owner)
 	shoot.control_match_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel]
 	shoot.control_match_precent_base_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel..'_precent_base']
 	shoot.control_match_precent_final_bonus = PlayerPower[playerID]['player_control_match_'..AbilityLevel..'_precent_final']
-	
+	--作用范围
 	shoot.range_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel]
 	shoot.range_precent_base_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_base']
-	shoot.range_precent_final_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_final']
-
-	
+	shoot.range_precent_final_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_final']	
 
 end
 

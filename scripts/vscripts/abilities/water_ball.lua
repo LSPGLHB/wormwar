@@ -3,13 +3,12 @@ require('skill_operation')
 function createWaterBall(keys)
     local caster = keys.caster
     local ability = keys.ability
-    local skillPoint = ability:GetCursorPosition()
-    
+    local skillPoint = ability:GetCursorPosition()  
     local casterPoint = caster:GetAbsOrigin() 
     local max_distance = (skillPoint - casterPoint):Length2D()
     local direction = (skillPoint - casterPoint):Normalized()
 
-
+	
 
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
 	creatSkillShootInit(keys,shoot,caster)
@@ -17,7 +16,7 @@ function createWaterBall(keys)
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
 
-    moveShoot(keys, shoot, max_distance, direction, speed, particleID, waterBallBoom, nil)
+    moveShoot(keys, shoot, max_distance, direction, particleID, waterBallBoom, nil)
 
 
 end
@@ -74,23 +73,13 @@ end
 function waterBallBoomRenderParticles(keys,shoot)
 	local caster = keys.caster
 	local ability = keys.ability
-	local radius = ability:GetSpecialValueFor("radius")
+	local radius = finalValueOperation(ability:GetSpecialValueFor("radius"),shoot.range_bonus,shoot.range_precent_base_bonus,shoot.range_precent_final_bonus)
 	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
 	ParticleManager:SetParticleControl(particleBoom, 3, shoot:GetAbsOrigin())
 	ParticleManager:SetParticleControl(particleBoom, 10, Vector(radius, 1, 0))
 	return particleBoom
 end
---[[
-function novaRenderParticles(keys,shoot)
-	local caster = keys.caster
-	local ability = keys.ability
-	local radius = ability:GetLevelSpecialValueFor("radius", ability:GetLevel() -1)
-	local particleBoom = ParticleManager:CreateParticle(keys.particlesBoom, PATTACH_WORLDORIGIN, caster)
-	ParticleManager:SetParticleControl(particleBoom, 0, shoot:GetAbsOrigin())
-	ParticleManager:SetParticleControl(particleBoom, 1, Vector(radius, 1, radius*2))
-	return particleBoom
-end
-]]
+
 
 
 function dealSkillBoom(keys,shoot)
@@ -98,7 +87,7 @@ function dealSkillBoom(keys,shoot)
 	local ability = keys.ability
 	local hitTargetDebuff = keys.hitTargetDebuff
 	local duration = ability:GetSpecialValueFor("duration") --冰冻持续时间
-	local radius = ability:GetSpecialValueFor("radius") --AOE范围
+	local radius = finalValueOperation(ability:GetSpecialValueFor("radius"),shoot.range_bonus,shoot.range_precent_base_bonus,shoot.range_precent_final_bonus)--AOE范围
 	local position=shoot:GetAbsOrigin()
 	local casterTeam = caster:GetTeam()
 	
@@ -118,7 +107,7 @@ function dealSkillBoom(keys,shoot)
 		--只作用于敌方,非技能单位
 		if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
 			ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
-			local damage = getApplyDamageValue(keys,shoot)
+			local damage = getAbilityShootDamageValue(shoot)
 			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		end
 		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效
