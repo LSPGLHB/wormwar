@@ -1,4 +1,5 @@
 require('skill_operation')
+require('player_power')
 function moveShoot(keys, shoot, max_distance, direction, particleID, skillBoomCallback, hitUnitCallBack)--skillBoomCallback：技能爆炸形态，hitUnitCallBack：技能中途击中效果（穿透使用）
 	--初始化数据包
 	moveShootInit(keys,shoot,max_distance,direction)
@@ -247,23 +248,20 @@ function creatSkillShootInit(keys,shoot,owner)
 	shoot:AddAbility('ability_health_control'):SetLevel(1)
 	shoot:RemoveModifierByName('modifier_health_debuff')
     shoot:SetModifierStackCount('modifier_health_buff', shoot, shoot.energy_bonus)
-	print("abilityEnergy",abilityEnergy)
-	print("energy_bonus",shoot.energy_bonus)
+	--print("abilityEnergy",abilityEnergy)
+	--print("energy_bonus",shoot.energy_bonus)
 
 	--直接可用数据
 	--伤害
 	local damageBase = ability:GetSpecialValueFor("damage")
 	shoot.damage = finalValueOperation(damageBase, PlayerPower[playerID]['player_damage_'..AbilityLevel],PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_base'], PlayerPower[playerID]['player_damage_'..AbilityLevel..'_precent_final'])
 	shoot.damage_match = finalValueOperation(shoot.damage, PlayerPower[playerID]['player_damage_match_'..AbilityLevel],PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_base'] ,PlayerPower[playerID]['player_damage_match_'..AbilityLevel..'_precent_final'])
-	print("damage",shoot.damage)
+	--print("damage",shoot.damage)
 	--弹道速度
 	local speedBase =  ability:GetSpecialValueFor("speed")
 	shoot.speed = finalValueOperation(speedBase,PlayerPower[playerID]['player_ability_speed_'..AbilityLevel],PlayerPower[playerID]['player_ability_speed_'..AbilityLevel..'_precent_base'],PlayerPower[playerID]['player_ability_speed_'..AbilityLevel..'_precent_final'])
 	
-
-
-
-	--半成品（还需加工）
+	--半成品（还需现场加工）
 	--控制时间
 	shoot.control_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel]
 	shoot.control_precent_base_bonus = PlayerPower[playerID]['player_control_'..AbilityLevel..'_precent_base']
@@ -276,6 +274,20 @@ function creatSkillShootInit(keys,shoot,owner)
 	shoot.range_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel]
 	shoot.range_precent_base_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_base']
 	shoot.range_precent_final_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_final']	
+
+
+	initDurationBuff(keys,shoot)
+end
+
+function initDurationBuff(keys,shoot)
+	local caster = keys.caster
+	local ability = keys.ability
+	local playerID = caster:GetPlayerID()
+	local AbilityLevel = keys.AbilityLevel
+
+	if (PlayerPower[playerID]['player_vision_duration'] > 0) then
+
+	end
 
 end
 

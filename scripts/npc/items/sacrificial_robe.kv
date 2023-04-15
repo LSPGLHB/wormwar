@@ -1,13 +1,12 @@
 "DOTAAbilities"
 {
-    "item_lvxie2"
+    "item_sacrificial_robe"
     {
         "ID"			"2002"
         "BaseClass"                                "item_datadriven"
-        "AbilityTextureName"        "item_lvxie2"
+        "AbilityTextureName"        "item_vladmir"
 
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE"    //  "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
-
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"    
 
         "ItemType"               "equip"
         "IconSrc"                "file://{images}/custom_game/shop_item/greater_crit_lg.png" 
@@ -28,27 +27,47 @@
         "ItemQuality"                        "rare"
         "ItemPermanent"                 "0"		//永久的
 
-        //"ItemShareability"                "ITEM_FULLY_SHAREABLE"
-
-
-        // Stats
-        //-------------------------------------------------------------------------------------------------------------
-        //"AbilityCooldown"				"3"
-        //"AbilityCastRange"				"200"
-        //"AbilityCastPoint"				"0.0"
-        //"AbilityManaCost"				"20"
-
         "AbilitySpecial"
         {
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_damage"			"100"
+                "team_vision_after_die"			"200"
             }
             "02"
             {
                 "var_type"				"FIELD_INTEGER"
-                "bonus_shoot_speed"			"1000"
+                "team_speed_after_die"			"30"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_speed_after_die"			"30"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_speed_after_die"			"30"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_speed_after_die"			"30"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_damage_precent_final_after_die"			"20"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_control_precent_final_after_die"			"15"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "team_mana_add_after_die"			"25"
             }
             
         }
@@ -56,7 +75,7 @@
 
         "Modifiers"
         {
-            "modifier_item_lvxie2_datadriven"
+            "modifier_item_sacrificial_robe_datadriven"
             {
                 "Passive"			"1"
                 //"IsHidden"			"1"
@@ -65,8 +84,8 @@
                 {
                     "RunScript"
                     {
-                        "ScriptFile"		"items/lvxie.lua"
-                        "Function"			"modifier_item_lvxie_on_created"
+                        "ScriptFile"		"items/sacrificialRobe.lua"
+                        "Function"			"modifier_item_sacrificial_robe_on_created"
                     }
                 }
                 
@@ -74,8 +93,16 @@
                 {
                     "RunScript"
                     {
-                        "ScriptFile"		"items/lvxie.lua"
-                        "Function"			"modifier_item_lvxie_on_destroy"
+                        "ScriptFile"		"items/sacrificialRobe.lua"
+                        "Function"			"modifier_item_sacrificial_robe_on_destroy"
+                    }
+                }
+                "OnDeath"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"items/sacrificialRobe.lua"
+                        "Function"			"modifier_item_sacrificial_robe_on_death"
                     }
                 }
             }

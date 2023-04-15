@@ -1,5 +1,5 @@
 #base items/lvxie.kv
-#base items/lvxie2.kv
+#base items/sacrificial_robe.kv
 #base items/lvxie3.kv
 #base items/lvxie4.kv
 #base items/lvxie5.kv

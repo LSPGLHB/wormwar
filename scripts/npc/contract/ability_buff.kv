@@ -1,5 +1,6 @@
 "DOTAAbilities"
 {
+        //永久类
         "ability_health_control"
         {
         "BaseClass"                     "ability_datadriven"
@@ -154,6 +155,177 @@
                                 }
                         }
                         "modifier_mana_regen_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"        "-1"
+                                }
+                        }
+                }
+        }
+
+
+
+        //持续时间限定
+        "ability_health_control_duration"
+        {
+        "BaseClass"                     "ability_datadriven"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+        "AbilityType"                   "abilityBuff"
+        "Modifiers"
+        {
+                "modifier_health_buff_duration"
+                {
+                        "Passive"		    "1"
+                        "IsHidden"          "0"
+                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                        "Properties"
+                        {
+                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
+                        }
+                }
+
+                "modifier_health_debuff_duration"
+                {
+                        "Passive"		    "1"
+                        "IsDebuff"          "1"
+                        "IsHidden"          "0"
+                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                        "Properties"
+                        {
+                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
+                        }
+                }
+        }
+        }
+
+        "ability_vision_control_duration"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_vision_buff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "1"
+                                        "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "1"
+                                }
+                        }
+                        "modifier_vision_debuff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_BONUS_DAY_VISION"        "-1"
+                                        "MODIFIER_PROPERTY_BONUS_NIGHT_VISION"       "-1"
+                                }
+                        }
+                }
+        }
+
+        "ability_speed_control_duration"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_speed_buff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "1"
+                                }
+                        }
+                        "modifier_speed_debuff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT"        "-1"
+                                }
+                        }
+                }
+        }
+
+        "ability_mana_control_duration"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_mana_buff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_BONUS"        "1"
+                                }
+                        }
+                        "modifier_mana_debuff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_BONUS"        "-1"
+                                }
+                        }
+                }
+        }
+        "ability_mana_regen_control_duration"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_mana_regen_buff_duration"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"        "1"
+                                }
+                        }
+                        "modifier_mana_regen_debuff_duration"
                         {
                                 "Passive"		    "1"
                                 "IsDebuff"          "1"
