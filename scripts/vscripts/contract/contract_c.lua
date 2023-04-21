@@ -39,7 +39,7 @@ function refreshContractBuff(keys,flag)
     setPlayerPowerFlag(playerID, "player_damage_flag", contract_damage_flag)
     setPlayerPowerFlag(playerID, "player_control_flag", contract_control_flag)
 
-    setPlayerBuffByNameAndBValue(keys,"vision",GameRules.playerBaseVision)
+    setPlayerBuffByNameAndBValue(caster,"vision",GameRules.playerBaseVision)
 end
 
 

@@ -19,6 +19,7 @@ function getReadyForIceArrow(keys)
     local ability_a_name = keys.ability_a_name
     local ability_b_name = keys.ability_b_name
 	caster:SwapAbilities( ability_a_name, ability_b_name, false, true )
+	initDurationBuff(keys)
 end
 
 function launchIceArrow(keys)
@@ -39,9 +40,10 @@ function launchIceArrow(keys)
 	GameRules:GetGameModeEntity():SetContextThink(DoUniqueString("1"),function ()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		creatSkillShootInit(keys,shoot,caster)
+		print("shoot",shoot.power_lv,shoot.damage) --此处显示正常
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
 		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)--"attach_hitloc"
-		moveShoot(keys, shoot, max_distance, direction, speed, particleID, iceArrowHitCallBack, nil)
+		moveShoot(keys, shoot, max_distance, direction, particleID, iceArrowHitCallBack, nil)
 		shootCount = shootCount + 1
 		if shootCount < 2 then
 			return 0.5
@@ -73,10 +75,10 @@ function iceArrowHitCallBack(keys,shoot,particleID)
 	local duration = ability:GetSpecialValueFor("debuff_duration") --debuff持续时间
 
 	local stackCount = 0 --caster:GetModifierStackCount( modifierStageName, ability_a_name )
-
+	print("shoot4",shoot.power_lv,shoot.damage)
 	for i = 1, #shoot.hitUnits  do
 		local unit = shoot.hitUnits[i]
-		local damage = getApplyDamageValue(keys,shoot)
+		local damage = getApplyDamageValue(shoot)
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	
 		local tempModifier = unit:FindModifierByName(hitTargetDebuff)
         if tempModifier == nil then

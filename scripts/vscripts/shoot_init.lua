@@ -144,6 +144,7 @@ function shootHit(keys, shoot,hitType, hitUnitCallBack)
 				if hitType == 1 or hitType == 2 then --爆炸弹，--穿透弹,--并实现伤害
 					--撞开击中单位
 					if hitUnitCallBack ~= nil then--会产生撞击
+						--print("shoot3",shoot.power_lv,shoot.damage)
 						hitUnitCallBack(keys, shoot, unit)
 					end
 					returnVal = hitType
@@ -224,6 +225,7 @@ function moveShootInit(keys,shoot,max_distance,direction)
 end
 
 function creatSkillShootInit(keys,shoot,owner)
+	print("creatSkillShootInit")
 	local caster = keys.caster
 	local ability = keys.ability
 	local playerID = caster:GetPlayerID()
@@ -237,9 +239,11 @@ function creatSkillShootInit(keys,shoot,owner)
 
 	--已处理
 	--蓝耗
+	
 	local manaCost = ability:GetManaCost(1)
 	shoot.mana_cost_bonus = PlayerPower[playerID]['player_mana_cost_'..AbilityLevel] + manaCost * PlayerPower[playerID]['player_mana_cost_'..AbilityLevel..'_precent']
-	caster:ReduceMana(shoot.mana_cost_bonus)
+	--caster:ReduceMana(50.0)--(shoot.mana_cost_bonus)-- 此方法23.4.21更新后不能使用
+	caster:SpendMana(shoot.mana_cost_bonus, caster)
 
 	--法魂
 	local abilityEnergy = shoot:GetHealth()
@@ -275,20 +279,21 @@ function creatSkillShootInit(keys,shoot,owner)
 	shoot.range_precent_base_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_base']
 	shoot.range_precent_final_bonus = PlayerPower[playerID]['player_range_'..AbilityLevel..'_precent_final']	
 
-
-	initDurationBuff(keys,shoot)
 end
 
-function initDurationBuff(keys,shoot)
+--施放技能时加强
+function initDurationBuff(keys)
 	local caster = keys.caster
 	local ability = keys.ability
 	local playerID = caster:GetPlayerID()
 	local AbilityLevel = keys.AbilityLevel
 
-	if (PlayerPower[playerID]['player_vision_duration'] > 0) then
 
-	end
-
+	setPlayerDurationBuffByName(keys,"vision")
+	setPlayerDurationBuffByName(keys,"speed")
+	setPlayerDurationBuffByName(keys,"health")
+	setPlayerDurationBuffByName(keys,"mana")
+	setPlayerDurationBuffByName(keys,"mana_regen")
 end
 
 function finalValueOperation(baseValue,bonusValue,precentBase,precentFinal)
@@ -395,7 +400,7 @@ function takeAwayUnit(keys,shoot,hitTarget)
 	local caster = keys.caster
 	local ability = keys.ability
 	local interval = 0.02
-	local speed = shoot.speed
+	local speed = shoot.speed * interval
 	local direction = shoot.direction
 	local hitTargetDebuff = keys.hitTargetDebuff
 	local debuffTable = hitTarget:FindModifierByName(hitTargetDebuff)

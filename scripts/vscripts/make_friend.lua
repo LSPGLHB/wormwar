@@ -6,7 +6,7 @@ function createFriend(keys)
     local player = caster:GetPlayerOwnerID()
     --local tempposition=position+chaoxiang*50
     --print("GetTeam:"..unit:GetTeam())
-    local new_unit = CreateUnitByName("huoren", position, true, nil, nil, DOTA_TEAM_NOTEAM)--unit:GetTeam())
+    local new_unit = CreateUnitByName("huoren", position, true, nil, nil, unit:GetTeam())--DOTA_TEAM_NOTEAM)--
     new_unit:SetControllableByPlayer(player, true)
     new_unit:SetForwardVector(chaoxiang)
 

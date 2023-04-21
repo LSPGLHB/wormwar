@@ -29,7 +29,7 @@ function refreshContractBuff(keys,flag)
     setPlayerPower(playerID, "player_speed_precent_final", flag, contract_speed_precent_final) 
     setPlayerPowerFlag(playerID, "player_damage_flag", contract_damage_flag)
 
-    setPlayerBuffByNameAndBValue(keys,"speed",GameRules.playerBaseSpeed)
+    setPlayerBuffByNameAndBValue(caster,"speed",GameRules.playerBaseSpeed)
 end
 
 

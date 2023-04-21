@@ -1,6 +1,6 @@
 --LinkLuaModifier( "modifier_stone_beat_back_aoe_lua", "abilities/modifier_stone_beat_back_aoe_lua.lua",LUA_MODIFIER_MOTION_NONE )
 ----伤害计算(keys, 子弹实体)
-function getAbilityShootDamageValue(shoot)
+function getApplyDamageValue(shoot)
 	local damage = powerLevelOperation(shoot.power_lv, shoot.damage) --克制增强运算
 	if damage < 0 then
 		damage = 0  --伤害保底
@@ -9,6 +9,7 @@ function getAbilityShootDamageValue(shoot)
 end
 --克制增强运算
 function powerLevelOperation(powerLv, damage)
+	print("powerLevelOperation",powerLv,"=",damage)
 	if powerLv > 0 then
 		damage = damage * 1.25
 	end

@@ -12,9 +12,12 @@
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"earth_spirit_rolling_boulder"
 
-         "MaxLevel"                      "1"
-	
-		"iconSrc" 				"file://{images}/custom_game/ability_button/invoker_exort.png"
+        "MaxLevel"                      "1"
+
+		"UnitType"         				"tu"
+		"AbilityLevel"					"C"
+		"IconSrc" 						"file://{images}/custom_game/ability_button/invoker_exort.png"  //选择框图标
+		"AbilityShowName" 				"#UIButton4"
 
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -36,12 +39,12 @@
 			"01"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"low_speed"						"450"
+				"speed"						"450"
 			}
             "02"
 			{
 				"var_type"					"FIELD_FLOAT"
-				"high_speed"					"900"
+				"high_speed"				"900"
 			}
 			"03"
 			{
@@ -100,6 +103,7 @@
 				"Function"			"createStoneSpirit"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
+				"AbilityLevel"		"C"
 				"unitType"          "tu"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 				"isTrack"			"0"

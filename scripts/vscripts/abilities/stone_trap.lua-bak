@@ -134,7 +134,7 @@ function createStoneTrap(keys)
 			local lockUnitNum = #searchUnit
 			if lockUnitNum > 0 then
 				keys.trackUnit = searchUnit[1]--就近目标
-				moveShoot(keys, shoot, max_distance, direction, min_speed, particleID, stoneTrapBoom, nil)
+				moveShoot(keys, shoot, max_distance, direction, particleID, stoneTrapBoom, nil)
 				return nil
 			end
 			if temp_timer > shoot_hold_duration then
@@ -153,7 +153,7 @@ end
 
 function stoneTrapBoom(keys,shoot,particleID)
 	local ability = keys.ability
-	local damage = getApplyDamageValue(keys,shoot)
+	local damage = getApplyDamageValue(shoot)
 	for i = 1, #shoot.hitUnits  do
 		local unit = shoot.hitUnits[i]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	

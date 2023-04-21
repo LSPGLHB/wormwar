@@ -12,6 +12,7 @@ function createWaterBall(keys)
 
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
 	creatSkillShootInit(keys,shoot,caster)
+	initDurationBuff(keys)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
@@ -107,7 +108,7 @@ function dealSkillBoom(keys,shoot)
 		--只作用于敌方,非技能单位
 		if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
 			ability:ApplyDataDrivenModifier(caster, unit, hitTargetDebuff, {Duration = duration})
-			local damage = getAbilityShootDamageValue(shoot)
+			local damage = getApplyDamageValue(shoot)
 			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		end
 		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效

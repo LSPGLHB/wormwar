@@ -14,6 +14,12 @@
 		"AbilityTextureName"			"lina_dragon_slave"
 		"MaxLevel"                      "1"
 		"AOERadius"                      "600"
+
+		"MaxLevel"                      "1"
+		"UnitType"         				"huo"
+		"AbilityLevel"					"C"
+		"IconSrc" "file://{images}/custom_game/ability_button/invoker_cold_snap.png"  //选择框图标
+		"AbilityShowName" "#UIButton4"
 		
 		"precache"						
 		{
@@ -121,7 +127,8 @@
 				"Function"			"createBigFireBall"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
-				"unitType"          "lei"
+				"AbilityLevel"		"C"
+				"unitType"          "huo"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
                 "isAOE"             "1"
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"

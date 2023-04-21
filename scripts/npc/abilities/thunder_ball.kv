@@ -14,7 +14,13 @@
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"zuus_arc_lightning"
 
-		"iconSrc" 				"file://{images}/custom_game/ability_button/invoker_quas.png"
+		"MaxLevel"                      "1"
+
+		"UnitType"         				"tu"
+		"AbilityLevel"					"C"
+		"IconSrc" 						"file://{images}/custom_game/ability_button/invoker_quas.png"  //选择框图标
+		"AbilityShowName" 				"#UIButton4"
+
 		
 		"precache"
 		{
@@ -86,6 +92,7 @@
 				"Function"			"createThunderBall"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
+				"AbilityLevel"		"C"
 				"unitType"          "lei"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"

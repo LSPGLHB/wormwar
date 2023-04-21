@@ -43,10 +43,10 @@ function refreshContractBuff(keys,flag)
     setPlayerPower(playerID, "player_control_B_precent_final", flag, contract_control_precent_final)
     setPlayerPower(playerID, "player_control_A_precent_final", flag, contract_control_precent_final)
 
-    setPlayerBuffByNameAndBValue(keys,"vision",GameRules.playerBaseVision)
-    setPlayerBuffByNameAndBValue(keys,"health",GameRules.playerBaseHealth)
-    setPlayerBuffByNameAndBValue(keys,"speed",GameRules.playerBaseSpeed)
-    setPlayerBuffByNameAndBValue(keys,"mana",GameRules.playerBaseMana)
+    setPlayerBuffByNameAndBValue(caster,"vision",GameRules.playerBaseVision)
+    setPlayerBuffByNameAndBValue(caster,"health",GameRules.playerBaseHealth)
+    setPlayerBuffByNameAndBValue(caster,"speed",GameRules.playerBaseSpeed)
+    setPlayerBuffByNameAndBValue(caster,"mana",GameRules.playerBaseMana)
 end
 
 

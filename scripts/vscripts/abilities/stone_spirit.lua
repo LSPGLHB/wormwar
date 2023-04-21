@@ -71,7 +71,7 @@ function createStoneSpirit(keys)
 	if keys.caster.stone_spirit_charges > 0 then
 		local caster = keys.caster
 		local ability = keys.ability
-		local low_speed = ability:GetSpecialValueFor("low_speed")
+		--local low_speed = ability:GetSpecialValueFor("low_speed")
 		local high_speed = ability:GetSpecialValueFor("high_speed")
 		local max_distance = ability:GetSpecialValueFor("max_distance")
 		local direction = (ability:GetCursorPosition() - caster:GetAbsOrigin()):Normalized()
@@ -99,12 +99,12 @@ function createStoneSpirit(keys)
 	
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 		creatSkillShootInit(keys,shoot,caster)
-
+		initDurationBuff(keys)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
         
-        moveShoot(keys, shoot, max_distance, direction, low_speed, particleID, stoneSpiritBoom, nil)
+        moveShoot(keys, shoot, max_distance, direction, particleID, stoneSpiritBoom, nil)
 
 		local casterTeam = caster:GetTeam()
 		
@@ -151,7 +151,7 @@ end
 
 function stoneSpiritBoom(keys,shoot,particleID)
 	local ability = keys.ability
-	local damage = getApplyDamageValue(keys,shoot)
+	local damage = getApplyDamageValue(shoot)
 	local doubleDamageFlag = RollPercentage(25)
 	if doubleDamageFlag then
 		damage = damage * 2

@@ -13,7 +13,11 @@
 		"AbilityTextureName"			"earth_spirit_boulder_smash"
 
         "MaxLevel"                      "1"
-		"iconSrc" 				"file://{images}/custom_game/ability_button/invoker_wex.png"
+
+		"UnitType"         				"tu"
+		"AbilityLevel"					"C"
+		"IconSrc" 						"file://{images}/custom_game/ability_button/invoker_wex.png"  //选择框图标
+		"AbilityShowName" 				"#UIButton4"
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -84,6 +88,7 @@
 				"Function"			"createStoneShoot"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
+				"AbilityLevel"					"C"
 				"unitType"          "tu"
 				"hitType" 			"2"   //3直达施法点，2穿透弹，1为不穿透
 				"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"

@@ -10,10 +10,11 @@ function createBigFireBall(keys)
     local direction = (skillPoint - casterPoint):Normalized()
     local shoot = CreateUnitByName(keys.unitModel, casterPoint, true, nil, nil, caster:GetTeam())
     creatSkillShootInit(keys,shoot,caster)
+    initDurationBuff(keys)
 	--shoot.timer = 0
     local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot)
     ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
-    moveShoot(keys, shoot, max_distance, direction, speed, particleID, bigFireBallBoomCallBack, nil)
+    moveShoot(keys, shoot, max_distance, direction, particleID, bigFireBallBoomCallBack, nil)
 end
 
 --技能爆炸,单次伤害
@@ -66,7 +67,7 @@ function dealSkillbigFireBallBoom(keys,shoot)
             local tempDistance = (shoot:GetAbsOrigin() - unit:GetAbsOrigin()):Length2D()
             local beatBackDistance = beat_back_one - tempDistance   --只击退到AOE的600码
             beatBackUnit(keys,shoot,unit,beatBackDistance,beatBackSpeed,1,1)
-			local damage = getApplyDamageValue(keys,shoot)
+			local damage = getApplyDamageValue(shoot)
 			ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 		end
 		--如果是技能则进行加强或减弱操作，AOE对所有队伍技能有效

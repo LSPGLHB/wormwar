@@ -112,7 +112,7 @@ function createShoot(keys)
 
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
-		moveShoot(keys, shoot, max_distance, direction, speed, particleID, shootBoom, nil)
+		moveShoot(keys, shoot, max_distance, direction, particleID, shootBoom, nil)
 	else
 		keys.ability:RefundManaCost()
 	end
@@ -136,7 +136,7 @@ end
 
 function shootBoom(keys,shoot,particleID)
 	local ability = keys.ability
-	local damage = getApplyDamageValue(keys,shoot)
+	local damage = getApplyDamageValue(shoot)
 	for i = 1, #shoot.hitUnits  do
 		local unit = shoot.hitUnits[1]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})	

@@ -13,11 +13,13 @@
 		"Ability4"  "stone_ball_datadriven"//"nothing_c"//"fire_storm_datadriven"
 		"Ability5"  "stone_spirit_datadriven"//"speed_up_stack_datadriven"//"cannon_datadriven"
 		"Ability6"  "thunder_ball_datadriven"//"speed_down_stack_datadriven"//"multi_stage_skills_a_datadriven"
-		//"Ability7"  "stone_double_twine_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
-		//"Ability8"	"big_fire_ball_datadriven"//"shoot_speed_up_stack_datadriven"
-		//"Ability9" 	"small_tornado_datadriven"
-		//"Ability10"  "water_ball_datadriven"
-		//"Ability11" "shoot_datadriven"
+		"Ability7"  "stone_double_twine_datadriven"//"bloodseeker_thirst"//"running_fire_datadriven"
+		"Ability8"	"big_fire_ball_datadriven"//"shoot_speed_up_stack_datadriven"
+		"Ability9" 	"small_tornado_datadriven"
+
+		"Ability10" "shoot_datadriven"
+
+
 		"Ability12"  "ice_arrow_launch_ready_datadriven"
 		"Ability13"  "stone_spear_stage_b_datadriven"
 		"Ability14"  "multi_stage_skills_b_datadriven"
@@ -62,7 +64,7 @@
 		// 基础力量
 		"AttributeBaseStrength"	"0"
 		// 力量成长
-		"AttributeStrengthGain"	"1"
+		"AttributeStrengthGain"	"0"
 		// 基础智力
 		"AttributeBaseIntelligence"	"0"
 		// 智力成长

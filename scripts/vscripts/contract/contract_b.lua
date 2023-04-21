@@ -23,6 +23,6 @@ function refreshContractBuff(keys,flag)
     setPlayerPower(playerID, "player_health_precent_final", flag, contract_health_precent_final)
     setPlayerPowerFlag(playerID, "player_speed_flag", contract_speed_flag)
 
-    setPlayerBuffByNameAndBValue(keys,"health",GameRules.playerBaseHealth)
-    setPlayerBuffByNameAndBValue(keys,"speed",GameRules.playerBaseSpeed)
+    setPlayerBuffByNameAndBValue(caster,"health",GameRules.playerBaseHealth)
+    setPlayerBuffByNameAndBValue(caster,"speed",GameRules.playerBaseSpeed)
 end

@@ -357,7 +357,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		for playerID = 0, DOTA_MAX_TEAM_PLAYERS-1 do
 			if PlayerResource:GetConnectionState(playerID) == DOTA_CONNECTION_STATE_CONNECTED then
 					--PlayerResource:SetGold(playerID,50,true)	--所有玩家金钱增量
-				
+					
 					--getRandomItem(playerID) 商店打开测试
 					--print("============initbutton============")
 					--CustomUI:DynamicHud_Destroy(-1,"UIButtonBox")
@@ -366,7 +366,9 @@ function wormWar:OnGameRulesStateChange( keys )
 					--契约板面
 					CustomUI:DynamicHud_Create(playerID,"UIContractPanelBG","file://{resources}/layout/custom_game/UI_contract_box.xml",nil)
 					
+					--CustomUI:DynamicHud_Create(playerID,"UIBannerMsgBox","file://{resources}/layout/custom_game/UI_banner_msg.xml",nil)
 					--showPlayerStatusPanel( playerID ) 
+					--CustomUI:DynamicHud_Create(playerID,"initIcon","file://{resources}/layout/custom_game/icon_init.xml",nil)
 					
 			end
 		end
@@ -406,7 +408,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		
 		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
 		
-		--gameProgress()
+		gameProgress()
 		
 	end
 

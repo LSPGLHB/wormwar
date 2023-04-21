@@ -13,7 +13,10 @@
 		"AbilityTextureName"			"enchantress_impetus"
 
          "MaxLevel"                      "1"
-	
+		"UnitType"         				"tu"
+		"AbilityLevel"					"C"
+		"IconSrc" 						"file://{images}/custom_game/ability_button/invoker_wex.png"  //选择框图标
+		"AbilityShowName" 				"#UIButton4"
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -75,6 +78,7 @@
 				"Function"			"createStoneSpear"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
+				"AbilityLevel"		"C"
 				"unitType"          "tu"
 				"hitType" 			"1"   //3直达施法点，2穿透弹，1为不穿透
 				"isControl"			"1"
@@ -226,18 +230,7 @@
 				"ability_a_name"		   "stone_spear_datadriven"
 				"ability_b_name"		   "stone_spear_stage_b_datadriven"
 				"modifier_caster_name" 		"modifier_stone_spear_under_control"
-				//"Target"			"POINT"
-				//"unitModel"			"shootUnit-control"
-				//"unitType"          "tu"
-				//"hitType" 			"1"   //3直达施法点，2穿透弹，1为不穿透
-				//"particles_nm"      "particles/invoker_kid_debut_wex_orb_test.vpcf"
-				//"particles_hit"     "particles/units/heroes/hero_gyrocopter/gyro_guided_missile_explosion.vpcf"
-				//"particles_hit_dur" "0.7"
-				//"particles_power" 	"particles/invoker_kid_debut_wex_orb_plus.vpcf"
-				//"particles_weak" 	"particles/invoker_kid_debut_wex_orb_weak.vpcf"
-				//"sound_hit"			"Hero_Gyrocopter.HomingMissile.Destroy"		
-				//"casterBuff"	    "modifier_stone_spear_on_spell"	
-				//"cp"				"0"
+		
 			}
 		}	
 	}

@@ -20,13 +20,14 @@ function createThunderBall(keys)
 		table.insert(directionTable,direction2)
 		local direction3 = Vector(newX3, newY3, direction.z)
 		table.insert(directionTable,direction3)
+		initDurationBuff(keys)
 		for i = 1, 3, 1 do
 			--print("direction:",directionTable[i])
 			local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
 			creatSkillShootInit(keys,shoot,caster)
 			local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 			ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)--"attach_hitloc"
-			moveShoot(keys, shoot, max_distance, directionTable[i], speed, particleID, thunderBallBoom, nil)
+			moveShoot(keys, shoot, max_distance, directionTable[i], particleID, thunderBallBoom, nil)
 		end
 		
 end
@@ -35,7 +36,7 @@ function thunderBallBoom(keys,shoot,particleID)
 	local caster = keys.caster
 	local ability = keys.ability
 	local duration = ability:GetSpecialValueFor("duration") --debuff持续时间
-	local damage = getApplyDamageValue(keys,shoot)
+	local damage = getApplyDamageValue(shoot)
 	for i = 1, #shoot.hitUnits  do
 		local unit = shoot.hitUnits[i]
 		ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})

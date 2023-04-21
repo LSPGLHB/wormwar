@@ -3,18 +3,17 @@
     "item_sacrificial_robe"
     {
         "ID"			"2002"
-        "BaseClass"                                "item_datadriven"
+        "BaseClass"                 "item_datadriven"
         "AbilityTextureName"        "item_vladmir"
 
         "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"    
 
         "ItemType"               "equip"
-        "IconSrc"                "file://{images}/custom_game/shop_item/greater_crit_lg.png" 
-		"ItemShowName"           "#DOTA_Tooltip_ability_item_lvxie2"
-        "ItemDescribe"           "#DOTA_Tooltip_ability_item_lvxie2_Description" 
-        //"AbilityUnitTargetTeam"			"DOTA_UNIT_TARGET_TEAM_ENEMY"
-        //"AbilityUnitTargetType"			"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-        //"AbilityUnitTargetFlags"		"DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+        "IconSrc"                "file://{images}/custom_game/shop_item/sacrificial_robe.png"
+		"ItemShowName"           "#DOTA_Tooltip_ability_item_sacrificial_robe"
+        "ItemDescribe"           "#DOTA_Tooltip_ability_item_sacrificial_robe_Description" 
+       
+
         //"Model"							"models/props_gameplay/red_box.vmdl" 
         //"Effect"						"particles/generic_gameplay/dropped_item.vpcf"
 
@@ -32,7 +31,7 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "team_vision_after_die"			"200"
+                "team_vision_after_die"			"1000"
             }
             "02"
             {
@@ -84,7 +83,7 @@
                 {
                     "RunScript"
                     {
-                        "ScriptFile"		"items/sacrificialRobe.lua"
+                        "ScriptFile"		"items/sacrificial_robe.lua"
                         "Function"			"modifier_item_sacrificial_robe_on_created"
                     }
                 }
@@ -93,16 +92,25 @@
                 {
                     "RunScript"
                     {
-                        "ScriptFile"		"items/sacrificialRobe.lua"
+                        "ScriptFile"		"items/sacrificial_robe.lua"
                         "Function"			"modifier_item_sacrificial_robe_on_destroy"
                     }
                 }
+
                 "OnDeath"
+                 {
+                    "RunScript"
+                    {
+                        "ScriptFile"		"items/sacrificial_robe.lua"
+                        "Function"			"modifier_item_sacrificial_robe_on_death"
+                    }
+                }
+                "OnRespawn"
                 {
                     "RunScript"
                     {
-                        "ScriptFile"		"items/sacrificialRobe.lua"
-                        "Function"			"modifier_item_sacrificial_robe_on_death"
+                        "ScriptFile"		"items/sacrificial_robe.lua"
+                        "Function"			"modifier_item_sacrificial_robe_on_respawn"
                     }
                 }
             }

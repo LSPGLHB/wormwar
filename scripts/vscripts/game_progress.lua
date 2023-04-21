@@ -1,8 +1,10 @@
 --发送到前段显示信息
 function OnGetTimeCount(round,step,stepTime,gameTime,playerID)
-    CustomUI:DynamicHud_Destroy(playerID,"UIMsgBox")
-	CustomUI:DynamicHud_Create(playerID,"UIMsgBox","file://{resources}/layout/custom_game/UI_topMsg.xml",nil)
-    CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "get_time_count", {round=round,step=step,stepTime=stepTime,gameTime=gameTime} )
+    print("======OnGetTimeCount======",playerID)
+
+    CustomUI:DynamicHud_Destroy(playerID,"UIBannerMsgBox")
+	CustomUI:DynamicHud_Create(playerID,"UIBannerMsgBox","file://{resources}/layout/custom_game/UI_banner_msg.xml",nil)
+    CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playerID), "getTimeCountLUATOJS", {round=round,step=step,stepTime=stepTime,gameTime=gameTime} )
 end
 
 

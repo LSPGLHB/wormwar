@@ -12,8 +12,12 @@
 		"FightRecapLevel"				"1"
 		"AbilityTextureName"			"earth_spirit_rolling_boulder"
 
-         "MaxLevel"                      "1"
-	
+        "MaxLevel"                      "1"
+
+		"UnitType"         				"tu"
+		"AbilityLevel"					"C"
+		"IconSrc" 						"file://{images}/custom_game/ability_button/invoker_exort.png"  //选择框图标
+		"AbilityShowName" 				"#UIButton4"
 		
 		// Casting
 		//-------------------------------------------------------------------------------------------------------------
@@ -103,6 +107,7 @@
 				"Function"			"createStoneTrap"
 				"Target"			"POINT"
 				"unitModel"			"shootUnit"
+				"AbilityLevel"		"C"
 				"unitType"          "tu"
 				"hitType" 			"1"   //3直达不触碰,2穿透弹,1触碰爆炸
 				"isTrack"			"1"

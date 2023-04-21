@@ -9,9 +9,10 @@ function createSmallTornado(keys)
 		local direction = (ability:GetCursorPosition() - position):Normalized()
 		local shoot = CreateUnitByName(keys.unitModel, position, true, nil, nil, caster:GetTeam())
         creatSkillShootInit(keys,shoot,caster)
+		initDurationBuff(keys)
 		local particleID = ParticleManager:CreateParticle(keys.particles_nm, PATTACH_ABSORIGIN_FOLLOW , shoot) 
 		ParticleManager:SetParticleControlEnt(particleID, keys.cp , shoot, PATTACH_POINT_FOLLOW, nil, shoot:GetAbsOrigin(), true)
-		moveShoot(keys, shoot, max_distance, direction, speed, particleID, smallTornadoBoomCallBack, smallTornadoTakeAwayCallBack)
+		moveShoot(keys, shoot, max_distance, direction, particleID, smallTornadoBoomCallBack, smallTornadoTakeAwayCallBack)
 end
 
 function smallTornadoBoomCallBack(keys,shoot,particleID)
@@ -46,7 +47,7 @@ function smallTornadoDuration(keys,shoot)
             local lable = unit:GetUnitLabel()
             --只作用于敌方,非技能单位
             if casterTeam ~= unitTeam and lable ~= GameRules.skillLabel then
-				local damage = getApplyDamageValue(keys,shoot)
+				local damage = getApplyDamageValue(shoot)
 				damage = damage * interval
 				ApplyDamage({victim = unit, attacker = shoot, damage = damage, damage_type = ability:GetAbilityDamageType()})
 				blackHole(keys, shoot, unit, aoeDebuff, interval, tempTimer, aoe_duration)

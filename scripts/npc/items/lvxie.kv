@@ -3,7 +3,7 @@
     "item_lvxie"
     {
         "ID"			"2000"
-        "BaseClass"                                "item_datadriven"
+        "BaseClass"                 "item_datadriven"
         "AbilityTextureName"        "item_lvxie"
 
         "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"    
@@ -16,7 +16,6 @@
         "ItemCost"               "50"
 
 
-        
         "ItemDroppable"                        "1"
         "ItemSellable"                        "1"
         "ItemPurchasable"                "1"
@@ -32,16 +31,18 @@
                 "var_type"				"FIELD_INTEGER"
                 "item_health"              "40"  //增加基础生命
             }
+
             "02"
             {
                 "var_type"				"FIELD_INTEGER"
-                "duration_speed_precent_final"          "20"  //增加移速百分比
+                "item_speed"            "25"  //增加移速
             }
-            "03"
+            "02"
             {
                 "var_type"				"FIELD_INTEGER"
-                "item_speed_duration"         "1.25"  //增加移速持续时间
+                "item_speed_precent_final"            "20"  //增加移速
             }
+            
             "04"
             {
                 "var_type"				"FIELD_INTEGER"
@@ -112,11 +113,62 @@
                 "var_type"				"FIELD_INTEGER"
                 "item_energy_match_C"      "20"  //增加C技能相生时法魂量
             }
+            
             "18"
             {
                 "var_type"				"FIELD_INTEGER"
-                "item_speed"            "25"  //增加移速
+                "duration_speed_precent_final"          "20"  //增加移速百分比
             }
+            "19"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_speed_duration"         "3"  //增加移速持续时间
+            }
+
+            "20"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "duration_vision"          "1000"  
+            }
+            "21"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_vision_duration"         "3"  
+            }
+
+            "22"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "duration_health"          "100"  
+            }
+            "23"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_health_duration"         "3" 
+            }
+
+            "24"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "duration_mana"          "50"  
+            }
+            "25"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_mana_duration"         "3"  
+            }
+            "26"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "duration_mana_regen"          "1.5"  
+            }
+            "27"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "item_mana_regen_duration"         "3"  
+            }
+
+
 
         }
 
