@@ -369,11 +369,14 @@ function wormWar:OnGameRulesStateChange( keys )
 					--CustomUI:DynamicHud_Create(playerID,"UIBannerMsgBox","file://{resources}/layout/custom_game/UI_banner_msg.xml",nil)
 					--showPlayerStatusPanel( playerID ) 
 					--CustomUI:DynamicHud_Create(playerID,"initIcon","file://{resources}/layout/custom_game/icon_init.xml",nil)
+				
+					local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+					hero:SetTimeUntilRespawn(999) --重新设置复活时间
 					
 			end
 		end
 
-		
+		gameProgress()
 
 		
 --[[
@@ -408,7 +411,7 @@ function wormWar:OnGameRulesStateChange( keys )
 		
 		--print("DOTA_GAMERULES_STATE_GAME_IN_PROGRESS"..getNowTime())
 		
-		gameProgress()
+		
 		
 	end
 
