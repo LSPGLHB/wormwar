@@ -3,36 +3,36 @@
         //永久类
         "ability_health_control"
         {
-        "BaseClass"                     "ability_datadriven"
-        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
-        "AbilityType"                   "abilityBuff"
-        "Modifiers"
-        {
-                "modifier_health_buff"
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
                 {
-                        "Passive"		    "1"
-                        "IsHidden"          "0"
-                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
-
-                        "Properties"
+                        "modifier_health_buff"
                         {
-                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_HEALTH_BONUS"        "1"
+                                }
+                        }
+
+                        "modifier_health_debuff"
+                        {
+                                "Passive"		    "1"
+                                "IsDebuff"          "1"
+                                "IsHidden"          "0"
+                                "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+
+                                "Properties"
+                                {
+                                        "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
+                                }
                         }
                 }
-
-                "modifier_health_debuff"
-                {
-                        "Passive"		    "1"
-                        "IsDebuff"          "1"
-                        "IsHidden"          "0"
-                        "Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
-
-                        "Properties"
-                        {
-                                "MODIFIER_PROPERTY_HEALTH_BONUS"        "-1"
-                        }
-                }
-        }
         }
 
         "ability_vision_control"
@@ -556,6 +556,31 @@
                                         "MODIFIER_PROPERTY_MANA_REGEN_CONSTANT"        "-1"
                                 }
                         }
+                }
+        }
+
+
+
+        "ability_init_stop"
+        {
+                "BaseClass"                     "ability_datadriven"
+                "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"  
+                "AbilityType"                   "abilityBuff"
+                "Modifiers"
+                {
+                        "modifier_init_stop"
+                        {
+                                "Passive"		    "1"
+                                "IsHidden"          "0"
+                                //"Attributes"        "MODIFIER_ATTRIBUTE_MULTIPLE"
+                                  
+
+                                "States"
+                                {
+                                     "MODIFIER_STATE_STUNNED "              "MODIFIER_STATE_VALUE_ENABLED"
+                                }
+                        }
+
                 }
         }
 
